@@ -1,0 +1,49 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="LolWikiApp.GameDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.Opacity="1"
+    Style="{StaticResource TransitionPageStyle}"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel Grid.Row="0" Margin="12,12,0,0">
+            <Border BorderThickness="15 0 0 0" Margin="12 -12 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
+                <TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center"
+                               FontSize="{StaticResource PhoneFontSizeLarge}" >
+                </TextBlock>
+            </Border>
+            
+            <TextBlock Text="比赛详情" Margin="12 0 0 0" />
+
+            <StackPanel x:Name="LoadingPanel" Margin="12 0 0 0" Orientation="Vertical">
+                <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+            </StackPanel>
+        </StackPanel>
+
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+             <phone:WebBrowser BorderThickness="0" Visibility="Collapsed" IsScriptEnabled="False" Margin="12 12 12 12" LoadCompleted="GameDetailWebBrowser_OnLoadCompleted" x:Name="GameDetailWebBrowser"></phone:WebBrowser>
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>
