@@ -1,0 +1,56 @@
+﻿/*!
+ * FileName   : reset.css
+ * WebSite    : http://www.duowan.com
+ * Desc       : 重置样式表,包括html5标签的样式重置
+ * Author     : MaxLee
+ * Version    : 3.4.1
+ * LastChange : 2012-05-22T16:31:24
+ * */
+html{overflow-y:scroll;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-size:100%;color:#000;background-color:#FFF;}
+/*
+ * 去掉height:100%;定义
+ * -webkit-text-size-adjust:none会导致页面缩放文字失效
+ * background-color:#FFF,html元素设置了背景色会导致body的背景色不能100%高度覆盖
+ * 把白色背景色定义在html上，定义这个背景色的目的是，修复一些浏览器中设置了浏览器保护色
+ * overflow-y:scroll定义在被iframe引用的页面就强制带滚动条
+ * */
+body{margin:0;word-wrap:break-word;}
+/* word-break:break-all会截断英文单词 min-height:100%是个好东西 */
+:active {outline:0;}
+:visited {outline:0;}
+:link,:visited,ins {text-decoration:none}
+/*
+ * :focus{outline:0}定义后按tab键在连接间跳转没有标识当前连接的外轮廓点线
+ * :active{outline:0;}
+ * :visited{outline:0;}
+ * */
+article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block;}
+audio,video,canvas{display:inline-block;*display:inline;*zoom:1}
+audio:not([controls]) {display:none;}
+[hidden]{display:none;}
+dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,select,textarea,p,blockquote,th,td,
+article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;}
+fieldset,iframe{border:0 none;}
+img{border:0 none;-ms-interpolation-mode:bicubic;vertical-align:middle;}
+address,caption,cite,code,dfn,em,i,th,var,optgroup{font-style:normal;font-weight:normal;}
+h1,h2,h3,h4,h5,h6,code,kbd,samp,tt,sup,sub,small,input,button,textarea,select{font-size:100%;}
+abbr,acronym{border:0 none;font-variant:normal;}
+input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}
+textarea{overflow:auto;vertical-align:top;resize:vertical;}
+ol,ul,menu{list-style:none outside none;}
+table{border-collapse:collapse;border-spacing:0;}
+td{vertical-align:top;}
+caption,th{text-align:left;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after {content:'';content:none;}
+mark{background-color:#FF6;}
+del{text-decoration:line-through;}
+abbr[title],dfn[title]{border-bottom:1px dotted;cursor:help;}
+input,select,button{vertical-align:middle;}
+button{width:auto;cursor:pointer;overflow:visible;}
+input[type=checkbox],
+input[type=radio]{box-sizing:border-box;}
+button::-moz-focus-inner,
+input[type=file] > input[type=button]::-moz-focus-inner{border:0 none;padding:0;}

@@ -1,0 +1,97 @@
+﻿@import url(reset.css);
+/*!
+ * FileName   : common.css
+ * WebSite    : http://www.duowan.com
+ * Desc       : 重置+公共
+ * Author     : MaxLee
+ * Version    : 3.4.1
+ * LastChange : 2012-05-22T16:34:54
+ * */
+/* 清除浮动 */
+.clearfix:before,
+.clearfix:after {content:'';display:table;}
+.clearfix:after {clear:both}
+.clearfix{zoom:1}
+.fr{float:right!important;display:inline}
+.fl{float:left!important;display:inline}
+.show{display:block}
+.hide{display:none}
+.hidden{display:none!important;visibility:hidden}
+.highlight{color:#F30!important}
+.important{font-weight:700!important}
+.center{text-align:center!important}
+.left{text-align:left!important}
+.right{text-align:right!important}
+.indent{text-indent:2em}
+.blank5,
+.blank10,
+.blank15,
+.blank20{display:block;clear:both;overflow:hidden}
+.blank5{height:5px}
+.blank10{height:10px}
+.blank15{height:15px}
+.blank20{height:20px}
+.no-border{border:0 none!important;}
+.transparent{opacity:.0;filter:alpha(opacity=0)}
+small,
+.small{-webkit-text-size-adjust:none;}
+/* 重置button标签浏览器表现 */
+button{line-height:1;padding:4px\0/;*padding:4px 4px 3px;}
+:root button{padding:5px 4px 3px\0/;}
+@media all and (-webkit-min-device-pixel-ratio:1) {button{padding:4px 5px 6px;}}
+@-moz-document url-prefix() {button{padding:2px 3px 4px;}}
+/* padding & margin */
+.pas{padding:5px}
+.pam{padding:10px}
+.pal{padding:20px}
+.pts{padding-top:5px}
+.ptm{padding-top:10px}
+.ptl{padding-top:20px}
+.prs{padding-right:5px}
+.prm{padding-right:10px}
+.prl{padding-right:20px}
+.pbs{padding-bottom:5px}
+.pbm{padding-bottom:10px}
+.pbl{padding-bottom:20px}
+.pls{padding-left:5px}
+.plm{padding-left:10px}
+.pll{padding-left:20px}
+.phs{padding-left:5px;padding-right:5px}
+.phm{padding-left:10px;padding-right:10px}
+.phl{padding-left:20px;padding-right:20px}
+.pvs{padding-top:5px;padding-bottom:5px}
+.pvm{padding-top:10px;padding-bottom:10px}
+.pvl{padding-top:20px;padding-bottom:20px}
+.mas{margin:5px}
+.mam{margin:10px}
+.mal{margin:20px}
+.mts{margin-top:5px}
+.mtm{margin-top:10px}
+.mtl{margin-top:20px}
+.mrs{margin-right:5px}
+.mrm{margin-right:10px}
+.mrl{margin-right:20px}
+.mbs{margin-bottom:5px}
+.mbm{margin-bottom:10px}
+.mbl{margin-bottom:20px}
+.mls{margin-left:5px}
+.mlm{margin-left:10px}
+.mll{margin-left:20px}
+.mhs{margin-left:5px;margin-right:5px}
+.mhm{margin-left:10px;margin-right:10px}
+.mhl{margin-left:20px;margin-right:20px}
+.mvs{margin-top:5px;margin-bottom:5px}
+.mvm{margin-top:10px;margin-bottom:10px}
+.mvl{margin-top:20px;margin-bottom:20px}
+.fss{font-size:10px}
+.fsm{font-size:12px}
+.fsl{font-size:14px}
+.fsxl{font-size:16px}
+.fsxxl{font-size:18px}
+.fwn{font-weight:400}
+.fwb{font-weight:700}
+/*  */
+.box .box-bd:before,
+.box .box-bd:after{content:'';display:table;}
+.box .box-bd:after{clear:both}
+.box .box-bd{zoom:1;}

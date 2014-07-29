@@ -1,0 +1,55 @@
+﻿
+@import url(reset.css);
+@import url(common.css);
+/*!
+ * 基本
+ * */
+body{font:14px/1.5 Segoe,sans-serif;color:#333;}
+a{text-decoration:none;color:#333;}
+a:hover{text-decoration:none;color:#F40;}
+
+#text table{border-collapse:separate;border-spacing:1px}
+
+
+html{background-color:#000;color: #fff;}
+
+/*通用描述文字颜色定义*/
+.f-color-red{color:#fa0000!important;}
+
+/
+/*------------------------------------------------通用样式定义 end--------------------------------------------------*/
+
+/*------------------------------------------------战绩详情 start------------------------------------------------*/
+.main-content{padding:7px 10px 10px 10px; position: relative;}
+
+.battle-team-info{padding-top:4px;}
+.battle-info-list li:last-child{border-radius:0 0 6px 6px; box-shadow:0px 1px 0px #000;}
+.battle-team .box-hd{font-size: 100%; padding:6px 0px;}
+.battle-team .box-hd .title{font-weight:normal; color:#3aae39; float:left;}
+.battle-team .box-hd .red{color:#fa0000;}
+.battle-team .box-hd .desc{float:right;}
+.battle-team .box-hd .desc span{margin-right:5px; color:#888888;}
+.battle-team .box-bd li{border: 1px solid #000; border-bottom: none; background-color: #000;}
+
+
+.team-member {display:block;margin-bottom:10px;}
+/*.team-member .pic{float:left; margin-right:0px;}*/
+.team-member .pic img{height:50px; width:50px;margin-right:5px;}
+.team-member .item-wrap span.pic{float:left;}
+.team-member .item-wrap{padding:0px;clear: both;}
+
+
+.team-member .member-info  {margin-top:0px;float:left;}
+.team-member .member-info p img{ width:16px; height:16px; margin:1px 0px 0px 4px; float:left;}
+.team-member .member-info img{height:24px; width:24px; margin-top:0px; margin-right:5px;}
+.team-member .member-info .member-name{float:left; color:#fff;}
+.team-member .member-info .extend{float: right; color:#fff;}
+
+.team-member .drop-content{ display: none;} /*暂时不显示玩家具体信息*/
+.team-member .switch-btn{ display: none;}   /*暂时不显示‘菜单’信息*/
+
+div.center { display: none;}  /*隐藏评论DIV*/
+
+/*.team-member .drop-content .group .battle-num{display:block;}*/
+/*------------------------------------------------战绩详情 end--------------------------------------------------*/
+

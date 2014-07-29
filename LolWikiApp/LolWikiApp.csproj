@@ -1,0 +1,574 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F016D6DF-D8BE-4C63-A9C4-970E2991EAEC}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LolWikiApp</RootNamespace>
+    <AssemblyName>LolWikiApp</AssemblyName>
+    <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>zh-Hans</SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>LolWikiApp_$(Configuration)_$(Platform).xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>LolWikiApp.App</SilverlightAppEntry>
+    <ValidateXaml>true</ValidateXaml>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <ExpressionBlendVersion>12.0.50429.0</ExpressionBlendVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\ARM\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\ARM\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AllHeroPage.xaml.cs">
+      <DependentUpon>AllHeroPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RefreshableListBox\RefreshableListBox.cs" />
+    <Compile Include="Controls\RefreshableListBox\RefreshableListBoxX.cs" />
+    <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converter\ImageSourceConverter.cs" />
+    <Compile Include="Converter\LetvSourceConverter.cs" />
+    <Compile Include="DataTemplateSelector\NewsListItemDataTemplateSelector.cs" />
+    <Compile Include="EquipmentRecommendDetailPage.xaml.cs">
+      <DependentUpon>EquipmentRecommendDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Extension\ApplicationX.cs" />
+    <Compile Include="Extension\StringX.cs" />
+    <Compile Include="GameDetailPage.xaml.cs">
+      <DependentUpon>GameDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HomePage.xaml.cs">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LocalizedStrings.cs" />
+    <Compile Include="HeroDetailsPage.xaml.cs">
+      <DependentUpon>HeroDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\EquipmentRecommend.cs" />
+    <Compile Include="Model\FreeHeroInfo.cs" />
+    <Compile Include="Model\HeroDetail.cs" />
+    <Compile Include="Model\HttpActionResult.cs" />
+    <Compile Include="Model\NewsListInfo.cs" />
+    <Compile Include="Model\NewsDetail.cs" />
+    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\ServerInfo.cs" />
+    <Compile Include="NewsCachePage.xaml.cs">
+      <DependentUpon>NewsCachePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NewsDetailPage.xaml.cs">
+      <DependentUpon>NewsDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PlayerDetailPage.xaml.cs">
+      <DependentUpon>PlayerDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PlayerInformationPage.xaml.cs">
+      <DependentUpon>PlayerInformationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\HeroRepository.cs" />
+    <Compile Include="Repository\HelperRepository.cs" />
+    <Compile Include="Repository\LocalFileRepository.cs" />
+    <Compile Include="Repository\NewsRepository.cs" />
+    <Compile Include="Repository\PlayerRepository.cs" />
+    <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Repository\ServerRepository.cs" />
+    <Compile Include="Resources\AppResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Hero.cs" />
+    <Compile Include="ShakeAShakePage.xaml.cs">
+      <DependentUpon>ShakeAShakePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\NewsViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Page Include="AboutPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AllHeroPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EquipmentRecommendDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HeroDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="HomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewsCachePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewsDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlayerDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlayerInformationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShakeAShakePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ApplicationIcon.png" />
+    <Content Include="Assets\AppBar\cancel.png" />
+    <Content Include="Assets\AppBar\check.png" />
+    <Content Include="Assets\AppBar\close.png" />
+    <Content Include="Assets\AppBar\download.png" />
+    <Content Include="Assets\AppBar\favs.png" />
+    <Content Include="Assets\AppBar\feature.search.png" />
+    <Content Include="Assets\AppBar\feature.video.png" />
+    <Content Include="Assets\AppBar\folder.png" />
+    <Content Include="Assets\AppBar\category.png" />
+    <Content Include="Assets\AppBar\more-1.png" />
+    <Content Include="Assets\AppBar\pin-1.png" />
+    <Content Include="Assets\AppBar\unpin-1.png" />
+    <Content Include="Assets\AppBar\save.png" />
+    <Content Include="Assets\AppBar\sync.png" />
+    <Content Include="Assets\AppBar\transport.play.png" />
+    <Content Include="Assets\E.png" />
+    <Content Include="Assets\profileIcon23.jpg" />
+    <Content Include="Assets\Q.png" />
+    <Content Include="Assets\R.png" />
+    <Content Include="Assets\video-play.png" />
+    <Content Include="Assets\video_flag.png" />
+    <Content Include="Assets\W.png" />
+    <Content Include="Data\champion.json" />
+    <Content Include="Data\html\common.css" />
+    <Content Include="Data\html\global_black.css" />
+    <Content Include="Data\html\global_light.css" />
+    <Content Include="Data\html\reset.css" />
+    <Content Include="Data\heros\Aatrox.json" />
+    <Content Include="Data\heros\Ahri.json" />
+    <Content Include="Data\heros\Akali.json" />
+    <Content Include="Data\heros\Alistar.json" />
+    <Content Include="Data\heros\Amumu.json" />
+    <Content Include="Data\heros\Anivia.json" />
+    <Content Include="Data\heros\Annie.json" />
+    <Content Include="Data\heros\Ashe.json" />
+    <Content Include="Data\heros\Blitzcrank.json" />
+    <Content Include="Data\heros\Brand.json" />
+    <Content Include="Data\heros\Braum.json" />
+    <Content Include="Data\heros\Caitlyn.json" />
+    <Content Include="Data\heros\Cassiopeia.json" />
+    <Content Include="Data\heros\Chogath.json" />
+    <Content Include="Data\heros\Corki.json" />
+    <Content Include="Data\heros\Darius.json" />
+    <Content Include="Data\heros\Diana.json" />
+    <Content Include="Data\heros\Draven.json" />
+    <Content Include="Data\heros\DrMundo.json" />
+    <Content Include="Data\heros\Elise.json" />
+    <Content Include="Data\heros\Evelynn.json" />
+    <Content Include="Data\heros\Ezreal.json" />
+    <Content Include="Data\heros\FiddleSticks.json" />
+    <Content Include="Data\heros\Fiora.json" />
+    <Content Include="Data\heros\Fizz.json" />
+    <Content Include="Data\heros\Galio.json" />
+    <Content Include="Data\heros\Gangplank.json" />
+    <Content Include="Data\heros\Garen.json" />
+    <Content Include="Data\heros\Gragas.json" />
+    <Content Include="Data\heros\Graves.json" />
+    <Content Include="Data\heros\Hecarim.json" />
+    <Content Include="Data\heros\Heimerdinger.json" />
+    <Content Include="Data\heros\Irelia.json" />
+    <Content Include="Data\heros\Janna.json" />
+    <Content Include="Data\heros\JarvanIV.json" />
+    <Content Include="Data\heros\Jax.json" />
+    <Content Include="Data\heros\Jayce.json" />
+    <Content Include="Data\heros\Jinx.json" />
+    <Content Include="Data\heros\Karma.json" />
+    <Content Include="Data\heros\Karthus.json" />
+    <Content Include="Data\heros\Kassadin.json" />
+    <Content Include="Data\heros\Katarina.json" />
+    <Content Include="Data\heros\Kayle.json" />
+    <Content Include="Data\heros\Kennen.json" />
+    <Content Include="Data\heros\Khazix.json" />
+    <Content Include="Data\heros\KogMaw.json" />
+    <Content Include="Data\heros\Leblanc.json" />
+    <Content Include="Data\heros\LeeSin.json" />
+    <Content Include="Data\heros\Leona.json" />
+    <Content Include="Data\heros\Lissandra.json" />
+    <Content Include="Data\heros\Lucian.json" />
+    <Content Include="Data\heros\Lulu.json" />
+    <Content Include="Data\heros\Lux.json" />
+    <Content Include="Data\heros\Malphite.json" />
+    <Content Include="Data\heros\Malzahar.json" />
+    <Content Include="Data\heros\Maokai.json" />
+    <Content Include="Data\heros\MasterYi.json" />
+    <Content Include="Data\heros\MissFortune.json" />
+    <Content Include="Data\heros\MonkeyKing.json" />
+    <Content Include="Data\heros\Mordekaiser.json" />
+    <Content Include="Data\heros\Morgana.json" />
+    <Content Include="Data\heros\Nami.json" />
+    <Content Include="Data\heros\Nasus.json" />
+    <Content Include="Data\heros\Nautilus.json" />
+    <Content Include="Data\heros\Nidalee.json" />
+    <Content Include="Data\heros\Nocturne.json" />
+    <Content Include="Data\heros\Nunu.json" />
+    <Content Include="Data\heros\Olaf.json" />
+    <Content Include="Data\heros\Orianna.json" />
+    <Content Include="Data\heros\Pantheon.json" />
+    <Content Include="Data\heros\Poppy.json" />
+    <Content Include="Data\heros\Quinn.json" />
+    <Content Include="Data\heros\Rammus.json" />
+    <Content Include="Data\heros\Renekton.json" />
+    <Content Include="Data\heros\Rengar.json" />
+    <Content Include="Data\heros\Riven.json" />
+    <Content Include="Data\heros\Rumble.json" />
+    <Content Include="Data\heros\Ryze.json" />
+    <Content Include="Data\heros\Sejuani.json" />
+    <Content Include="Data\heros\Shaco.json" />
+    <Content Include="Data\heros\Shen.json" />
+    <Content Include="Data\heros\Shyvana.json" />
+    <Content Include="Data\heros\Singed.json" />
+    <Content Include="Data\heros\Sion.json" />
+    <Content Include="Data\heros\Sivir.json" />
+    <Content Include="Data\heros\Skarner.json" />
+    <Content Include="Data\heros\Sona.json" />
+    <Content Include="Data\heros\Soraka.json" />
+    <Content Include="Data\heros\Swain.json" />
+    <Content Include="Data\heros\Syndra.json" />
+    <Content Include="Data\heros\Talon.json" />
+    <Content Include="Data\heros\Taric.json" />
+    <Content Include="Data\heros\Teemo.json" />
+    <Content Include="Data\heros\Thresh.json" />
+    <Content Include="Data\heros\Tristana.json" />
+    <Content Include="Data\heros\Trundle.json" />
+    <Content Include="Data\heros\Tryndamere.json" />
+    <Content Include="Data\heros\TwistedFate.json" />
+    <Content Include="Data\heros\Twitch.json" />
+    <Content Include="Data\heros\Udyr.json" />
+    <Content Include="Data\heros\Urgot.json" />
+    <Content Include="Data\heros\Varus.json" />
+    <Content Include="Data\heros\Vayne.json" />
+    <Content Include="Data\heros\Veigar.json" />
+    <Content Include="Data\heros\Velkoz.json" />
+    <Content Include="Data\heros\Vi.json" />
+    <Content Include="Data\heros\Viktor.json" />
+    <Content Include="Data\heros\Vladimir.json" />
+    <Content Include="Data\heros\Volibear.json" />
+    <Content Include="Data\heros\Warwick.json" />
+    <Content Include="Data\heros\Xerath.json" />
+    <Content Include="Data\heros\XinZhao.json" />
+    <Content Include="Data\heros\Yasuo.json" />
+    <Content Include="Data\heros\Yorick.json" />
+    <Content Include="Data\heros\Zac.json" />
+    <Content Include="Data\heros\Zed.json" />
+    <Content Include="Data\heros\Ziggs.json" />
+    <Content Include="Data\heros\Zilean.json" />
+    <Content Include="Data\heros\Zyra.json" />
+    <Content Include="Data\apiCurrentMatch.json" />
+    <None Include="packages.config" />
+    <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\WMAppManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Assets\ApplicationIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\FlipCycleTileMedium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\FlipCycleTileSmall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\IconicTileMediumLarge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\IconicTileSmall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\default%402x.png" />
+    <Content Include="Data\html\temp.html" />
+    <Content Include="Data\images\Aatrox\Aatrox.png" />
+    <Content Include="Data\images\Ahri\Ahri.png" />
+    <Content Include="Data\images\Akali\Akali.png" />
+    <Content Include="Data\images\Alistar\Alistar.png" />
+    <Content Include="Data\images\Amumu\Amumu.png" />
+    <Content Include="Data\images\Anivia\Anivia.png" />
+    <Content Include="Data\images\Annie\Annie.png" />
+    <Content Include="Data\images\Ashe\Ashe.png" />
+    <Content Include="Data\images\Blitzcrank\Blitzcrank.png" />
+    <Content Include="Data\images\Brand\Brand.png" />
+    <Content Include="Data\images\Braum\Braum.png" />
+    <Content Include="Data\images\Caitlyn\Caitlyn.png" />
+    <Content Include="Data\images\Cassiopeia\Cassiopeia.png" />
+    <Content Include="Data\images\Chogath\Chogath.png" />
+    <Content Include="Data\images\Corki\Corki.png" />
+    <Content Include="Data\images\Darius\Darius.png" />
+    <Content Include="Data\images\Diana\Diana.png" />
+    <Content Include="Data\images\Draven\Draven.png" />
+    <Content Include="Data\images\DrMundo\DrMundo.png" />
+    <Content Include="Data\images\Elise\Elise.png" />
+    <Content Include="Data\images\Evelynn\Evelynn.png" />
+    <Content Include="Data\images\Ezreal\Ezreal.png" />
+    <Content Include="Data\images\FiddleSticks\FiddleSticks.png" />
+    <Content Include="Data\images\Fiora\Fiora.png" />
+    <Content Include="Data\images\Fizz\Fizz.png" />
+    <Content Include="Data\images\Galio\Galio.png" />
+    <Content Include="Data\images\Gangplank\Gangplank.png" />
+    <Content Include="Data\images\Garen\Garen.png" />
+    <Content Include="Data\images\Gragas\Gragas.png" />
+    <Content Include="Data\images\Graves\Graves.png" />
+    <Content Include="Data\images\Hecarim\Hecarim.png" />
+    <Content Include="Data\images\Heimerdinger\Heimerdinger.png" />
+    <Content Include="Data\images\Irelia\Irelia.png" />
+    <Content Include="Data\images\Janna\Janna.png" />
+    <Content Include="Data\images\JarvanIV\JarvanIV.png" />
+    <Content Include="Data\images\Jax\Jax.png" />
+    <Content Include="Data\images\Jayce\Jayce.png" />
+    <Content Include="Data\images\Jinx\Jinx.png" />
+    <Content Include="Data\images\Karma\Karma.png" />
+    <Content Include="Data\images\Karthus\Karthus.png" />
+    <Content Include="Data\images\Kassadin\Kassadin.png" />
+    <Content Include="Data\images\Katarina\Katarina.png" />
+    <Content Include="Data\images\Kayle\Kayle.png" />
+    <Content Include="Data\images\Kennen\Kennen.png" />
+    <Content Include="Data\images\Khazix\Khazix.png" />
+    <Content Include="Data\images\KogMaw\KogMaw.png" />
+    <Content Include="Data\images\Leblanc\Leblanc.png" />
+    <Content Include="Data\images\LeeSin\LeeSin.png" />
+    <Content Include="Data\images\Leona\Leona.png" />
+    <Content Include="Data\images\Lissandra\Lissandra.png" />
+    <Content Include="Data\images\Lucian\Lucian.png" />
+    <Content Include="Data\images\Lulu\Lulu.png" />
+    <Content Include="Data\images\Lux\Lux.png" />
+    <Content Include="Data\images\Malphite\Malphite.png" />
+    <Content Include="Data\images\Malzahar\Malzahar.png" />
+    <Content Include="Data\images\Maokai\Maokai.png" />
+    <Content Include="Data\images\MasterYi\MasterYi.png" />
+    <Content Include="Data\images\MissFortune\MissFortune.png" />
+    <Content Include="Data\images\MonkeyKing\MonkeyKing.png" />
+    <Content Include="Data\images\Mordekaiser\Mordekaiser.png" />
+    <Content Include="Data\images\Morgana\Morgana.png" />
+    <Content Include="Data\images\Nami\Nami.png" />
+    <Content Include="Data\images\Nasus\Nasus.png" />
+    <Content Include="Data\images\Nautilus\Nautilus.png" />
+    <Content Include="Data\images\Nidalee\Nidalee.png" />
+    <Content Include="Data\images\Nocturne\Nocturne.png" />
+    <Content Include="Data\images\Nunu\Nunu.png" />
+    <Content Include="Data\images\Olaf\Olaf.png" />
+    <Content Include="Data\images\Orianna\Orianna.png" />
+    <Content Include="Data\images\Pantheon\Pantheon.png" />
+    <Content Include="Data\images\Poppy\Poppy.png" />
+    <Content Include="Data\images\Quinn\Quinn.png" />
+    <Content Include="Data\images\Rammus\Rammus.png" />
+    <Content Include="Data\images\Renekton\Renekton.png" />
+    <Content Include="Data\images\Rengar\Rengar.png" />
+    <Content Include="Data\images\Riven\Riven.png" />
+    <Content Include="Data\images\Rumble\Rumble.png" />
+    <Content Include="Data\images\Ryze\Ryze.png" />
+    <Content Include="Data\images\Sejuani\Sejuani.png" />
+    <Content Include="Data\images\Shaco\Shaco.png" />
+    <Content Include="Data\images\Shen\Shen.png" />
+    <Content Include="Data\images\Shyvana\Shyvana.png" />
+    <Content Include="Data\images\Singed\Singed.png" />
+    <Content Include="Data\images\Sion\Sion.png" />
+    <Content Include="Data\images\Sivir\Sivir.png" />
+    <Content Include="Data\images\Skarner\Skarner.png" />
+    <Content Include="Data\images\Sona\Sona.png" />
+    <Content Include="Data\images\Soraka\Soraka.png" />
+    <Content Include="Data\images\Swain\Swain.png" />
+    <Content Include="Data\images\Syndra\Syndra.png" />
+    <Content Include="Data\images\Talon\Talon.png" />
+    <Content Include="Data\images\Taric\Taric.png" />
+    <Content Include="Data\images\Teemo\Teemo.png" />
+    <Content Include="Data\images\Thresh\Thresh.png" />
+    <Content Include="Data\images\Tristana\Tristana.png" />
+    <Content Include="Data\images\Trundle\Trundle.png" />
+    <Content Include="Data\images\Tryndamere\Tryndamere.png" />
+    <Content Include="Data\images\TwistedFate\TwistedFate.png" />
+    <Content Include="Data\images\Twitch\Twitch.png" />
+    <Content Include="Data\images\Udyr\Udyr.png" />
+    <Content Include="Data\images\Urgot\Urgot.png" />
+    <Content Include="Data\images\Varus\Varus.png" />
+    <Content Include="Data\images\Vayne\Vayne.png" />
+    <Content Include="Data\images\Veigar\Veigar.png" />
+    <Content Include="Data\images\Velkoz\Velkoz.png" />
+    <Content Include="Data\images\Viktor\Viktor.png" />
+    <Content Include="Data\images\Vi\Vi.png" />
+    <Content Include="Data\images\Vladimir\Vladimir.png" />
+    <Content Include="Data\images\Volibear\Volibear.png" />
+    <Content Include="Data\images\Warwick\Warwick.png" />
+    <Content Include="Data\images\Xerath\Xerath.png" />
+    <Content Include="Data\images\XinZhao\XinZhao.png" />
+    <Content Include="Data\images\Yasuo\Yasuo.png" />
+    <Content Include="Data\images\Yorick\Yorick.png" />
+    <Content Include="Data\images\Zac\Zac.png" />
+    <Content Include="Data\images\Zed\Zed.png" />
+    <Content Include="Data\images\Ziggs\Ziggs.png" />
+    <Content Include="Data\images\Zilean\Zilean.png" />
+    <Content Include="Data\images\Zyra\Zyra.png" />
+    <Content Include="Data\template.txt" />
+    <Content Include="logo_173.png" />
+    <Content Include="logo_200.png" />
+    <Content Include="logo_62.png" />
+    <Content Include="logo_99.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Select.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AppResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AppResources.zh-Hans.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\sl4-windowsphone71\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Drawing" />
+    <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=8.0.1.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\MyAssets\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ShakeGestures">
+      <HintPath>..\..\..\..\..\Desktop\ShakeGestures.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\sl4-windowsphone71\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft SDKs\Silverlight\v4.0\Libraries\Client\System.Xml.XPath.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+</Project>

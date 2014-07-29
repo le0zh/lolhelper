@@ -1,0 +1,267 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="LolWikiApp.PlayerDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.Opacity="1"
+    Style="{StaticResource TransitionPageStyle}"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator x:Name="indicator" Text="读取中..."  IsIndeterminate="True"></shell:ProgressIndicator>
+    </shell:SystemTray.ProgressIndicator>
+    
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent" Visibility="Visible">
+        <!--Pivot Control-->
+        <phone:Pivot Title="{Binding}">
+            <phone:Pivot.TitleTemplate>
+                <DataTemplate>
+                    <Grid MinWidth="430">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="80"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Border BorderThickness="15 0 0 0" Margin="0 -12 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
+                                <TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center"
+                               FontSize="{StaticResource PhoneFontSizeLarge}" >
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
+                        
+                        <Image Grid.Row="1" Grid.Column="0" Source="{Binding PhotoUrl}" Width="80"></Image>
+
+                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="12 0 0 0" VerticalAlignment="Center" Orientation="Vertical">
+                            <TextBlock Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                            <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}"
+                                       Foreground="{StaticResource PhoneSubtleBrush}">
+                                    <Run Text="{Binding ServerInfo.DisplayName}"></Run>
+                                    <Run Text="{Binding Level}"></Run>
+                                    <Run Text="级"></Run>
+                            </TextBlock>
+                            <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}"
+                                       Foreground="{StaticResource PhoneSubtleBrush}">
+                                    <Run Text="被赞"></Run>
+                                    <Run Text="{Binding Good}"></Run>
+                                    <Run Text="被拉黑"></Run>
+                                    <Run Text="{Binding Bad}"></Run>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="2" 
+                                    Background="{StaticResource PhoneAccentBrush}" 
+                                    Margin="0 0 0 0" Width="80">
+                            <TextBlock FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 12 0 0" Text="战斗力" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 0 0 0" Text="{Binding Power}" HorizontalAlignment="Center"></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </phone:Pivot.TitleTemplate>
+
+            <phone:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel  Margin="0 12 0 -18">
+                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </phone:Pivot.HeaderTemplate>
+            <!--Pivot item one-->
+            <phone:PivotItem Header="基本信息">
+                <ScrollViewer Margin="12 0 12 0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border Margin="0 0 0 12"
+                                    BorderBrush="{StaticResource PhoneBorderBrush}"
+                                    BorderThickness="0 2 0 1">
+                            <TextBlock Text="匹配赛战绩：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                        </Border>
+
+                        <phone:LongListSelector ItemsSource="{Binding MatchGameInfos}">
+                            <phone:LongListSelector.ListHeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="0" Text="模式"></TextBlock>
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="1" Text="胜率"></TextBlock>
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="2" Text="胜场"></TextBlock>
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="3" Text="负场"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </phone:LongListSelector.ListHeaderTemplate>
+
+                            <phone:LongListSelector.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="{Binding Mode}"></TextBlock>
+                                        <TextBlock Grid.Column="1" Text="{Binding WinRate}"></TextBlock>
+                                        <TextBlock Grid.Column="2" Text="{Binding WinNumber}"></TextBlock>
+                                        <TextBlock Grid.Column="3" Text="{Binding LoseNumber}"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </phone:LongListSelector.ItemTemplate>
+                        </phone:LongListSelector>
+
+                        <Border Margin="0 12 0 12"
+                                    BorderBrush="{StaticResource PhoneBorderBrush}"
+                                    BorderThickness="0 1 0 1">
+                            <TextBlock Text="排位赛战绩：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                        </Border>
+
+                        <Grid  DataContext="{Binding RankGmeInfo}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="0" Text="类型"></TextBlock>
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="1" Text="胜率"></TextBlock>
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="2" Text="胜场"></TextBlock>
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="3" Text="段位/胜点"></TextBlock>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Type}"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding WinRate}"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding WinNumber}"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding RangeAndWinPoint}"></TextBlock>
+
+                        </Grid>
+
+                        <Border Margin="0 12 0 12"
+                                    BorderBrush="{StaticResource PhoneBorderBrush}"
+                                    BorderThickness="0 1 0 1">
+                            <TextBlock Text="战斗力：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                        </Border>
+
+                        <Grid DataContext="{Binding PowerDetailInfo}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="0" Text="总分"></TextBlock>
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="1" Text="基础分"></TextBlock>
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="2" Text="胜率加分"></TextBlock>
+                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="3" Text="胜场加分"></TextBlock>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding TotaScore}"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding BaseScore}"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding WinRateScore}"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding WinNumberScore}"></TextBlock>
+                        </Grid>
+
+                        <Border Margin="0 12 0 12"
+                                    BorderBrush="{StaticResource PhoneBorderBrush}"
+                                    BorderThickness="0 1 0 1">
+                            <TextBlock Text="常用英雄：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                        </Border>
+
+                        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility = "Disabled"
+                                 ItemsSource="{Binding RecentUsedHeroImageList}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding}" Width="50" Height="50" Margin="0 0 12 0"></Image>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </phone:PivotItem>
+
+           <phone:PivotItem Header="最近比赛">
+                <ScrollViewer  Margin="12 0 12 0" VerticalScrollBarVisibility="Auto">
+                    <phone:LongListSelector x:Name="RecentGameLongListSelector" Tap="RecentGameLongListSelector_OnTap" ItemsSource="{Binding RecentGameInfoList}">
+                        <phone:LongListSelector.ListHeaderTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0 2 0 1" BorderBrush="{StaticResource PhoneBorderBrush}">
+                                    <Grid Margin="0 12 0 12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="0" Text="英雄"></TextBlock>
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="1" Text="类型"></TextBlock>
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="2" Text="结果"></TextBlock>
+                                        <TextBlock FontWeight="ExtraBold" Grid.Column="3" Text="时间"></TextBlock>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </phone:LongListSelector.ListHeaderTemplate>
+
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0 0 12 12" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}">
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image HorizontalAlignment="Left" Height="50" Width="50" Margin="0" Grid.Column="0" Source="{Binding HeroImageUrl}"></Image>
+
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding GameMode}"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding Result}"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="3" Text="{Binding Date}"></TextBlock>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </ScrollViewer>
+            </phone:PivotItem>
+        </phone:Pivot>
+    </Grid>
+
+</phone:PhoneApplicationPage>
