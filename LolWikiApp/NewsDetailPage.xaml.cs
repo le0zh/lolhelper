@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using LolWikiApp.Repository;
+using LolWikiApp.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
@@ -206,12 +207,11 @@ p{
             //</html>";
             #endregion
 
-            
-
             var content = htmlTemplate.Replace("$title$", _newsDetail.Title).Replace("$postTime$", _newsDetail.Posttime).Replace("$site$", _newsDetail.Site).Replace("$content$", _newsDetail.Content.Replace("<div","<p").Replace("</div", "</p"));
 
-
             Debug.WriteLine(content);
+
+            await App.ViewModel.LocalFileHelper.SaveNewsContentToCacheFolder(_newsDetail.Id, content);
 
             ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
 

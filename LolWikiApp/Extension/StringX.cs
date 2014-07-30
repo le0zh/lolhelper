@@ -8,6 +8,23 @@ namespace LolWikiApp
 {
     public  static class StringX
     {
+        public static string GetImgFileNameFromSrc(this string src)
+        {
+            if (!src.Contains("/"))
+            {
+                return src;
+            }
+
+            if (src.StartsWith("http"))
+            {                
+                src = src.Substring(7);
+            }
+
+            src = src.Replace("/", "_");
+
+            return src;
+        }
+        
         public static string HtmlDecode(this string content)
         {
             if (string.IsNullOrEmpty(content))
