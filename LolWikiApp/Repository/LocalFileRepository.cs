@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Media.Imaging;
+using Windows.Foundation.Metadata;
 using HtmlAgilityPack;
 using System.Threading.Tasks;
 
 using Windows.Storage;
+using Microsoft.Phone.Controls;
 
 namespace LolWikiApp.Repository
 {
@@ -90,17 +96,30 @@ namespace LolWikiApp.Repository
                 }
             }
 
-            var htmlPath = Path.Combine(newsCacheFolder.Path, id, id + ".html");
+            var htmlPath = Path.Combine(newsCacheFolder.Path, id + ".html");
             doc.Save(htmlPath);
 
-            downloadImgList(imgSrcList);
+            downloadImgList(imgSrcList, newsCacheFolder);
 
             return htmlPath;
         }
 
-        private void downloadImgList(List<string> imgSrcList)
+        private async void downloadImgList(List<string> imgSrcList, StorageFolder folder)
         {
             //TODO
+            var src = imgSrcList[0];
+            var client = new HttpClient();
+            using (var stream = await client.GetStreamAsync(src))
+            {
+                var file = await folder.CreateFileAsync(src.GetImgFileNameFromSrc(),CreationCollisionOption.ReplaceExisting);
+                byte[] data = new byte[stream.Length];
+                stream.Read(data, 0, data.Length);
+                using (var fs = await file.OpenStreamForWriteAsync())
+                {
+                    await fs.WriteAsync(data, 0, data.Length);
+                }
+            }
+            //Windows Phone Power Tools
         }
     }
 }
