@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,6 +15,8 @@ namespace LolWikiApp.ViewModels
     public class NewsViewModel
     {
         private readonly NewsRepository newsRepository;
+
+        public NewsCacheListInfo NewsCacheListInfo { get; private set; }
 
         private NewsType oldNewsType;
         public ObservableCollection<NewsListInfo> NewsListInfObservableCollection { get; private set; }
@@ -30,6 +33,12 @@ namespace LolWikiApp.ViewModels
             }
         }
 
+        public async void LoadCachedNewsList()
+        {
+           var count =  await newsRepository.LoadNewsCachedListInfo(NewsCacheListInfo);
+            Debug.WriteLine("-------LOADED CACHED NEWS LIST COUNT " + count);
+        }
+
         public int CurrentPage { get; set; }
 
         public int TotalPage { get; set; }
@@ -40,6 +49,7 @@ namespace LolWikiApp.ViewModels
             oldNewsType = NewsType.Latest;
 
             newsRepository = new NewsRepository();
+            NewsCacheListInfo = new NewsCacheListInfo();
         }
 
         //public async Task LoadHeadLineListForHomePageAsync(int size = 10)
@@ -63,6 +73,12 @@ namespace LolWikiApp.ViewModels
         //        HeaderLinesListForListPage.Add(n);
         //    }
         //}
+
+        public async Task<List<NewsListInfo>> LoadNewsListInfoListAsync(NewsType type, int page = 1)
+        {
+            List<NewsListInfo> newsList = await this.newsRepository.GetPagedNewsList(type, page);
+            return newsList;
+        }
 
         public async Task LoadNewsListInfosByTypeAndPageAsync(NewsType type = NewsType.Latest, int page = 1, bool refresh = false)
         {

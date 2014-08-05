@@ -16,5 +16,10 @@ namespace LolWikiApp
         {
             InitializeComponent();
         }
+
+        private void cacheNewsList(List<NewsListInfo> newsListInfos)
+        {
+            
+        }
     }
 }

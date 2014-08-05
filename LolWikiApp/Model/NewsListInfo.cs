@@ -45,7 +45,6 @@ namespace LolWikiApp
 
         public string Thumb_ok { get; set; }
     }
-
     public class NewsTypeWrapper
     {
         public NewsType Type { get; set; }

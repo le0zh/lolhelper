@@ -293,7 +293,7 @@
                 <Setter.Value>
                     <toolkit:NavigationInTransition>
                         <toolkit:NavigationInTransition.Backward>
-                            <toolkit:SwivelTransition Mode="BackwardIn"/>                            
+                            <toolkit:TurnstileTransition Mode="BackwardIn"/>                            
                         </toolkit:NavigationInTransition.Backward>
                         <toolkit:NavigationInTransition.Forward>
                             <toolkit:TurnstileTransition Mode="ForwardIn"/>
@@ -316,8 +316,7 @@
 
             <Setter Property="Background" Value="White"></Setter>
         </Style>
-      
-
+        
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

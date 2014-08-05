@@ -11,8 +11,16 @@ namespace LolWikiApp.Repository
 {
     public class NewsRepository : Repository
     {
-       private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}   "; //{0}: artId, {1}: random
-       
+        private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}   "; //{0}: artId, {1}: random
+        private LocalFileRepository localFileRepository = new LocalFileRepository();
+        /// <summary>
+        /// 获取缓存中的咨询列表
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<List<NewsListInfo>> GetNewsCachedListAsync()
+        //{
+            
+        //}
 
         public async Task<NewsDetail> GetNewsDetailAsync(string artId)
         {
@@ -24,6 +32,44 @@ namespace LolWikiApp.Repository
             var newsDetail = JsonConvert.DeserializeObject<NewsDetail>(json);
 
             return newsDetail;
+        }
+
+        /// <summary>
+        /// 从本地文件夹中读取缓存的新闻列表信息
+        /// </summary>
+        /// <param name="cacheListInfo"></param>
+        /// <returns></returns>
+        public async Task<int> LoadNewsCachedListInfo(NewsCacheListInfo cacheListInfo)
+        {
+            var count = 0;
+            foreach (var fileName in cacheListInfo.FileNameAndListDcit.Keys)
+            {
+                var content = await localFileRepository.GetNewsCacheListInfoStringAsync(fileName);
+                if (!string.IsNullOrEmpty(content))
+                {
+                    var list = JsonConvert.DeserializeObject<List<NewsListInfo>>(content);
+                    foreach (var listInfo in list)
+                    {
+                        cacheListInfo.FileNameAndListDcit[fileName].Add(listInfo);
+                        count++;
+                    }
+                }
+            }
+            cacheListInfo.IsDataLoaded = true;
+            return count;
+        }
+
+        public async Task<int> SaveNewsCacheList(NewsCacheListInfo cacheListInfo)
+        {
+            var count = 0;
+            foreach (var fileName in cacheListInfo.FileNameAndListDcit.Keys)
+            {
+                var content = JsonConvert.SerializeObject(cacheListInfo.FileNameAndListDcit[fileName]);
+                await localFileRepository.SaveNewsCacheListInfoStringAsync(fileName,content);
+                count++;
+            }
+            cacheListInfo.IsDataLoaded = true;
+            return count;
         }
 
         /// <summary>

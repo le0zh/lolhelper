@@ -221,6 +221,10 @@ namespace LolWikiApp
             try
             {
                 Debug.WriteLine(currentNewsType);
+
+                //Launch new task to load cached news list
+                await Task.Run(() => App.NewsViewModel.LoadCachedNewsList());
+
                 await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(currentNewsType, 1, true);
             }
             catch (System.Net.Http.HttpRequestException exception404)
@@ -607,11 +611,20 @@ namespace LolWikiApp
             if (newsCategoryPopup.IsOpen)
             {
                 newsCategoryPopup.IsOpen = false;
+                SetAppbarForNewsList();
                 e.Cancel = true;
             }
-            else if (MessageBoxResult.Cancel == MessageBox.Show("要退出英雄联盟助手吗?", "确认", MessageBoxButton.OKCancel))
+            else 
             {
                 e.Cancel = true;
+                this.Dispatcher.BeginInvoke(delegate
+                {
+                    if (MessageBoxResult.OK == MessageBox.Show("要退出英雄联盟助手吗?", "确认", MessageBoxButton.OKCancel))
+                    {
+                        //TODO:save any data needed before app is terminated.
+                        Application.Current.Terminate();
+                    }
+                });
             }
         }
 

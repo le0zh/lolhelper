@@ -3,11 +3,6 @@ using System.Collections.Generic;
 
 namespace LolWikiApp
 {
-    /// <summary>
-    /// Video info for news 
-    /// </summary>
-
-
     public class NewsDetail
     {
         public string Title { get; set; }

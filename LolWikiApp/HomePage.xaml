@@ -86,7 +86,8 @@
                                     Visibility="Collapsed"
                                     x:Name="NewsLongListSelector" 
                                     IsGetMoreEnabled="True"
-                                              Loaded="NewsLongListSelector_OnLoaded"
+                                    Loaded="NewsLongListSelector_OnLoaded"
+                                    Margin="0 0 0 12"
                                     GettingMoreTriggered="NewsLongListSelector_OnGettingMoreTriggered"
                                     RefreshTriggered="NewsLongListSelector_OnRefreshTriggered"
                                     ItemTemplate="{StaticResource NewsListDataTemplate}">

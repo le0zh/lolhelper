@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 using Windows.Storage;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Tasks;
 
 namespace LolWikiApp.Repository
 {
@@ -22,13 +23,53 @@ namespace LolWikiApp.Repository
         private const string VideoCacheFolerName = "VideoCache";
         private const string NewsCacheFolerName = "NewsCache";
 
-
-        private async Task<StorageFolder> GetNewsCacheFolderAsync(string id)
+        private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var newsCacheRootFolder = await localFolder.CreateFolderAsync(NewsCacheFolerName, CreationCollisionOption.OpenIfExists);
-            var newsCacheFolder = await newsCacheRootFolder.CreateFolderAsync(id, CreationCollisionOption.OpenIfExists);
+            if (string.IsNullOrEmpty(id))
+            {
+                return newsCacheRootFolder;
+            }
+
+            var newsCacheFolder =
+                    await newsCacheRootFolder.CreateFolderAsync(id, CreationCollisionOption.OpenIfExists);
             return newsCacheFolder;
+        }
+
+
+        public async Task<string> GetNewsCacheListInfoStringAsync(string fileName)
+        {
+            var cacheFolder = await GetNewsCacheFolderAsync();
+            var content = string.Empty;
+
+            Debug.WriteLine("----------- get news list cache,filename: " + fileName);
+
+            var file = await cacheFolder.GetFileAsync(fileName);
+
+            
+
+            //if (file != null)
+            //{
+            //    using (var stream = await file.OpenReadAsync())
+            //    using (var sr = new StreamReader(stream.AsStream()))
+            //    {
+            //        content = await sr.ReadToEndAsync();
+            //    }
+            //}
+            return content;
+        }
+
+        public async Task<bool> SaveNewsCacheListInfoStringAsync(string fileName, string content)
+        {
+            var cacheFolder = await GetNewsCacheFolderAsync();
+            using(var file = await cacheFolder.OpenStreamForWriteAsync(fileName, CreationCollisionOption.ReplaceExisting))
+            using (var sr = new StreamWriter(file))
+            {
+                await sr.WriteAsync(content);
+            }
+
+            return true;
         }
 
         public string GetNewsCachePath(string id)
@@ -47,7 +88,6 @@ namespace LolWikiApp.Repository
         public async Task<string> SaveNewsContentToCacheFolder(string id, string htmlContent)
         {
             var newsCacheFolder = await GetNewsCacheFolderAsync(id);
-
 
             //var op = await newsCacheFolder.CreateFileAsync(id + ".html", CreationCollisionOption.ReplaceExisting);
             //using (Stream stream = await op.OpenStreamForWriteAsync())
@@ -104,20 +144,33 @@ namespace LolWikiApp.Repository
             return htmlPath;
         }
 
-        private async void downloadImgList(List<string> imgSrcList, StorageFolder folder)
+        private async void downloadImgList(IReadOnlyList<string> imgSrcList, IStorageFolder folder)
         {
-            //TODO
-            var src = imgSrcList[0];
-            var client = new HttpClient();
-            using (var stream = await client.GetStreamAsync(src))
+            if(imgSrcList==null || imgSrcList.Count == 0)
+                return;
+
+            foreach (var src in imgSrcList)
             {
-                var file = await folder.CreateFileAsync(src.GetImgFileNameFromSrc(),CreationCollisionOption.ReplaceExisting);
-                byte[] data = new byte[stream.Length];
-                stream.Read(data, 0, data.Length);
-                using (var fs = await file.OpenStreamForWriteAsync())
+                Debug.WriteLine("Downloading:{0}", src);
+                var client = new HttpClient();
+                HttpWebRequest request = WebRequest.CreateHttp(src);
+                request.BeginGetResponse(async (result) =>
                 {
-                    await fs.WriteAsync(data, 0, data.Length);
-                }
+                    var response = request.EndGetResponse(result);
+
+                    using (var stream = response.GetResponseStream())
+                    {
+                        var file = await folder.CreateFileAsync(src.GetImgFileNameFromSrc(), CreationCollisionOption.ReplaceExisting);
+                        var data = new byte[(int)response.ContentLength];
+
+                        stream.Read(data, 0, data.Length);
+
+                        using (var fs = await file.OpenStreamForWriteAsync())
+                        {
+                            await fs.WriteAsync(data, 0, data.Length);
+                        }
+                    }
+                }, null);
             }
             //Windows Phone Power Tools
         }
