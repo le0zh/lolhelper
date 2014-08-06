@@ -26,18 +26,22 @@ namespace LolWikiApp
 
             App.NewsViewModel.NewsRepository.NewsListCacheCompletedEventHandler += (s, e) =>
             {
-                InfoTextBlock2.Text = "资讯列表缓存完成: " + e.Value.ToString();
+                CachingProgressBar.Maximum = e.Value;
+                ListReadingTipStackPanel.Visibility = Visibility.Collapsed;
+                ContentReadingTipStackPanel.Visibility = Visibility.Visible;
             };
 
 
             App.NewsViewModel.NewsRepository.NewsContentCacheProgressChangedEventHandler += (s, e) =>
             {
-                InfoTextBlock.Text = "缓存资讯内容中: " + e.Value.ToString();
+                CachingProgressBar.Value = e.Value;
+                  InfoTextBlock2.Text = "资讯内容缓存中 " + string.Format("{0:F2}%", e.Value / CachingProgressBar.Maximum * 100);
             };
 
             App.NewsViewModel.NewsRepository.NewsContentCacheCompletedEventHandler += (s, e) =>
             {
-                InfoTextBlock2.Text = "资讯内容缓存完成: " + e.Value.ToString();
+                InfoTextBlock2.Text = "资讯内容缓存完成";
+                //StartButton.IsEnabled = true;
             };
 
             await App.NewsViewModel.NewsRepository.CacheNews();
@@ -46,6 +50,8 @@ namespace LolWikiApp
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             cacheNewsList();
+            ListReadingTipStackPanel.Visibility = Visibility.Visible;
+            StartButton.Visibility = Visibility.Collapsed;
         }
     }
 }

@@ -209,23 +209,21 @@ p{
                 {
                     Debug.WriteLine("going to cache:" + newsListInfo.Id + ".html");
                     //TODO: EXCEPTION HANDER HERE
-                    NewsDetail detail;
                     try
                     {
-                        detail = await GetNewsDetailAsync(newsListInfo.Id);
+                        NewsDetail detail = await GetNewsDetailAsync(newsListInfo.Id);
+                        var content = RenderNewsHtmlContent(detail);
+
+                        var path = await _localFileRepository.SaveNewsContentToCacheFolder(newsListInfo.Id, content);
+                        _nesCachedCount++;
+                        Debug.WriteLine("##Cached: " + path);
+                        NewsContentCacheProgreessChanged();
+                        App.NewsViewModel.NewsCacheListInfo.LatestNewsCacheList.Add(newsListInfo);
                     }
                     catch (HttpRequestException)
                     {
                         Debug.WriteLine("4O4:" + newsListInfo.Id + ".html");
                     }
-                   
-                    var content
-
-                    var path = await _localFileRepository.SaveNewsContentToCacheFolder(newsListInfo.Id, content);
-                    _nesCachedCount++;
-                    Debug.WriteLine("##Cached: " + path);
-                    NewsContentCacheProgreessChanged();
-                    App.NewsViewModel.NewsCacheListInfo.LatestNewsCacheList.Add(newsListInfo);
                 }
             }
 
@@ -334,11 +332,6 @@ p{
 
             var newsTypeList = new List<NewsTypeWrapper>() { t1, t2, t3, t4, t5, t6 };
             return newsTypeList;
-        }
-
-        public void DownloadNews(NewsType type, int page = 1)
-        {
-
         }
     }
 }
