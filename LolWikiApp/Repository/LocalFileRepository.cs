@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Media.Imaging;
+using Windows.Foundation.Metadata;
+using Windows.Storage.Search;
 using HtmlAgilityPack;
 using System.Threading.Tasks;
 
 using Windows.Storage;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Tasks;
 
 namespace LolWikiApp.Repository
 {
@@ -16,13 +24,71 @@ namespace LolWikiApp.Repository
         private const string VideoCacheFolerName = "VideoCache";
         private const string NewsCacheFolerName = "NewsCache";
 
-
-        private async Task<StorageFolder> GetNewsCacheFolderAsync(string id)
+        private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var newsCacheRootFolder = await localFolder.CreateFolderAsync(NewsCacheFolerName, CreationCollisionOption.OpenIfExists);
-            var newsCacheFolder = await newsCacheRootFolder.CreateFolderAsync(id, CreationCollisionOption.OpenIfExists);
+            if (string.IsNullOrEmpty(id))
+            {
+                return newsCacheRootFolder;
+            }
+
+            var newsCacheFolder =
+                    await newsCacheRootFolder.CreateFolderAsync(id, CreationCollisionOption.OpenIfExists);
             return newsCacheFolder;
+        }
+
+        public async Task<bool> CheckNewsIsCachedOrNot(string id)
+        {
+            var cacheFolder = await GetNewsCacheFolderAsync();
+            var result = true;
+            try
+            {
+                await cacheFolder.GetFileAsync(id + ".html");
+            }
+            catch (FileNotFoundException)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+
+        public async Task<string> GetNewsCacheListInfoStringAsync(string fileName)
+        {
+            var cacheFolder = await GetNewsCacheFolderAsync();
+            var content = string.Empty;
+
+            Debug.WriteLine("----------- get news list cache,filename: " + fileName);
+            
+            try
+            {
+                var file = await cacheFolder.GetFileAsync(fileName);
+                using (var stream = await file.OpenReadAsync())
+                using (var sr = new StreamReader(stream.AsStream()))
+                {
+                    content = await sr.ReadToEndAsync();
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Debug.WriteLine(fileName + " not found!!!  " +  ex.Message);
+            }
+
+            return content;
+        }
+
+        public async Task<bool> SaveNewsCacheListInfoStringAsync(string fileName, string content)
+        {
+            var cacheFolder = await GetNewsCacheFolderAsync();
+            using (var file = await cacheFolder.OpenStreamForWriteAsync(fileName, CreationCollisionOption.ReplaceExisting))
+            using (var sr = new StreamWriter(file))
+            {
+                await sr.WriteAsync(content);
+            }
+
+            return true;
         }
 
         public string GetNewsCachePath(string id)
@@ -40,16 +106,8 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public async Task<string> SaveNewsContentToCacheFolder(string id, string htmlContent)
         {
-            var newsCacheFolder = await GetNewsCacheFolderAsync(id);
-
-
-            //var op = await newsCacheFolder.CreateFileAsync(id + ".html", CreationCollisionOption.ReplaceExisting);
-            //using (Stream stream = await op.OpenStreamForWriteAsync())
-            //using (StreamWriter sw = new StreamWriter(stream))
-            //{
-            //    sw.Write(htmlContent);
-            //}
-
+            StorageFolder newsCacheFolder= await GetNewsCacheFolderAsync(id);
+         
             const string imgNotFoundSrc = "Not found";
 
             var doc = new HtmlDocument();
@@ -90,17 +148,45 @@ namespace LolWikiApp.Repository
                 }
             }
 
-            var htmlPath = Path.Combine(newsCacheFolder.Path, id, id + ".html");
+            var htmlPath = Path.Combine(newsCacheFolder.Path, id + ".html");
+            //doc.ToString();
+            Debug.WriteLine("####################################");
             doc.Save(htmlPath);
-
-            downloadImgList(imgSrcList);
+            
+            downloadImgList(imgSrcList, newsCacheFolder);
 
             return htmlPath;
         }
 
-        private void downloadImgList(List<string> imgSrcList)
+        private async void downloadImgList(IReadOnlyList<string> imgSrcList, IStorageFolder folder)
         {
-            //TODO
+            if (imgSrcList == null || imgSrcList.Count == 0)
+                return;
+
+            foreach (var src in imgSrcList)
+            {
+                Debug.WriteLine("Downloading:{0}", src);
+                var client = new HttpClient();
+                HttpWebRequest request = WebRequest.CreateHttp(src);
+                request.BeginGetResponse(async (result) =>
+                {
+                    var response = request.EndGetResponse(result);
+
+                    using (var stream = response.GetResponseStream())
+                    {
+                        var file = await folder.CreateFileAsync(src.GetImgFileNameFromSrc(), CreationCollisionOption.ReplaceExisting);
+                        var data = new byte[(int)response.ContentLength];
+
+                        stream.Read(data, 0, data.Length);
+
+                        using (var fs = await file.OpenStreamForWriteAsync())
+                        {
+                            await fs.WriteAsync(data, 0, data.Length);
+                        }
+                    }
+                }, null);
+            }
+            //Windows Phone Power Tools
         }
     }
 }

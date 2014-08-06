@@ -34,6 +34,8 @@ namespace LolWikiApp.ViewModels
 
         public EquipmentRecommend EquipmentRecommendSelected { get; set; }
 
+        
+
         public MainViewModel()
         {
             this.HeroBasicInfoCollection = new ObservableCollection<Hero>();

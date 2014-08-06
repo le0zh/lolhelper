@@ -6,30 +6,71 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.Opacity="0"
+    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.ForegroundColor="Black"
+    Style="{StaticResource TransitionPageStyle}"
+    toolkit:TiltEffect.IsTiltEnabled="True"
+    mc:Ignorable="d">
+    
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Name="ToggleHeaderTemplate">
+            <ContentControl FontSize="{StaticResource PhoneFontSizeLarge}" Foreground="{StaticResource PhoneForegroundBrush}" Content="{Binding}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Name="ToggleContentTemplate">
+            <TextBlock HorizontalAlignment="Right" FontSize="{StaticResource PhoneFontSizeSmall}" Text="{Binding}"/>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="White" Margin="12 0 12 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        <StackPanel Grid.Row="0" Margin="12,12,0,0">
+            <Border MinWidth="400" BorderThickness="15 0 0 0" Margin="0 0 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
+                <TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center"
+                               FontSize="{StaticResource PhoneFontSizeLarge}" >
+                </TextBlock>
+            </Border>
+            <TextBlock Text="离线阅读" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+            <TextBlock Text="为保证离线成功，在离线完成前，请先不要关闭该页面，给您带来不便，请谅解。" TextWrapping="Wrap" 
+                       Foreground="{StaticResource PhoneSubtleBrush}"
+                       Margin="0 12 0 12"
+                       FontSize="{StaticResource PhoneFontSizeNormal}"></TextBlock>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <ScrollViewer Grid.Row="1" Margin="0,0,12,0">
+           <StackPanel>
+                <!--<toolkit:ToggleSwitch Header="最新资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
+                <toolkit:ToggleSwitch Header="热评资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
+                <toolkit:ToggleSwitch Header="官方资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
+                <toolkit:ToggleSwitch Header="外服资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
+                <toolkit:ToggleSwitch Header="赛事资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
+                <toolkit:ToggleSwitch Header="攻略资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>-->
+               
+                <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="information"></TextBlock>
+                <TextBlock Margin="12" x:Name="InfoTextBlock2" TextWrapping="Wrap" Text="information"></TextBlock>
 
-        </Grid>
+                <Button Content="开始离线" Click="ButtonBase_OnClick"></Button>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2">
+           
+        </StackPanel>
+        
     </Grid>
 
 </phone:PhoneApplicationPage>

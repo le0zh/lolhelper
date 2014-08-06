@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Windows.Navigation;
 using LolWikiApp.Repository;
 using Microsoft.Phone.Controls;
@@ -83,6 +84,16 @@ namespace LolWikiApp
                 // and consume battery power when the user is not using the phone.
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
+
+            overwriteSystemColor();
+        }
+
+        private void overwriteSystemColor()
+        {
+            ((SolidColorBrush)Application.Current.Resources["PhoneBackgroundBrush"]).Color = Colors.White;
+            ((SolidColorBrush)Application.Current.Resources["PhoneForegroundBrush"]).Color = Colors.Black;
+            //PhoneSubtleBrush
+            ((SolidColorBrush)Application.Current.Resources["PhoneSubtleBrush"]).Color = Colors.DarkGray;
         }
 
         // Code to execute when the application is launching (eg, from Start)
