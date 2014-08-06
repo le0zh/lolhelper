@@ -14,28 +14,28 @@ namespace LolWikiApp.ViewModels
 {
     public class NewsViewModel
     {
-        private readonly NewsRepository newsRepository;
+        public readonly NewsRepository NewsRepository;
 
         public NewsCacheListInfo NewsCacheListInfo { get; private set; }
 
-        private NewsType oldNewsType;
+        private NewsType _oldNewsType;
         public ObservableCollection<NewsListInfo> NewsListInfObservableCollection { get; private set; }
 
-        private List<NewsTypeWrapper> newsTypeList;
+        private List<NewsTypeWrapper> _newsTypeList;
         public List<NewsTypeWrapper> NewsTypeList
         {
             get
             {
-                if (newsTypeList != null && newsTypeList.Count != 0)
-                    return newsTypeList;
+                if (_newsTypeList != null && _newsTypeList.Count != 0)
+                    return _newsTypeList;
 
-                return newsTypeList = newsRepository.GetNewsTypeList();
+                return _newsTypeList = NewsRepository.GetNewsTypeList();
             }
         }
 
         public async void LoadCachedNewsList()
         {
-           var count =  await newsRepository.LoadNewsCachedListInfo(NewsCacheListInfo);
+           var count =  await NewsRepository.LoadNewsCachedListInfo(NewsCacheListInfo);
             Debug.WriteLine("-------LOADED CACHED NEWS LIST COUNT " + count);
         }
 
@@ -46,9 +46,9 @@ namespace LolWikiApp.ViewModels
         public NewsViewModel()
         {
             NewsListInfObservableCollection = new ObservableCollection<NewsListInfo>();
-            oldNewsType = NewsType.Latest;
+            _oldNewsType = NewsType.Latest;
 
-            newsRepository = new NewsRepository();
+            NewsRepository = new NewsRepository();
             NewsCacheListInfo = new NewsCacheListInfo();
         }
 
@@ -76,17 +76,17 @@ namespace LolWikiApp.ViewModels
 
         public async Task<List<NewsListInfo>> LoadNewsListInfoListAsync(NewsType type, int page = 1)
         {
-            List<NewsListInfo> newsList = await this.newsRepository.GetPagedNewsList(type, page);
+            List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
             return newsList;
         }
 
         public async Task LoadNewsListInfosByTypeAndPageAsync(NewsType type = NewsType.Latest, int page = 1, bool refresh = false)
         {
-            List<NewsListInfo> newsList = await this.newsRepository.GetPagedNewsList(type, page);
+            List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
 
-            if (refresh || (type != oldNewsType))
+            if (refresh || (type != _oldNewsType))
             {
-                oldNewsType = type;
+                _oldNewsType = type;
                 NewsListInfObservableCollection.Clear();
             }
 
@@ -98,7 +98,7 @@ namespace LolWikiApp.ViewModels
 
         public async Task<NewsDetail> GetNewsDetailAsync(string artId)
         {
-            NewsDetail newsDetail = await newsRepository.GetNewsDetailAsync(artId);
+            NewsDetail newsDetail = await NewsRepository.GetNewsDetailAsync(artId);
             return newsDetail;
         }
 

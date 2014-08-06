@@ -60,8 +60,10 @@
                 <toolkit:ToggleSwitch Header="赛事资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
                 <toolkit:ToggleSwitch Header="攻略资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>-->
                
-               
-                <Button Content="开始离线"></Button>
+                <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="information"></TextBlock>
+                <TextBlock Margin="12" x:Name="InfoTextBlock2" TextWrapping="Wrap" Text="information"></TextBlock>
+
+                <Button Content="开始离线" Click="ButtonBase_OnClick"></Button>
             </StackPanel>
         </ScrollViewer>
 

@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Media.Imaging;
 using Windows.Foundation.Metadata;
+using Windows.Storage.Search;
 using HtmlAgilityPack;
 using System.Threading.Tasks;
 
@@ -37,6 +38,22 @@ namespace LolWikiApp.Repository
             return newsCacheFolder;
         }
 
+        public async Task<bool> CheckNewsIsCachedOrNot(string id)
+        {
+            var cacheFolder = await GetNewsCacheFolderAsync();
+            var result = true;
+            try
+            {
+                await cacheFolder.GetFileAsync(id + ".html");
+            }
+            catch (FileNotFoundException)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
 
         public async Task<string> GetNewsCacheListInfoStringAsync(string fileName)
         {
@@ -44,26 +61,28 @@ namespace LolWikiApp.Repository
             var content = string.Empty;
 
             Debug.WriteLine("----------- get news list cache,filename: " + fileName);
-
-            var file = await cacheFolder.GetFileAsync(fileName);
-
             
+            try
+            {
+                var file = await cacheFolder.GetFileAsync(fileName);
+                using (var stream = await file.OpenReadAsync())
+                using (var sr = new StreamReader(stream.AsStream()))
+                {
+                    content = await sr.ReadToEndAsync();
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Debug.WriteLine(fileName + " not found!!!  " +  ex.Message);
+            }
 
-            //if (file != null)
-            //{
-            //    using (var stream = await file.OpenReadAsync())
-            //    using (var sr = new StreamReader(stream.AsStream()))
-            //    {
-            //        content = await sr.ReadToEndAsync();
-            //    }
-            //}
             return content;
         }
 
         public async Task<bool> SaveNewsCacheListInfoStringAsync(string fileName, string content)
         {
             var cacheFolder = await GetNewsCacheFolderAsync();
-            using(var file = await cacheFolder.OpenStreamForWriteAsync(fileName, CreationCollisionOption.ReplaceExisting))
+            using (var file = await cacheFolder.OpenStreamForWriteAsync(fileName, CreationCollisionOption.ReplaceExisting))
             using (var sr = new StreamWriter(file))
             {
                 await sr.WriteAsync(content);
@@ -87,15 +106,8 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public async Task<string> SaveNewsContentToCacheFolder(string id, string htmlContent)
         {
-            var newsCacheFolder = await GetNewsCacheFolderAsync(id);
-
-            //var op = await newsCacheFolder.CreateFileAsync(id + ".html", CreationCollisionOption.ReplaceExisting);
-            //using (Stream stream = await op.OpenStreamForWriteAsync())
-            //using (StreamWriter sw = new StreamWriter(stream))
-            //{
-            //    sw.Write(htmlContent);
-            //}
-
+            StorageFolder newsCacheFolder= await GetNewsCacheFolderAsync(id);
+         
             const string imgNotFoundSrc = "Not found";
 
             var doc = new HtmlDocument();
@@ -137,8 +149,10 @@ namespace LolWikiApp.Repository
             }
 
             var htmlPath = Path.Combine(newsCacheFolder.Path, id + ".html");
+            //doc.ToString();
+            Debug.WriteLine("####################################");
             doc.Save(htmlPath);
-
+            
             downloadImgList(imgSrcList, newsCacheFolder);
 
             return htmlPath;
@@ -146,7 +160,7 @@ namespace LolWikiApp.Repository
 
         private async void downloadImgList(IReadOnlyList<string> imgSrcList, IStorageFolder folder)
         {
-            if(imgSrcList==null || imgSrcList.Count == 0)
+            if (imgSrcList == null || imgSrcList.Count == 0)
                 return;
 
             foreach (var src in imgSrcList)
