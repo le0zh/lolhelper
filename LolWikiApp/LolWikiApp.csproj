@@ -525,7 +525,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Coding4Fun.Toolkit.Controls">
-      <HintPath>..\Bin\Coding4Fun.Toolkit.Controls.dll</HintPath>
+      <HintPath>..\bin\Coding4Fun.Toolkit.Controls.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\sl4-windowsphone71\HtmlAgilityPack.dll</HintPath>

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Tasks;
+using Newtonsoft.Json;
 
 namespace LolWikiApp.Repository
 {
@@ -54,7 +55,6 @@ namespace LolWikiApp.Repository
             return result;
         }
 
-
         public async Task<string> GetNewsCacheListInfoStringAsync(string fileName)
         {
             var cacheFolder = await GetNewsCacheFolderAsync();
@@ -79,9 +79,29 @@ namespace LolWikiApp.Repository
             return content;
         }
 
-        public async Task<bool> SaveNewsCacheListInfoStringAsync(string fileName, string content)
+        public async Task<bool> SaveNewsListCacheAsync(string fileName, List<NewsListInfo> list)
         {
             var cacheFolder = await GetNewsCacheFolderAsync();
+
+            var imgList = (from newsListInfo in list where newsListInfo.IsCached == false select newsListInfo.Thumb_img).ToList();
+            if (imgList.Count == 0)
+                return true;
+
+            downloadImgList(imgList,cacheFolder);
+
+            foreach (var newsListInfo in list)
+            {
+                if (newsListInfo.IsCached == false)
+                {
+                    newsListInfo.Img = newsListInfo.Img.GetImgFileNameFromSrc();
+                    newsListInfo.Thumb_img = "/NewsCache/" + newsListInfo.Thumb_img.GetImgFileNameFromSrc();
+                }
+
+                newsListInfo.IsCached = true;
+            }
+
+            var content = JsonConvert.SerializeObject(list);
+
             using (var file = await cacheFolder.OpenStreamForWriteAsync(fileName, CreationCollisionOption.ReplaceExisting))
             using (var sr = new StreamWriter(file))
             {
@@ -91,14 +111,19 @@ namespace LolWikiApp.Repository
             return true;
         }
 
+        /// <summary>
+        /// 根据新闻ID，获取缓存中对应文件的地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public string GetNewsCachePath(string id)
         {
-            //var newsCacheFolder = await this.GetNewsCacheFolderAsync(id);
-            //var path = Path.Combine(newsCacheFolder.Path, id + ".html");
             var path = string.Format("NewsCache/{0}/{1}.html", id, id);
             Debug.WriteLine("GetNewsCachePath: " + path);
             return path;
         }
+
+        private const string imgNotFoundSrc = "Not found";
 
         /// <summary>
         /// 将新闻内容缓存到本地的html文件中
@@ -109,8 +134,6 @@ namespace LolWikiApp.Repository
         public async Task<string> SaveNewsContentToCacheFolder(string id, string htmlContent)
         {
             StorageFolder newsCacheFolder = await GetNewsCacheFolderAsync(id);
-
-            const string imgNotFoundSrc = "Not found";
 
             var doc = new HtmlDocument();
             doc.LoadHtml(htmlContent);
@@ -152,7 +175,7 @@ namespace LolWikiApp.Repository
 
             var htmlPath = Path.Combine(newsCacheFolder.Path, id + ".html");
             //doc.ToString();
-            Debug.WriteLine("####################################");
+            Debug.WriteLine("#Caching###################################");
             downloadImgList(imgSrcList, newsCacheFolder);
             doc.Save(htmlPath);
 
@@ -167,15 +190,19 @@ namespace LolWikiApp.Repository
             foreach (var src in imgSrcList)
             {
                 Debug.WriteLine("Downloading:{0}", src);
-                var client = new HttpClient();
+
+                if (string.IsNullOrEmpty(src))
+                    continue;
+
                 HttpWebRequest request = WebRequest.CreateHttp(src);
+                string src1 = src;
                 request.BeginGetResponse(async (result) =>
                 {
                     var response = request.EndGetResponse(result);
 
                     using (var stream = response.GetResponseStream())
                     {
-                        var file = await folder.CreateFileAsync(src.GetImgFileNameFromSrc(), CreationCollisionOption.ReplaceExisting);
+                        var file = await folder.CreateFileAsync(src1.GetImgFileNameFromSrc(), CreationCollisionOption.ReplaceExisting);
                         var data = new byte[(int)response.ContentLength];
 
                         stream.Read(data, 0, data.Length);
@@ -194,6 +221,8 @@ namespace LolWikiApp.Repository
         {
             var cacheFolder = await GetNewsCacheFolderAsync();
             await cacheFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+
+            App.NewsViewModel.NewsCacheListInfo.Clear();
         }
     }
 }

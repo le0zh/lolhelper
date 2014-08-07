@@ -44,6 +44,8 @@ namespace LolWikiApp
         public string Topic_id { get; set; }
 
         public string Thumb_ok { get; set; }
+
+        public bool IsCached { get; set; }
     }
     public class NewsTypeWrapper
     {

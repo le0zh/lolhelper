@@ -236,7 +236,13 @@ namespace LolWikiApp
             }
             catch (System.Net.Http.HttpRequestException exception404)
             {
-                this.NewsRetryNetPanel.Visibility = Visibility.Visible;
+                //this.NewsRetryNetPanel.Visibility = Visibility.Visible;
+
+                var toast = ToastPromt.GetToastWithImgAndTitle("加载失败，读取离线文章。");
+                toast.Show();
+
+                App.NewsViewModel.LoadeNewsListInfoFromCache(currentNewsType);
+                this.NewsLongListSelector.Visibility = Visibility.Visible;
 
                 return;
             }
@@ -248,7 +254,6 @@ namespace LolWikiApp
 
             this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
             this.NewsLongListSelector.Visibility = Visibility.Visible;
-
 
             //this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
             //this.NewsLoadingBar.Visibility = Visibility.Visible;

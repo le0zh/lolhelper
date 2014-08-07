@@ -99,6 +99,20 @@ namespace LolWikiApp.ViewModels
             }
         }
 
+        public async void LoadeNewsListInfoFromCache(NewsType type = NewsType.Latest)
+        {
+            if (!App.NewsViewModel.NewsCacheListInfo.IsDataLoaded)
+            {
+                await NewsRepository.LoadNewsCachedListInfo(App.NewsViewModel.NewsCacheListInfo);
+            }
+
+            NewsListInfObservableCollection.Clear();
+            foreach (var n in (App.NewsViewModel.NewsCacheListInfo.GetListByNewsType(type)))
+            {
+                NewsListInfObservableCollection.Add(n);
+            }
+        }
+
         public async Task<NewsDetail> GetNewsDetailAsync(string artId)
         {
             var newsDetail = await NewsRepository.GetNewsDetailAsync(artId);

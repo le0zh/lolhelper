@@ -33,7 +33,7 @@ namespace LolWikiApp
                 this.marksmanHeroWrapPanel, this.supportHeroWrapPanel };
         }
 
-        private async void LoadHeroList(int index)
+        private void LoadHeroList(int index)
         {
             if (index < 0 || index > 6)
                 return;
@@ -45,7 +45,7 @@ namespace LolWikiApp
 
             if (!App.ViewModel.IsDataLoaded)
             {
-                await App.ViewModel.LoadHeroBaiscInfoDataAsync();
+                App.ViewModel.LoadHeroBaiscInfoDataAsync();
             }
 
             Task t = new Task(() => this.Dispatcher.BeginInvoke(() =>

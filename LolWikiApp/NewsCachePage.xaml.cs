@@ -36,7 +36,7 @@ namespace LolWikiApp
 
             App.NewsViewModel.NewsRepository.NewsContentCacheProgressChangedEventHandler += (s, e) =>
             {
-                CachingProgressBar.Value = e.Value;
+                  CachingProgressBar.Value = e.Value;
                   InfoTextBlock2.Text = "资讯内容缓存中 " + string.Format("{0:F2}%", e.Value / CachingProgressBar.Maximum * 100);
             };
 
@@ -49,11 +49,16 @@ namespace LolWikiApp
             };
 
             await App.NewsViewModel.NewsRepository.CacheNews();
+
+            //内容缓存完成后，缓存列表信息
+
+            await App.NewsViewModel.NewsRepository.SaveNewsCacheList(App.NewsViewModel.NewsCacheListInfo);
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             CacheNewsList();
+
             ListReadingTipStackPanel.Visibility = Visibility.Visible;
             StartButton.Visibility = Visibility.Collapsed;
         }

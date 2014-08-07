@@ -180,18 +180,26 @@ p{
         public async Task<int> SaveNewsCacheList(NewsCacheListInfo cacheListInfo)
         {
             var count = 0;
-            foreach (var fileName in cacheListInfo.FileNameAndListDcit.Keys)
-            {
-                var content = JsonConvert.SerializeObject(cacheListInfo.FileNameAndListDcit[fileName]);
-                await _localFileRepository.SaveNewsCacheListInfoStringAsync(fileName, content);
-                count++;
-            }
+            //TODO:暂时只是缓存了最新资讯
+            await _localFileRepository.SaveNewsListCacheAsync("Latest.json", cacheListInfo.FileNameAndListDcit["Latest.json"]);
+            count++;
+
+            _newsCachedCount++;
+            NewsContentCacheProgreessChanged();
+            //foreach (var fileName in cacheListInfo.FileNameAndListDcit.Keys)
+            //{
+            //    await _localFileRepository.SaveNewsListCacheAsync(fileName, cacheListInfo.FileNameAndListDcit[fileName]);
+            //    count++;
+
+            //    _newsCachedCount++;
+            //    NewsContentCacheProgreessChanged();
+            //}
             cacheListInfo.IsDataLoaded = true;
             return count;
         }
 
         private int _newsToCacheCount;
-        private int _nesCachedCount;
+        private int _newsCachedCount;
 
         /// <summary>
         /// 缓存新闻内容
@@ -199,7 +207,7 @@ p{
         public async Task CacheNews()
         {
             var latestNewsList = await GetPagedNewsList(NewsType.Latest);
-            _newsToCacheCount += latestNewsList.Count;
+            _newsToCacheCount += latestNewsList.Count+1;//+1是因为要缓存该类型的list信息
             NewsListCacheProgreessChanged();
 
             NewsListCacheCompleted();
@@ -213,7 +221,7 @@ p{
                 }
                 else
                 {
-                    Debug.WriteLine("going to cache:" + newsListInfo.Id + ".html");
+                    Debug.WriteLine("going to cache:" + newsListInfo.Id + ".html//" + newsListInfo.Title);
                     //TODO: EXCEPTION HANDER HERE
                     try
                     {
@@ -221,7 +229,7 @@ p{
                         var content = RenderNewsHtmlContent(detail);
 
                         var path = await _localFileRepository.SaveNewsContentToCacheFolder(newsListInfo.Id, content);
-                        _nesCachedCount++;
+                        _newsCachedCount++;
                         Debug.WriteLine("##Cached: " + path);
                         NewsContentCacheProgreessChanged();
                         App.NewsViewModel.NewsCacheListInfo.LatestNewsCacheList.Add(newsListInfo);
@@ -259,7 +267,7 @@ p{
         {
             if (NewsContentCacheProgressChangedEventHandler != null)
             {
-                var progressChangedArgs = new ProgressChangedArgs() { Value = _nesCachedCount };
+                var progressChangedArgs = new ProgressChangedArgs() { Value = _newsCachedCount };
                 NewsContentCacheProgressChangedEventHandler(this, progressChangedArgs);
             }
         }
@@ -268,7 +276,7 @@ p{
         {
             if (NewsContentCacheCompletedEventHandler != null)
             {
-                var progressChangedArgs = new ProgressChangedArgs() { Value = _nesCachedCount };
+                var progressChangedArgs = new ProgressChangedArgs() { Value = _newsCachedCount };
                 NewsContentCacheCompletedEventHandler(this, progressChangedArgs);
             }
         }
