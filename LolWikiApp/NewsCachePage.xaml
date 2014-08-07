@@ -121,6 +121,7 @@
                 </StackPanel>
 
                 <Button x:Name="StartButton" Content="开始离线" Click="ButtonBase_OnClick"></Button>
+                <Button x:Name="DeleteButton" Content="删除缓存-Test" Click="DeleteButton_OnClick"></Button>
             </StackPanel>
         </ScrollViewer>
 

@@ -33,6 +33,9 @@ namespace LolWikiApp
             InitializeComponent();
 
             _popUp = new Popup();
+
+            ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
+            ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
         }
 
         private async void LoadNewsDetailAsync(string artId)
@@ -42,7 +45,25 @@ namespace LolWikiApp
             NewsLoadingBar.Visibility = Visibility.Visible;
             try
             {
-                _newsDetail = await App.NewsViewModel.GetNewsDetailAsync(artId);
+
+                var isCached = await App.NewsViewModel.FileRepository.CheckNewsIsCachedOrNot(artId);
+                if (isCached)
+                {
+                    var cachedPath = App.NewsViewModel.FileRepository.GetNewsCachePath(artId);
+                    Debug.WriteLine("##News detail, load form CACHE:" + cachedPath);
+                    ContentWebBrowser.Navigate(new Uri(cachedPath, UriKind.Relative));
+                }
+                else
+                {
+                    Debug.WriteLine("##not cached");
+                    if (DataContext == null)
+                    {
+                        _newsDetail = await App.NewsViewModel.GetNewsDetailAsync(artId);
+                        var content = App.NewsViewModel.NewsRepository.RenderNewsHtmlContent(_newsDetail);
+                        DataContext = _newsDetail;
+                        ContentWebBrowser.NavigateToString(content);
+                    }
+                }
             }
             catch (System.Net.Http.HttpRequestException exception404)
             {
@@ -55,22 +76,17 @@ namespace LolWikiApp
                 NewsLoadingBar.Visibility = Visibility.Collapsed;
             }
 
-            DataContext = _newsDetail;
-            RetryNetPanel.Visibility = Visibility.Collapsed;
 
-            RenderNewsContent();
+            RetryNetPanel.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (DataContext == null)
+            string artId;
+            if (NavigationContext.QueryString.TryGetValue("newsId", out artId))
             {
-                string artId;
-                if (NavigationContext.QueryString.TryGetValue("newsId", out artId))
-                {
-                    _articleId = artId;
-                    LoadNewsDetailAsync(artId);
-                }
+                _articleId = artId;
+                LoadNewsDetailAsync(artId);
             }
 
             base.OnNavigatedTo(e);
@@ -79,23 +95,6 @@ namespace LolWikiApp
         private void RetryButton_OnClick(object sender, RoutedEventArgs e)
         {
             LoadNewsDetailAsync(_articleId);
-        }
-
-        private async void RenderNewsContent()
-        {
-            if (_newsDetail == null)
-                return;
-
-            var content = App.NewsViewModel.NewsRepository.RenderNewsHtmlContent(_newsDetail);
-
-            //Debug.WriteLine(content);
-
-            //await App.ViewModel.LocalFileHelper.SaveNewsContentToCacheFolder(_newsDetail.Id, content);
-
-            ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
-
-            ContentWebBrowser.NavigateToString(content);
-            ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
         }
 
         void ContentWebBrowser_LoadCompleted(object sender, NavigationEventArgs e)

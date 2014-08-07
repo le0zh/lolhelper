@@ -312,13 +312,14 @@ namespace LolWikiApp
         private async void LoadMoreNewsList()
         {
             NewsListInfo lastNews = null;
-            var nextPage = 0;
 
             NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
 
             try
             {
-                nextPage = currentPage + 1;
+                var nextPage = currentPage + 1;
+                Debug.WriteLine("[news]nextpage: " + nextPage);
+
                 lastNews = App.NewsViewModel.NewsListInfObservableCollection.Last();
                 Debug.WriteLine("load more news : " + currentNewsType);
                 await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(currentNewsType, nextPage);
@@ -331,12 +332,16 @@ namespace LolWikiApp
             finally
             {
                 this.NewsLongListSelector.HideGettingMorePanel();
+            }
 
+            if (lastNews != null)
+            {
+                this.NewsLongListSelector.ScrollTo(lastNews);
             }
 
             //NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
 
-            //currentPage = App.NewsViewModel.CurrentPage;
+            currentPage = App.NewsViewModel.CurrentPage;
             //totalPage = App.NewsViewModel.TotalPage;
 
             //if (nextPage > totalPage)

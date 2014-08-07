@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -27,6 +28,11 @@ namespace LolWikiApp.Repository
         private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}   "; //{0}: artId, {1}: random
         private readonly LocalFileRepository _localFileRepository = new LocalFileRepository();
 
+        /// <summary>
+        /// 拼写新闻内容的html格式
+        /// </summary>
+        /// <param name="detail"></param>
+        /// <returns></returns>
         public string RenderNewsHtmlContent(NewsDetail detail)
         {
             #region HtmlTemplate
@@ -311,6 +317,12 @@ p{
             return requestedUrl;
         }
 
+        /// <summary>
+        /// 根据类型和页数，获取新闻列表信息
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public async Task<List<NewsListInfo>> GetPagedNewsList(NewsType type = NewsType.Latest, int page = 1)
         {
             string url = getNewsListRequestUrl(type, page);
@@ -321,6 +333,10 @@ p{
             return newsList;
         }
 
+        /// <summary>
+        /// 获取新闻类型列表
+        /// </summary>
+        /// <returns></returns>
         public List<NewsTypeWrapper> GetNewsTypeList()
         {
             var t1 = new NewsTypeWrapper() { Type = NewsType.Latest, DisplayName = "最新资讯" };

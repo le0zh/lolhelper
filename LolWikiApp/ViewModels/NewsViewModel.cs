@@ -15,6 +15,7 @@ namespace LolWikiApp.ViewModels
     public class NewsViewModel
     {
         public readonly NewsRepository NewsRepository;
+        public readonly LocalFileRepository FileRepository;
 
         public NewsCacheListInfo NewsCacheListInfo { get; private set; }
 
@@ -49,6 +50,7 @@ namespace LolWikiApp.ViewModels
             _oldNewsType = NewsType.Latest;
 
             NewsRepository = new NewsRepository();
+            FileRepository = new LocalFileRepository();
             NewsCacheListInfo = new NewsCacheListInfo();
         }
 
@@ -77,13 +79,14 @@ namespace LolWikiApp.ViewModels
         public async Task<List<NewsListInfo>> LoadNewsListInfoListAsync(NewsType type, int page = 1)
         {
             List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
+            CurrentPage = page;
             return newsList;
         }
 
         public async Task LoadNewsListInfosByTypeAndPageAsync(NewsType type = NewsType.Latest, int page = 1, bool refresh = false)
         {
-            List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
-
+            var newsList = await NewsRepository.GetPagedNewsList(type, page);
+            CurrentPage = page;
             if (refresh || (type != _oldNewsType))
             {
                 _oldNewsType = type;
@@ -98,7 +101,7 @@ namespace LolWikiApp.ViewModels
 
         public async Task<NewsDetail> GetNewsDetailAsync(string artId)
         {
-            NewsDetail newsDetail = await NewsRepository.GetNewsDetailAsync(artId);
+            var newsDetail = await NewsRepository.GetNewsDetailAsync(artId);
             return newsDetail;
         }
 

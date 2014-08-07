@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Controls\RefreshableListBox\RefreshableListBox.cs" />
     <Compile Include="Controls\RefreshableListBox\RefreshableListBoxX.cs" />
+    <Compile Include="Controls\ToastPromt.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\ImageSourceConverter.cs" />
     <Compile Include="Converter\LetvSourceConverter.cs" />
@@ -523,6 +524,9 @@
     <EmbeddedResource Include="Resources\AppResources.zh-Hans.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Coding4Fun.Toolkit.Controls">
+      <HintPath>..\Bin\Coding4Fun.Toolkit.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\sl4-windowsphone71\HtmlAgilityPack.dll</HintPath>
     </Reference>

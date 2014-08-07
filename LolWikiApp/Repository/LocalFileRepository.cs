@@ -40,7 +40,7 @@ namespace LolWikiApp.Repository
 
         public async Task<bool> CheckNewsIsCachedOrNot(string id)
         {
-            var cacheFolder = await GetNewsCacheFolderAsync();
+            var cacheFolder = await GetNewsCacheFolderAsync(id);
             var result = true;
             try
             {
@@ -61,7 +61,7 @@ namespace LolWikiApp.Repository
             var content = string.Empty;
 
             Debug.WriteLine("----------- get news list cache,filename: " + fileName);
-            
+
             try
             {
                 var file = await cacheFolder.GetFileAsync(fileName);
@@ -73,7 +73,7 @@ namespace LolWikiApp.Repository
             }
             catch (FileNotFoundException ex)
             {
-                Debug.WriteLine(fileName + " not found!!!  " +  ex.Message);
+                Debug.WriteLine(fileName + " not found!!!  " + ex.Message);
             }
 
             return content;
@@ -93,9 +93,11 @@ namespace LolWikiApp.Repository
 
         public string GetNewsCachePath(string id)
         {
-            //var newsCacheFolder = await this.GetNewsCacheFolderAsync();
-
-            return NewsCacheFolerName + "\\" + id + ".html";
+            //var newsCacheFolder = await this.GetNewsCacheFolderAsync(id);
+            //var path = Path.Combine(newsCacheFolder.Path, id + ".html");
+            var path = string.Format("NewsCache/{0}/{1}.html", id, id);
+            Debug.WriteLine("GetNewsCachePath: " + path);
+            return path;
         }
 
         /// <summary>
@@ -106,8 +108,8 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public async Task<string> SaveNewsContentToCacheFolder(string id, string htmlContent)
         {
-            StorageFolder newsCacheFolder= await GetNewsCacheFolderAsync(id);
-         
+            StorageFolder newsCacheFolder = await GetNewsCacheFolderAsync(id);
+
             const string imgNotFoundSrc = "Not found";
 
             var doc = new HtmlDocument();
@@ -151,14 +153,13 @@ namespace LolWikiApp.Repository
             var htmlPath = Path.Combine(newsCacheFolder.Path, id + ".html");
             //doc.ToString();
             Debug.WriteLine("####################################");
-            doc.Save(htmlPath);
-            
             downloadImgList(imgSrcList, newsCacheFolder);
+            doc.Save(htmlPath);
 
             return htmlPath;
         }
 
-        private async void downloadImgList(IReadOnlyList<string> imgSrcList, IStorageFolder folder)
+        private void downloadImgList(IReadOnlyList<string> imgSrcList, IStorageFolder folder)
         {
             if (imgSrcList == null || imgSrcList.Count == 0)
                 return;
@@ -187,6 +188,12 @@ namespace LolWikiApp.Repository
                 }, null);
             }
             //Windows Phone Power Tools
+        }
+
+        public async Task ClearNewsCache()
+        {
+            var cacheFolder = await GetNewsCacheFolderAsync();
+            await cacheFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
     }
 }

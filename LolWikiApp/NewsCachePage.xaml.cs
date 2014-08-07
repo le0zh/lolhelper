@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
@@ -17,7 +19,7 @@ namespace LolWikiApp
             InitializeComponent();
         }
 
-        private async void cacheNewsList()
+        private async void CacheNewsList()
         {
             App.NewsViewModel.NewsRepository.NewsListCacheProgreessChangedEventHandler += (s, e) =>
             {
@@ -42,6 +44,8 @@ namespace LolWikiApp
             {
                 InfoTextBlock2.Text = "资讯内容缓存完成";
                 //StartButton.IsEnabled = true;
+                var tost = ToastPromt.GetToastWithImgAndTitle("资讯内容缓存完成!");
+                tost.Show();
             };
 
             await App.NewsViewModel.NewsRepository.CacheNews();
@@ -49,9 +53,19 @@ namespace LolWikiApp
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            cacheNewsList();
+            CacheNewsList();
             ListReadingTipStackPanel.Visibility = Visibility.Visible;
             StartButton.Visibility = Visibility.Collapsed;
         }
+
+        private async void DeleteButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await App.NewsViewModel.FileRepository.ClearNewsCache();
+
+            var tost = ToastPromt.GetToastWithImgAndTitle("清除成功!");
+            tost.Show();
+        }
+
+
     }
 }
