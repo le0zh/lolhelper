@@ -25,6 +25,15 @@ namespace LolWikiApp.Repository
         private const string VideoCacheFolerName = "VideoCache";
         private const string NewsCacheFolerName = "NewsCache";
 
+
+        public async void SetBitmapSource(string imgName, BitmapSource bitmapSource)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            //var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
+
+            var file = await localFolder.GetFileAsync(imgName);
+        }
+
         private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
         {
             var localFolder = ApplicationData.Current.LocalFolder;
@@ -93,8 +102,8 @@ namespace LolWikiApp.Repository
             {
                 if (newsListInfo.IsCached == false)
                 {
-                    newsListInfo.Img = newsListInfo.Img.GetImgFileNameFromSrc();
-                    newsListInfo.Thumb_img = "/NewsCache/" + newsListInfo.Thumb_img.GetImgFileNameFromSrc();
+                    newsListInfo.Img = "iso::NewsCache/" + newsListInfo.Img.GetImgFileNameFromSrc();
+                    newsListInfo.Thumb_img = "iso::NewsCache/" + newsListInfo.Thumb_img.GetImgFileNameFromSrc();
                 }
 
                 newsListInfo.IsCached = true;

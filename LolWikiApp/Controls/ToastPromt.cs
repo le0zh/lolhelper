@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Coding4Fun.Toolkit.Controls;
 
 namespace LolWikiApp
-{public class ToastPromt
+{
+    public class ToastPromt
     {
         public static ToastPrompt GetToastWithImgAndTitle(string message)
         {
