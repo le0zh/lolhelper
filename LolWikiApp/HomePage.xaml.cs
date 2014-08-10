@@ -136,14 +136,14 @@ namespace LolWikiApp
 
             var mainStackPanel = new StackPanel
             {
-                Background = new SolidColorBrush(Colors.DarkGray),
+                Background = new SolidColorBrush(Colors.Black),
                 Orientation = System.Windows.Controls.Orientation.Vertical
             };
 
             var titleTextBlock = new TextBlock()
             {
                 Text = "请选择资讯类型 ",
-                Foreground = new SolidColorBrush(Colors.White),
+                Foreground =new SolidColorBrush(Colors.DarkGray),
                 FontSize = (double)Application.Current.Resources["PhoneFontSizeLarge"],
                 Margin = new Thickness(24, 12, 12, 0),
             };
@@ -648,6 +648,11 @@ namespace LolWikiApp
         private void NewsLongListSelector_OnLoaded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void VideoButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/VideoPage.xaml", UriKind.Relative));
         }
     }
 }

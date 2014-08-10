@@ -160,6 +160,9 @@
     <Compile Include="ShakeAShakePage.xaml.cs">
       <DependentUpon>ShakeAShakePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VideoPage.xaml.cs">
+      <DependentUpon>VideoPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NewsViewModel.cs" />
@@ -213,6 +216,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="VideoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApplicationIcon.png" />
@@ -231,6 +238,7 @@
     <Content Include="Assets\AppBar\save.png" />
     <Content Include="Assets\AppBar\sync.png" />
     <Content Include="Assets\AppBar\transport.play.png" />
+    <Content Include="Assets\back-groudn.PNG" />
     <Content Include="Assets\E.png" />
     <Content Include="Assets\profileIcon23.jpg" />
     <Content Include="Assets\Q.png" />
@@ -541,6 +549,9 @@
     </Reference>
     <Reference Include="ShakeGestures">
       <HintPath>..\Bin\ShakeGestures.dll</HintPath>
+    </Reference>
+    <Reference Include="SM.Media.Platform.WP8">
+      <HintPath>..\..\..\..\Desktop\phonesm-1.2.2\phonesm-1.2.2\bin\Release\WP8\x86\SM.Media.Platform.WP8.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>

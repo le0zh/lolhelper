@@ -13,7 +13,9 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="1"
+    shell:SystemTray.Opacity="0"
+    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.ForegroundColor="Black"
     Style="{StaticResource TransitionPageStyle}"
     toolkit:TiltEffect.IsTiltEnabled="True">
 
@@ -25,8 +27,8 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,12,0,0">
-            <Border BorderThickness="15 0 0 0" Margin="12 -12 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
+        <StackPanel Grid.Row="0" Margin="12,0,0,0">
+            <Border BorderThickness="15 0 0 0" Margin="12 0 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
                 <TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center"
                                FontSize="{StaticResource PhoneFontSizeLarge}" >
                 </TextBlock>

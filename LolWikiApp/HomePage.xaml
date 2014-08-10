@@ -41,6 +41,7 @@
             <phone:Pivot.TitleTemplate>
                 <DataTemplate>
                     <Border MinWidth="400" BorderThickness="15 0 0 0" Margin="0 -12 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
+              
                         <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center"
                                FontSize="{StaticResource PhoneFontSizeLarge}" >
                         </TextBlock>
@@ -308,38 +309,42 @@
             </phone:PivotItem>
 
             <phone:PivotItem Header="工具" >
-                <StackPanel Margin="12 0 12 12">
+                <ScrollViewer>
+                    <StackPanel Margin="12 0 12 12">
 
-                    <Button Margin="-16 12 0 0" x:Name="ShakeItButton" Click="ShakeItButton_OnClick" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
-                        <StackPanel Width="350" HorizontalAlignment="Left" Background="{StaticResource PhoneAccentBrush}">
-                            <TextBlock Margin="12 12 0 0" Text="摇一摇"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                            <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="游戏读条时， 摇动手机以获取对阵信息"
+                        <Button Margin="-16 12 0 0" x:Name="VideoButton" Click="VideoButton_OnClick" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
+                            <StackPanel Width="350" HorizontalAlignment="Left" Background="{StaticResource PhoneAccentBrush}">
+                                <TextBlock Margin="12 12 0 0" Text="视频中心"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                                <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="最新英雄联盟比赛、解说视频。"
                                    FontSize="{StaticResource PhoneFontSizeMedium}" 
-                                   Foreground="{StaticResource PhoneSubtleBrush}">
-                            </TextBlock>
-                        </StackPanel>
-                    </Button>
+                                   Foreground="WhiteSmoke">
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
 
-                    <Button x:Name="SearchRecordButton" Click="SearchRecordButton_OnClick" Margin="-16 12 0 0" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
-                        <StackPanel  Width="350"  Background="{StaticResource PhoneAccentBrush}">
-                            <TextBlock Margin="12 12 0 0" Text="战绩查询"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                            <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="查询召唤师的战绩。"
+                        <Button Margin="-16 12 0 0" x:Name="ShakeItButton" Click="ShakeItButton_OnClick" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
+                            <StackPanel Width="350" HorizontalAlignment="Left" Background="{StaticResource PhoneAccentBrush}">
+                                <TextBlock Margin="12 12 0 0" Text="摇一摇"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                                <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="游戏读条时， 摇动手机以获取对阵信息。"
                                    FontSize="{StaticResource PhoneFontSizeMedium}" 
-                                   Foreground="{StaticResource PhoneSubtleBrush}">
-                            </TextBlock>
-                        </StackPanel>
-                    </Button>
+                                   Foreground="WhiteSmoke">
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
 
-                    <Button x:Name="AboutRecordButton" Click="AboutRecordButton_OnClick" Margin="-16 12 0 0" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
-                        <StackPanel  Width="350"  Background="{StaticResource PhoneAccentBrush}">
-                            <TextBlock Margin="12 12 0 0" Text="关于"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                            <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="关于英雄联盟助手。"
+                        <Button x:Name="SearchRecordButton" Click="SearchRecordButton_OnClick" Margin="-16 12 0 0" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
+                            <StackPanel  Width="350"  Background="{StaticResource PhoneAccentBrush}">
+                                <TextBlock Margin="12 12 0 0" Text="战绩查询"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                                <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="查询召唤师的战绩。"
                                    FontSize="{StaticResource PhoneFontSizeMedium}" 
-                                   Foreground="{StaticResource PhoneSubtleBrush}">
-                            </TextBlock>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                                    Foreground="WhiteSmoke">
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                </ScrollViewer>
+               
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>

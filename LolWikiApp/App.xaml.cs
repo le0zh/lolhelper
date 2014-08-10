@@ -93,7 +93,9 @@ namespace LolWikiApp
             ((SolidColorBrush)Application.Current.Resources["PhoneBackgroundBrush"]).Color = Colors.White;
             ((SolidColorBrush)Application.Current.Resources["PhoneForegroundBrush"]).Color = Colors.Black;
             //PhoneSubtleBrush
+            //PhoneBorderBrush
             ((SolidColorBrush)Application.Current.Resources["PhoneSubtleBrush"]).Color = Colors.DarkGray;
+            ((SolidColorBrush)Application.Current.Resources["PhoneBorderBrush"]).Color = Colors.DarkGray;      
         }
 
         // Code to execute when the application is launching (eg, from Start)

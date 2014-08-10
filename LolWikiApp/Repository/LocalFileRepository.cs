@@ -29,9 +29,13 @@ namespace LolWikiApp.Repository
         public async void SetBitmapSource(string imgName, BitmapSource bitmapSource)
         {
             var localFolder = ApplicationData.Current.LocalFolder;
-            //var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
+            var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
 
-            var file = await localFolder.GetFileAsync(imgName);
+            var file = await newsCacheRootFolder.GetFileAsync(imgName);
+            using (var stream = await file.OpenReadAsync())
+            {
+                bitmapSource.SetSource(stream.AsStreamForRead());
+            }
         }
 
         private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
@@ -102,8 +106,8 @@ namespace LolWikiApp.Repository
             {
                 if (newsListInfo.IsCached == false)
                 {
-                    newsListInfo.Img = "iso::NewsCache/" + newsListInfo.Img.GetImgFileNameFromSrc();
-                    newsListInfo.Thumb_img = "iso::NewsCache/" + newsListInfo.Thumb_img.GetImgFileNameFromSrc();
+                    newsListInfo.Img = "iso::" + newsListInfo.Img.GetImgFileNameFromSrc();
+                    newsListInfo.Thumb_img = "iso::" + newsListInfo.Thumb_img.GetImgFileNameFromSrc();
                 }
 
                 newsListInfo.IsCached = true;

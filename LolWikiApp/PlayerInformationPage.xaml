@@ -9,11 +9,14 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    Background="#FFFFFBFB"
+    Foreground="Black"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="1"
+    shell:SystemTray.Opacity="0"
+    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.ForegroundColor="Black"
     Style="{StaticResource TransitionPageStyle}"
     toolkit:TiltEffect.IsTiltEnabled="True">
 
@@ -28,7 +31,7 @@
     </phone:PhoneApplicationPage.ApplicationBar>-->
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="12 24 12 0">
+    <Grid x:Name="LayoutRoot" Margin="12 24 12 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -52,12 +55,12 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Vertical" Grid.Row="0">                
-                <TextBlock Text="召唤师名称" Margin="12 0 12 0"></TextBlock>
-                <TextBox x:Name="PlayerNameTextBox" Text=""></TextBox>
-                <toolkit:ListPicker x:Name="ServerListPicker" Header="服务器名称">
+                <TextBlock Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
+                <TextBox x:Name="PlayerNameTextBox" Text="" Padding="12 0 12 0" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
+                <toolkit:ListPicker x:Name="ServerListPicker" Header="服务器名称:" BorderThickness="0 0 0 1.5">
                     <toolkit:ListPicker.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" Foreground="White"></TextBlock>
+                            <TextBlock Text="{Binding}" Foreground="Black"></TextBlock>
                         </DataTemplate>
                     </toolkit:ListPicker.HeaderTemplate>
 
@@ -69,9 +72,10 @@
 
                     <toolkit:ListPicker.FullModeItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DisplayName}" Margin="0 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
+                            <TextBlock Text="{Binding DisplayName}" Foreground="White" Margin="0 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
                         </DataTemplate>
                     </toolkit:ListPicker.FullModeItemTemplate>
+                    
                 </toolkit:ListPicker>
             </StackPanel>
 
@@ -83,26 +87,31 @@
             </StackPanel>
 
             <ScrollViewer Grid.Row="1" x:Name="PlayerInfoViewer" Visibility="Collapsed">
-                <StackPanel  Margin="12 0 12 0" Orientation="Vertical">
-                    <TextBlock Text="找到召唤师：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    <StackPanel Tap="UIElement_OnTap" Margin="0 12 0 0" Height="100" VerticalAlignment="Top" Orientation="Horizontal">
-                        <Image Height="100" Source="{Binding PhotoUrl}"></Image>
-                        <StackPanel Margin="12 0 0 0">
-                            <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-                            <Run Text="{Binding Name}"></Run>
-                            <Run Text="{Binding Level}"></Run>
-                            <Run Text="级"></Run>
-                            </TextBlock>
-                            <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-                            <Run Text="{Binding ServerInfo.DisplayName}"></Run>
-                            </TextBlock>
-                            <TextBlock>
-                            <Run Text="战斗力："></Run>
-                            <Run Text="{Binding Power}"></Run>
-                            </TextBlock>
-                        </StackPanel>
+                
+                    <StackPanel  Margin="12 0 12 0" Orientation="Vertical">
+                        <TextBlock Text="找到召唤师：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                        <Border BorderBrush="DarkGray" BorderThickness="1">
+                            <StackPanel Tap="UIElement_OnTap" Margin="0 12 0 0" Height="100" VerticalAlignment="Top" Orientation="Horizontal">
+                                <Image Height="100" Source="{Binding PhotoUrl}"></Image>
+                                <StackPanel Margin="12 0 0 0">
+                                    <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                                <Run Text="{Binding Name}"></Run>
+                                <Run Text="{Binding Level}"></Run>
+                                <Run Text="级"></Run>
+                                    </TextBlock>
+                                    <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                                <Run Text="{Binding ServerInfo.DisplayName}"></Run>
+                                    </TextBlock>
+                                    <TextBlock>
+                                <Run Text="战斗力："></Run>
+                                <Run Text="{Binding Power}"></Run>
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        
                     </StackPanel>
-                </StackPanel>
+              
             </ScrollViewer>
             
         </Grid>

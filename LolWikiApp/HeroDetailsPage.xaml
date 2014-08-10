@@ -8,14 +8,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="1"
+    shell:SystemTray.Opacity="0"
+    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.ForegroundColor="Black"
     toolkit:TiltEffect.IsTiltEnabled="True"
     BackKeyPress="DetailsPage_OnBackKeyPress"
     Style="{StaticResource TransitionPageStyle}">
@@ -26,20 +27,20 @@
     <phone:Pivot Title="{Binding}" x:Name="HeroDetailMainPivot" SelectionChanged="HeroDetailMainPivot_OnSelectionChanged">
         <phone:Pivot.TitleTemplate>
             <DataTemplate>
-                <Grid Margin="0 -12 0 8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
+                    <Grid Background="Black" Width="480" Margin="-24 -18 -24 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
 
-                    <Image Width="100" Height="100" Source="{Binding ImageUrl, Converter={StaticResource ImageSourceConverter}}" Grid.Column="0"></Image>
-                    <StackPanel VerticalAlignment="Top" Grid.Column="1" Margin="12 0 0 0" Orientation="Vertical">
-                        <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}">
+                        <Image Margin="12 12 0 0" Width="100" Height="100" Source="{Binding ImageUrl, Converter={StaticResource ImageSourceConverter}}" Grid.Column="0"></Image>
+                        <StackPanel   VerticalAlignment="Top" Grid.Column="1" Margin="12 12 0 0" Orientation="Vertical">
+                            <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="WhiteSmoke">
                             <Run Text="{Binding Title}"></Run>
                             <Run Text="{Binding DisplayName}"></Run>
-                        </TextBlock>
+                            </TextBlock>
 
-                        <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}">
+                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="WhiteSmoke">
                             <Run Text="{Binding Tags}" ></Run>
                             <LineBreak></LineBreak>
                             <Run Text="{Binding DisplayPrice}"></Run>
@@ -52,15 +53,16 @@
                              <Run Text="{Binding RatingMagic}"></Run> 
                             <Run Text="难度"></Run>
                              <Run Text="{Binding RatingDifficulty}"></Run>
-                        </TextBlock>
-                    </StackPanel>
-                </Grid>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+              
             </DataTemplate>
         </phone:Pivot.TitleTemplate>
 
         <phone:Pivot.HeaderTemplate>
             <DataTemplate>
-                <StackPanel  Margin="0 8 0 -18">
+                <StackPanel   Margin="0 8 0 -18">
                     <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
                 </StackPanel>
             </DataTemplate>

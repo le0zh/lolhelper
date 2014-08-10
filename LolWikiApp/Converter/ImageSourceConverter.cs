@@ -23,13 +23,16 @@ namespace LolWikiApp
             var imgUri = value as string;
             var localFileRepository = new LocalFileRepository();
 
-            Debug.WriteLine("Converter: " + imgUri);
 
             BitmapSource bitmap = new BitmapImage();
 
             if (imgUri.StartsWith("iso::"))
             {
-                localFileRepository.SetBitmapSource("/"+imgUri.Substring(5),bitmap);
+                //const string imgUrl = "115.28.105.168_thumb_lol_news_16000_16499_16241_183.jpg";
+
+                Debug.WriteLine("img: " + imgUri.Substring(5));
+                localFileRepository.SetBitmapSource(imgUri.Substring(5),bitmap);
+                //localFileRepository.SetBitmapSource(imgUrl, bitmap);
             }
             else
             {

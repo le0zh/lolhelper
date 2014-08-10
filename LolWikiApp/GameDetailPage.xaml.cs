@@ -79,16 +79,19 @@ namespace LolWikiApp
     <link rel='stylesheet' type='text/css' href='global_light.css' media='all'>
 </head>";
 
-            if (Application.Current.GetTheme() == Theme.Dark)
-            {
-                content = headerContentBlack + content;
-                this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.Black);
-            }
-            else
-            {
-                content = headerContentLight + content;
-                this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.White);
-            }
+            //if (Application.Current.GetTheme() == Theme.Dark)
+            //{
+            //    content = headerContentBlack + content;
+            //    this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.Black);
+            //}
+            //else
+            //{
+            //    content = headerContentLight + content;
+            //    this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.White);
+            //}
+
+            content = headerContentLight + content;
+            this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.White);
             
             //content = content.Replace("img/touch_js.js", "http://lolbox.duowan.com/phone/img/touch_js.js");
             Debug.WriteLine(content);
