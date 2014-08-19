@@ -26,22 +26,20 @@ namespace LolWikiApp
     public class NewsListItemDataTemplateSelector : DataTemplateSelector
     {
         public DataTemplate NormalNewsDataTemplate { get; set; }
-        public DataTemplate VideoDataTemplate { get; set; }
+        public DataTemplate FlipViewNewsDataTemplate { get; set; }
 
         public override DataTemplate SelectDataTemplate(object item, DependencyObject container)
         {
-            //News news = item as News;
+            var news = item as NewsListInfo;
 
-
-            //if (news != null)
-            //{
-            //    if (news.HasVideo == 1)
-            //    {
-            //        //Debug.WriteLine(string.Format("has video, title: {0}", news.Title));
-            //        return VideoDataTemplate;
-            //    }
-            //    return NormalNewsDataTemplate;
-            //}
+            if (news != null)
+            {
+                if (news.IsFlipNews)
+                {
+                    return FlipViewNewsDataTemplate;
+                }
+                return NormalNewsDataTemplate;
+            }
 
             return base.SelectDataTemplate(item, container);
         }

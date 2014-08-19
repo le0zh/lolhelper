@@ -283,7 +283,11 @@ namespace LolWikiApp
                 var newsInfo = this.NewsLongListSelector.SelectedItem as NewsListInfo;
                 if (newsInfo != null)
                 {
-                    NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative));
+                    if (!newsInfo.IsFlipNews)
+                    {
+                        NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative)); 
+                    }
+                    
                 }
             }
         }
@@ -653,6 +657,20 @@ namespace LolWikiApp
         private void VideoButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/VideoPage.xaml", UriKind.Relative));
+        }
+
+        private void HorizontalFlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+           
+        }
+
+        private void HorizontalFlipView_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var item = ((FlipView) sender).SelectedItem as NewsListInfo;
+            if (item != null)
+            {
+                NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative)); 
+            }
         }
     }
 }

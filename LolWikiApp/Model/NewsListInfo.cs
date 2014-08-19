@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,14 @@ namespace LolWikiApp
         public string Thumb_ok { get; set; }
 
         public bool IsCached { get; set; }
+
+        public bool IsFlipNews { get; set; }
+
+        private List<NewsListInfo> _bannerListInfos;
+        public List<NewsListInfo> BannerListInfos
+        {
+            get { return _bannerListInfos ?? (_bannerListInfos = new List<NewsListInfo>()); }
+        }
     }
     public class NewsTypeWrapper
     {

@@ -19,7 +19,7 @@
     Style="{StaticResource TransitionPageStyle}"
     toolkit:TiltEffect.IsTiltEnabled="True"
     BackKeyPress="HomePage_OnBackKeyPress">
-    
+
     <!--<phone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="NewsTypeListBoxTemplate">
             <Border Margin="12" Width="456">
@@ -41,12 +41,12 @@
             <phone:Pivot.TitleTemplate>
                 <DataTemplate>
                     <Border MinWidth="400" BorderThickness="15 0 0 0" Margin="0 -12 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
-              
+
                         <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center"
                                FontSize="{StaticResource PhoneFontSizeLarge}" >
                         </TextBlock>
                     </Border>
-                    
+
                 </DataTemplate>
             </phone:Pivot.TitleTemplate>
 
@@ -67,7 +67,7 @@
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    
+
                     <StackPanel x:Name="NewsLoadingBar" Grid.Row="0" Orientation="Vertical">
                         <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
@@ -82,7 +82,7 @@
                     </StackPanel>
 
                     <!--Row2-->
-                    <local:RefreshableListBox Grid.Row="2" 
+                    <local:RefreshableListBox Grid.Row="2"
                                     Tap="NewsLongListSelector_Tap"
                                     Visibility="Collapsed"
                                     x:Name="NewsLongListSelector" 
@@ -90,8 +90,54 @@
                                     Loaded="NewsLongListSelector_OnLoaded"
                                     Margin="0 0 0 12"
                                     GettingMoreTriggered="NewsLongListSelector_OnGettingMoreTriggered"
-                                    RefreshTriggered="NewsLongListSelector_OnRefreshTriggered"
-                                    ItemTemplate="{StaticResource NewsListDataTemplate}">
+                                    RefreshTriggered="NewsLongListSelector_OnRefreshTriggered">
+                        <local:RefreshableListBox.ItemTemplate>
+                            <DataTemplate>
+                                <local:NewsListItemDataTemplateSelector Content="{Binding}">
+                                    <local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="110"></ColumnDefinition>
+                                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="110" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Thumb_img, Converter={StaticResource ImageSourceConverter}}"></Image>
+                                                    <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
+                                                        <TextBlock Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                                        <TextBlock Text="{Binding DescDisplay}"
+								                                   Foreground="Gray"
+								                                   FontSize="15" TextWrapping="Wrap"></TextBlock>
+                                                        <TextBlock Foreground="Black"  FontSize="15">
+                                                                    <Run Text="发表时间: "></Run>
+                                                                    <Run Text="{Binding PostTime}"></Run>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
+
+                                    <local:NewsListItemDataTemplateSelector.FlipViewNewsDataTemplate>
+                                        <DataTemplate>
+                                            <toolkit:FlipView x:Name="HorizontalFlipView"
+                                                      ItemsSource="{Binding BannerListInfos}"
+                                                      UseTouchAnimationsForAllNavigation="True"
+                                                      SelectionChanged="HorizontalFlipView_OnSelectionChanged" Tap="HorizontalFlipView_Tap"
+                                                       >
+                                                <toolkit:FlipView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Image Source="{Binding Img}" Height="210"></Image>
+                                                    </DataTemplate>
+                                                </toolkit:FlipView.ItemTemplate>
+                                            </toolkit:FlipView>
+                                        </DataTemplate>
+                                    </local:NewsListItemDataTemplateSelector.FlipViewNewsDataTemplate>
+                                </local:NewsListItemDataTemplateSelector>
+                            </DataTemplate>
+                        </local:RefreshableListBox.ItemTemplate>
+
                     </local:RefreshableListBox>
 
                     <!--Row3-->
@@ -116,17 +162,17 @@
                             <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                             <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                         </StackPanel>
-                        
+
                         <StackPanel Orientation="Vertical" Margin="0 24 0 0" Visibility="Collapsed" x:Name="FreeHeroRetryNetPanel">
                             <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneSubtleBrush}" >
                             <Run Text="貌似网络不太稳定..."></Run>
                             <LineBreak></LineBreak>
                             <Run Text="加载周免英雄失败。"></Run>
-                            </TextBlock>                            
+                            </TextBlock>
                         </StackPanel>
 
                         <toolkit:WrapPanel x:Name="wrapPanel" Orientation="Horizontal" />
-                        
+
                     </StackPanel>
 
                 </ScrollViewer>
@@ -140,7 +186,7 @@
                             <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                             <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                         </StackPanel>
-                        
+
                         <StackPanel Visibility="Collapsed" x:Name="NeedBindPlayerInfoPanel" Margin="0">
                             <TextBlock Text="您还没有关绑定唤师信息。" FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                             <!--<Button Width="150" HorizontalAlignment="Left" Content="绑定" Margin="-12 12 0 0" x:Name="AddFollowButton" Click="AddFollowButton_OnClick"></Button>-->
@@ -301,7 +347,7 @@
                                 <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding WinNumberScore}"></TextBlock>
                             </Grid>
 
-                           
+
                         </Grid>
 
                     </StackPanel>
@@ -344,7 +390,7 @@
 
                     </StackPanel>
                 </ScrollViewer>
-               
+
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>

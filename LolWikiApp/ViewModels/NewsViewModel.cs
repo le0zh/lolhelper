@@ -36,7 +36,7 @@ namespace LolWikiApp.ViewModels
 
         public async void LoadCachedNewsList()
         {
-           var count =  await NewsRepository.LoadNewsCachedListInfo(NewsCacheListInfo);
+            var count = await NewsRepository.LoadNewsCachedListInfo(NewsCacheListInfo);
             Debug.WriteLine("-------LOADED CACHED NEWS LIST COUNT " + count);
         }
 
@@ -91,8 +91,16 @@ namespace LolWikiApp.ViewModels
             {
                 _oldNewsType = type;
                 NewsListInfObservableCollection.Clear();
-            }
 
+                if (type == NewsType.Latest)
+                {
+                    var bannerList = await NewsRepository.GetBannerNewsList();
+                    var bannerNewsInfo = new NewsListInfo() {IsFlipNews = true};
+                    bannerNewsInfo.BannerListInfos.AddRange(bannerList);
+                    NewsListInfObservableCollection.Add(bannerNewsInfo);
+                }
+            }
+            
             foreach (var n in newsList)
             {
                 NewsListInfObservableCollection.Add(n);

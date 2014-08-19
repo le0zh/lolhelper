@@ -342,6 +342,23 @@ p{
         }
 
         /// <summary>
+        /// 获取banner新闻列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<NewsListInfo>> GetBannerNewsList()
+        {
+            var r = new Random(DateTime.Now.Millisecond);
+            var random = r.Next();
+            var url = string.Format("http://lolbox.oss.aliyuncs.com/json/v3/news/banner.json?r={0}", random);
+
+            string json = await GetJsonStringViaHTTPAsync(url);
+
+            var newsList = JsonConvert.DeserializeObject<List<NewsListInfo>>(json);
+
+            return newsList;
+        }
+
+        /// <summary>
         /// 获取新闻类型列表
         /// </summary>
         /// <returns></returns>

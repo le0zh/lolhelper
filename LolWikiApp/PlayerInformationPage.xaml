@@ -6,7 +6,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"    
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Background="#FFFFFBFB"
@@ -70,11 +70,11 @@
                         </DataTemplate>
                     </toolkit:ListPicker.ItemTemplate>
 
-                    <toolkit:ListPicker.FullModeItemTemplate>
+                    <!--<toolkit:ListPicker.FullModeItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding DisplayName}" Foreground="White" Margin="0 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
                         </DataTemplate>
-                    </toolkit:ListPicker.FullModeItemTemplate>
+                    </toolkit:ListPicker.FullModeItemTemplate>-->
                     
                 </toolkit:ListPicker>
             </StackPanel>
