@@ -153,17 +153,15 @@ namespace LolWikiApp
                 Width = 480,
                 ItemsSource = App.NewsViewModel.NewsTypeList,
                 Margin = new Thickness(0, 12, 0, 0),
+                Padding = new Thickness(0,4,0,0),
                 SelectionMode = SelectionMode.Single,
                 Background = new SolidColorBrush(Colors.DarkGray),
                 ItemTemplate = Application.Current.Resources["NewsTypeListBoxTemplate"] as DataTemplate,
                 ItemContainerStyle = Application.Current.Resources["NewsTypeListBoxItemStyle"] as Style,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Opacity = 0
+                HorizontalAlignment = HorizontalAlignment.Center
             };
 
             newsTypeListBox.SetValue(TiltEffect.IsTiltEnabledProperty, true);
-
-            newsTypeListBox.Loaded += newsTypeListBox_Loaded;            
 
             var index = 0;
             foreach (var item in newsTypeListBox.Items)
@@ -213,45 +211,6 @@ namespace LolWikiApp
 
             newsCategoryPopup.Child = mainStackPanel;
             newsCategoryPopup.IsOpen = true;
-
-            //var count = newsTypeListBox.Items.Count;
-            //var itemsToAnimate = newsTypeListBox.GetItemsInViewPort();
-
-            ////SetupListItems(newsTypeListBox, -90);
-
-            //newsTypeListBox.Opacity = 1;
-        }
-
-        void newsTypeListBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            var listbox = sender as ListBox;
-            if (listbox == null)
-                return;
-
-            SetupListItems(listbox, -90);
-
-            listbox.Opacity = 1;
-
-            //SetupListItems(listbox, 0);
-        }
-
-        private void SetupListItems(ListBox listbox, double degree)
-        {
-            var itemsToAnimate = listbox.GetItemsInViewPort();
-
-            for (var i = 0; i < itemsToAnimate.Count; i++)
-            {
-                var item = (FrameworkElement)itemsToAnimate[i].Target;
-                if (null == item) continue;
-
-                var p = (PlaneProjection)item.Projection;
-                if (null == p)
-                {
-                    p = new PlaneProjection();
-                    item.Projection = p;
-                }
-                p.RotationX = degree;
-            }
         }
 
         private async void LoadCachedNews()

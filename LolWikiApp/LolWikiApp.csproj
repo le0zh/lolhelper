@@ -100,6 +100,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FullScreenPopup.cs" />
     <Compile Include="Controls\RefreshableListBox\RefreshableListBox.cs" />
     <Compile Include="Controls\RefreshableListBox\RefreshableListBoxX.cs" />
     <Compile Include="Controls\ToastPromt.cs" />

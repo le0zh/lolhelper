@@ -57,26 +57,28 @@
             <StackPanel Orientation="Vertical" Grid.Row="0">                
                 <TextBlock Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
                 <TextBox x:Name="PlayerNameTextBox" Text="" Padding="12 0 12 0" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
-                <toolkit:ListPicker x:Name="ServerListPicker" Header="服务器名称:" BorderThickness="0 0 0 1.5">
-                    <toolkit:ListPicker.HeaderTemplate>
+                <toolkit:PickerBox x:Name="ServerListPicker" 
+                                   Header="服务器名称:" BorderThickness="0 0 0 1.5"
+                                   FullModeHeader=" ">
+                    <toolkit:PickerBox.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" Foreground="Black"></TextBlock>
                         </DataTemplate>
-                    </toolkit:ListPicker.HeaderTemplate>
+                    </toolkit:PickerBox.HeaderTemplate>
 
-                    <toolkit:ListPicker.ItemTemplate>
+                    <toolkit:PickerBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding DisplayName}"></TextBlock>
                         </DataTemplate>
-                    </toolkit:ListPicker.ItemTemplate>
+                    </toolkit:PickerBox.ItemTemplate>
 
-                    <!--<toolkit:ListPicker.FullModeItemTemplate>
+                    <toolkit:PickerBox.FullModeItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DisplayName}" Foreground="White" Margin="0 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
+                            <TextBlock Text="{Binding DisplayName}" Foreground="White" Margin="18 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
                         </DataTemplate>
-                    </toolkit:ListPicker.FullModeItemTemplate>-->
+                    </toolkit:PickerBox.FullModeItemTemplate>
                     
-                </toolkit:ListPicker>
+                </toolkit:PickerBox>
             </StackPanel>
 
             <TextBlock Grid.Row="1" x:Name="NotFoundTextBlock" Visibility="Collapsed" TextWrapping="Wrap" Text="没有该召唤师信息" Foreground="{StaticResource PhoneSubtleBrush}" Margin="12 12 0 0"></TextBlock>

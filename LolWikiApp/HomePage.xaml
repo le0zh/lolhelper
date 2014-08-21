@@ -105,7 +105,7 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="110" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
-                                                    <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
+                                                    <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 8 0">
                                                         <TextBlock Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
                                                         <TextBlock Text="{Binding DescDisplay}"
 								                                   Foreground="Gray"
