@@ -38,8 +38,7 @@ namespace LolWikiApp
                 Background = (SolidColorBrush)Application.Current.Resources["PhoneSemitransparentBrush"]
             };
 
-            _hostPopup = new Popup();
-            _hostPopup.Child = _outerBorder;
+            _hostPopup = new Popup {Child = _outerBorder};
         }
 
         public void Show()
@@ -55,9 +54,14 @@ namespace LolWikiApp
             RestoreSettings();
         }
 
+        public bool IsOpen
+        {
+            get { return _hostPopup.IsOpen; }
+        }
+
         private void PrepareAppForFullScreen()
         {
-            PhoneApplicationFrame frame = Application.Current.RootVisual as PhoneApplicationFrame;
+            var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             _hostPage = null;
 
             if (frame != null)
@@ -65,15 +69,15 @@ namespace LolWikiApp
                 _hostPage = frame.Content as PhoneApplicationPage;
             }
 
-            if (_hostPage != null && _hostPage.ApplicationBar != null && _hostPage.ApplicationBar.IsVisible)
-            {
-                _wasApplicationBarVisible = true;
-                _hostPage.ApplicationBar.IsVisible = false;
-            }
+            //if (_hostPage != null && _hostPage.ApplicationBar != null && _hostPage.ApplicationBar.IsVisible)
+            //{
+            //    _wasApplicationBarVisible = true;
+            //    _hostPage.ApplicationBar.IsVisible = false;
+            //}
 
             if (frame != null)
             {
-                frame.BackKeyPress += OnBackKeyPress;
+                //frame.BackKeyPress += OnBackKeyPress;
                 frame.Navigating += OnFrameNavigating;
                 frame.OrientationChanged += OnOrientationChanged;
             }
@@ -81,7 +85,7 @@ namespace LolWikiApp
 
         private void RestoreSettings()
         {
-            PhoneApplicationFrame frame = Application.Current.RootVisual as PhoneApplicationFrame;
+            var frame = Application.Current.RootVisual as PhoneApplicationFrame;
 
             if (_wasApplicationBarVisible && _hostPage != null && _hostPage.ApplicationBar != null)
             {
@@ -90,7 +94,7 @@ namespace LolWikiApp
 
             if (frame != null)
             {
-                frame.BackKeyPress -= OnBackKeyPress;
+                //frame.BackKeyPress -= OnBackKeyPress;
                 frame.Navigating -= OnFrameNavigating;
                 frame.OrientationChanged -= OnOrientationChanged;
             }
@@ -134,7 +138,7 @@ namespace LolWikiApp
 
         private void SetOrientation()
         {
-            PhoneApplicationFrame frame = Application.Current.RootVisual as PhoneApplicationFrame;
+            var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             if (frame != null)
             {
                 PageOrientation orientation = frame.Orientation;

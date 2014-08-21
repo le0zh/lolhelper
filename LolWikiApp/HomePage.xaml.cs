@@ -24,19 +24,19 @@ namespace LolWikiApp
 {
     public partial class HomePage : PhoneApplicationPage
     {
-        private List<Hero> freeHeros;
-        private int currentPage;
-        private NewsType currentNewsType;
-        private bool isPivotFirstLoaded = false;
-        private Popup newsCategoryPopup;
+        private List<Hero> _freeHeros;
+        private int _currentPage;
+        private NewsType _currentNewsType;
+        private bool _isPivotFirstLoaded = false;
+        private readonly FullScreenPopup _newsCategoryPopup;
 
         public HomePage()
         {
             InitializeComponent();
-            freeHeros = new List<Hero>();
-            currentPage = 0;
-            currentNewsType = NewsType.Latest;
-            newsCategoryPopup = new Popup();
+            _freeHeros = new List<Hero>();
+            _currentPage = 0;
+            _currentNewsType = NewsType.Latest;
+            _newsCategoryPopup = new FullScreenPopup();
         }
 
         private void HomePageMain()
@@ -71,9 +71,9 @@ namespace LolWikiApp
         #region Pivot
         private void MainPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isPivotFirstLoaded == false && MainPivot.SelectedIndex == 0)
+            if (_isPivotFirstLoaded == false && MainPivot.SelectedIndex == 0)
             {
-                isPivotFirstLoaded = true;
+                _isPivotFirstLoaded = true;
             }
             else
             {
@@ -124,19 +124,18 @@ namespace LolWikiApp
 
         private void ShowNewsCategoriesPopup()
         {
-            if (newsCategoryPopup.IsOpen)
+            if (_newsCategoryPopup.IsOpen)
             {
-                newsCategoryPopup.IsOpen = false;
+                _newsCategoryPopup.Hide();
                 return;
             }
 
-            newsCategoryPopup.VerticalOffset = 330;
-            newsCategoryPopup.Width = 480;
-
             var mainStackPanel = new StackPanel
             {
-                Background = new SolidColorBrush(Colors.Black),
-                Orientation = System.Windows.Controls.Orientation.Vertical
+                Background = Application.Current.Resources["PhoneChromeBrush"] as SolidColorBrush,
+                Orientation = System.Windows.Controls.Orientation.Vertical,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(0,0,0,72)
             };
 
             var titleTextBlock = new TextBlock()
@@ -167,7 +166,7 @@ namespace LolWikiApp
             foreach (var item in newsTypeListBox.Items)
             {
                 var type = item as NewsTypeWrapper;
-                if (type.Type == currentNewsType)
+                if (type.Type == _currentNewsType)
                 {
                     break;
                 }
@@ -192,14 +191,14 @@ namespace LolWikiApp
                 if (newsTypeListBox.SelectedItem != null)
                 {
                     var newsType = newsTypeListBox.SelectedItem as NewsTypeWrapper;
-                    currentNewsType = newsType == null ? NewsType.Latest : newsType.Type;
+                    _currentNewsType = newsType == null ? NewsType.Latest : newsType.Type;
                     LoadNewsData();
                 }
                 SetAppbarForNewsList();
             };
             cancelButton.Click += (s, e) =>
             {
-                newsCategoryPopup.IsOpen = false;
+                _newsCategoryPopup.Hide();
                 SetAppbarForNewsList();
             };
 
@@ -209,8 +208,8 @@ namespace LolWikiApp
             mainStackPanel.Children.Add(titleTextBlock);
             mainStackPanel.Children.Add(newsTypeListBox);
 
-            newsCategoryPopup.Child = mainStackPanel;
-            newsCategoryPopup.IsOpen = true;
+            _newsCategoryPopup.Child = mainStackPanel;
+            _newsCategoryPopup.Show();
         }
 
         private async void LoadCachedNews()
@@ -224,17 +223,17 @@ namespace LolWikiApp
 
         private async void LoadNewsData()
         {
-            if (newsCategoryPopup.IsOpen)
+            if (_newsCategoryPopup.IsOpen)
             {
-                newsCategoryPopup.IsOpen = false;
+                _newsCategoryPopup.Hide();
             }
 
             this.NewsLoadingBar.Visibility = Visibility.Visible;
             try
             {
-                Debug.WriteLine(currentNewsType);
+                Debug.WriteLine(_currentNewsType);
 
-                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(currentNewsType, 1, true);
+                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsType, 1, true);
             }
             catch (System.Net.Http.HttpRequestException exception404)
             {
@@ -243,39 +242,19 @@ namespace LolWikiApp
                 var toast = ToastPromt.GetToastWithImgAndTitle("加载失败，读取离线文章。");
                 toast.Show();
 
-                App.NewsViewModel.LoadeNewsListInfoFromCache(currentNewsType);
+                App.NewsViewModel.LoadeNewsListInfoFromCache(_currentNewsType);
                 this.NewsLongListSelector.Visibility = Visibility.Visible;
 
                 return;
             }
             finally
             {
-                currentPage = 1;
+                _currentPage = 1;
                 this.NewsLoadingBar.Visibility = Visibility.Collapsed;
             }
 
             this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
             this.NewsLongListSelector.Visibility = Visibility.Visible;
-
-            //this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            //this.NewsLoadingBar.Visibility = Visibility.Visible;
-
-            //try
-            //{
-            //    await App.NewsViewModel.LoadHeadLineListForHomePageAsync(7);
-            //}
-            //catch (System.Net.Http.HttpRequestException exception404)
-            //{
-            //    this.NewsRetryNetPanel.Visibility = Visibility.Visible;
-            //    return;
-            //}
-            //finally
-            //{
-            //    this.NewsLoadingBar.Visibility = Visibility.Collapsed;
-            //}
-
-            //this.NewsLongListSelector.Visibility = Visibility.Visible;
-            //this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
         }
 
         private void NewsLongListSelector_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -287,9 +266,9 @@ namespace LolWikiApp
                 {
                     if (!newsInfo.IsFlipNews)
                     {
-                        if (newsCategoryPopup.IsOpen)
+                        if (_newsCategoryPopup.IsOpen)
                         {
-                            newsCategoryPopup.IsOpen = false;
+                            _newsCategoryPopup.Hide();
                             SetAppbarForNewsList();
                         }
 
@@ -329,12 +308,12 @@ namespace LolWikiApp
 
             try
             {
-                var nextPage = currentPage + 1;
+                var nextPage = _currentPage + 1;
                 Debug.WriteLine("[news]nextpage: " + nextPage);
 
                 lastNews = App.NewsViewModel.NewsListInfObservableCollection.Last();
-                Debug.WriteLine("load more news : " + currentNewsType);
-                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(currentNewsType, nextPage);
+                Debug.WriteLine("load more news : " + _currentNewsType);
+                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsType, nextPage);
             }
             catch (System.Net.Http.HttpRequestException exception404)
             {
@@ -351,19 +330,7 @@ namespace LolWikiApp
                 this.NewsLongListSelector.ScrollTo(lastNews);
             }
 
-            //NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
-
-            currentPage = App.NewsViewModel.CurrentPage;
-            //totalPage = App.NewsViewModel.TotalPage;
-
-            //if (nextPage > totalPage)
-            //{
-            //    this.NewsLongListSelector.ShowNoMoreDataPanel();
-            //}
-            //else if (lastNews != null)
-            //{
-            //    this.NewsLongListSelector.ScrollTo(lastNews);
-            //}
+            _currentPage = App.NewsViewModel.CurrentPage;
         }
         #endregion
 
@@ -387,7 +354,7 @@ namespace LolWikiApp
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(moreButton);
 
-            if (freeHeros.Count == 0)
+            if (_freeHeros.Count == 0)
             {
                 refreshFreeHeroList();
             }
@@ -400,10 +367,10 @@ namespace LolWikiApp
 
             try
             {
-                freeHeros.Clear();
+                _freeHeros.Clear();
                 this.wrapPanel.Children.Clear();
-                freeHeros = await App.ViewModel.LoadFreeHeroInfoListAsync(isForced);
-                freeHeros.ForEach(AddFreeHeroItem);
+                _freeHeros = await App.ViewModel.LoadFreeHeroInfoListAsync(isForced);
+                _freeHeros.ForEach(AddFreeHeroItem);
             }
             catch (System.Net.Http.HttpRequestException exception404)
             {
@@ -632,9 +599,9 @@ namespace LolWikiApp
 
         private void HomePage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
-            if (newsCategoryPopup.IsOpen)
+            if (_newsCategoryPopup.IsOpen)
             {
-                newsCategoryPopup.IsOpen = false;
+                _newsCategoryPopup.Hide();
                 SetAppbarForNewsList();
                 e.Cancel = true;
             }
@@ -672,9 +639,9 @@ namespace LolWikiApp
             var item = ((FlipView)sender).SelectedItem as NewsListInfo;
             if (item != null)
             {
-                if (newsCategoryPopup.IsOpen)
+                if (_newsCategoryPopup.IsOpen)
                 {
-                    newsCategoryPopup.IsOpen = false;
+                    _newsCategoryPopup.Hide();
                     SetAppbarForNewsList();
                 }
 
