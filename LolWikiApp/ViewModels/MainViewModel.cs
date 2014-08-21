@@ -17,17 +17,17 @@ namespace LolWikiApp.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
 
-        private readonly HeroRepository heroRepository;
-        private readonly PlayerRepository playerRepository;
-        private readonly LocalFileRepository localFileRepository;
-        private readonly Dictionary<string, HeroDetail> HeroDetailsCache;
+        private readonly HeroRepository _heroRepository;
+        private readonly PlayerRepository _playerRepository;
+        private readonly LocalFileRepository _localFileRepository;
+        private readonly Dictionary<string, HeroDetail> _heroDetailsCache;
 
         public Player BindedPlayer { get; set; }
         public Player SelectedPlayer { get; set; }
 
         public LocalFileRepository LocalFileHelper
         {
-            get { return localFileRepository; }
+            get { return _localFileRepository; }
         }
 
         public string SelectedDetailGameInfoUrl { get; set; }
@@ -40,10 +40,10 @@ namespace LolWikiApp.ViewModels
         {
             this.HeroBasicInfoCollection = new ObservableCollection<Hero>();
 
-            HeroDetailsCache = new Dictionary<string, HeroDetail>();
-            heroRepository = new HeroRepository();
-            playerRepository = new PlayerRepository();
-            localFileRepository =new LocalFileRepository();
+            _heroDetailsCache = new Dictionary<string, HeroDetail>();
+            _heroRepository = new HeroRepository();
+            _playerRepository = new PlayerRepository();
+            _localFileRepository =new LocalFileRepository();
 
             BindedPlayer = GetPlayerInfoFromSettings();
         }
@@ -79,33 +79,33 @@ namespace LolWikiApp.ViewModels
                 return null;
 
             CurrentGameInfo currentGameInfo =
-                await playerRepository.GetCurrentGameInfoAsync(BindedPlayer.ServerInfo.Value, BindedPlayer.Name);
+                await _playerRepository.GetCurrentGameInfoAsync(BindedPlayer.ServerInfo.Value, BindedPlayer.Name);
 
             return currentGameInfo;
         }
 
         public async Task<HttpActionResult> GetPlayerDetailInfo(string sn,string pn)
         {
-            HttpActionResult result = await playerRepository.PharsePlayerInfo(sn,pn);
+            HttpActionResult result = await _playerRepository.PharsePlayerInfo(sn,pn);
             return result;
         }
 
         public Player GetPlayerInfoFromSettings()
         {
-            return playerRepository.ReadPlayerInfoSettings();
+            return _playerRepository.ReadPlayerInfoSettings();
         }
 
         public void SavePlayerInfoToAppSettings(Player player)
         {
             if (player != null)
             {
-                playerRepository.SavePlayerInfo(player.Name, player.ServerInfo);
+                _playerRepository.SavePlayerInfo(player.Name, player.ServerInfo);
             }
         }
 
         public void RemovePlayerBind()
         {
-            playerRepository.RemovePlayerInfoFromSettings();
+            _playerRepository.RemovePlayerInfoFromSettings();
         }
         #endregion
 
@@ -147,21 +147,21 @@ namespace LolWikiApp.ViewModels
 
         public async Task<HeroDetail> GetHeroDetailByKeyAsync(string id)
         {
-            if (HeroDetailsCache.ContainsKey(id))
+            if (_heroDetailsCache.ContainsKey(id))
             {
-                return HeroDetailsCache[id];
+                return _heroDetailsCache[id];
             }
             else
             {
-                HeroDetail heroDetail = await heroRepository.GetHeroDetailByKeyAshync(id);
-                HeroDetailsCache.Add(id, heroDetail);
+                HeroDetail heroDetail = await _heroRepository.GetHeroDetailByKeyAshync(id);
+                _heroDetailsCache.Add(id, heroDetail);
                 return heroDetail;
             }
         }
 
         public async Task<List<HeroSkin>> LoadHeroSkinListAsync(string heroEnName)
         {
-            return await heroRepository.GetHeroSkinListAsync(heroEnName);
+            return await _heroRepository.GetHeroSkinListAsync(heroEnName);
         }
 
         public bool IsDataLoaded
@@ -172,13 +172,13 @@ namespace LolWikiApp.ViewModels
 
         public async Task<List<Hero>> LoadFreeHeroInfoListAsync(bool isForced)
         {
-            List<Hero> heros = await heroRepository.GetFreeHeroListlAsync(isForced);
+            List<Hero> heros = await _heroRepository.GetFreeHeroListlAsync(isForced);
             return heros;
         }
 
         public async Task<List<EquipmentRecommend>> LoadEquipmentRecommendList(string heroEnName)
         {
-            List<EquipmentRecommend> list = await heroRepository.GetEquipmentRecommendListAsync(heroEnName);
+            List<EquipmentRecommend> list = await _heroRepository.GetEquipmentRecommendListAsync(heroEnName);
             return list;
         }
 
@@ -191,7 +191,7 @@ namespace LolWikiApp.ViewModels
             if (HeroBasicInfoCollection.Count > 0)
                 return;
 
-            IList<Hero> herosList = await heroRepository.GetAllHeroBasicInfosAsync();
+            IList<Hero> herosList = await _heroRepository.GetAllHeroBasicInfosAsync();
             HeroBasicInfoCollection.Clear();
 
             foreach (var hero in herosList)
@@ -199,8 +199,8 @@ namespace LolWikiApp.ViewModels
                 this.HeroBasicInfoCollection.Add(hero);
             }
 
-            DataVersion = heroRepository.DataVersion;
-            dataLastUpdated = heroRepository.DataLastUpdated;
+            DataVersion = _heroRepository.DataVersion;
+            dataLastUpdated = _heroRepository.DataLastUpdated;
 
             this.IsDataLoaded = true;
         }

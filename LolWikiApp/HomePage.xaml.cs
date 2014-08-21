@@ -131,7 +131,6 @@ namespace LolWikiApp
             }
 
             newsCategoryPopup.VerticalOffset = 330;
-            //newsCategoryPopup.Height = 350;
             newsCategoryPopup.Width = 480;
 
             var mainStackPanel = new StackPanel
@@ -143,7 +142,7 @@ namespace LolWikiApp
             var titleTextBlock = new TextBlock()
             {
                 Text = "请选择资讯类型 ",
-                Foreground =new SolidColorBrush(Colors.DarkGray),
+                Foreground = new SolidColorBrush(Colors.DarkGray),
                 FontSize = (double)Application.Current.Resources["PhoneFontSizeLarge"],
                 Margin = new Thickness(24, 12, 12, 0),
             };
@@ -158,8 +157,13 @@ namespace LolWikiApp
                 Background = new SolidColorBrush(Colors.DarkGray),
                 ItemTemplate = Application.Current.Resources["NewsTypeListBoxTemplate"] as DataTemplate,
                 ItemContainerStyle = Application.Current.Resources["NewsTypeListBoxItemStyle"] as Style,
-                HorizontalAlignment = HorizontalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Opacity = 0
             };
+
+            newsTypeListBox.SetValue(TiltEffect.IsTiltEnabledProperty, true);
+
+            newsTypeListBox.Loaded += newsTypeListBox_Loaded;            
 
             var index = 0;
             foreach (var item in newsTypeListBox.Items)
@@ -209,6 +213,45 @@ namespace LolWikiApp
 
             newsCategoryPopup.Child = mainStackPanel;
             newsCategoryPopup.IsOpen = true;
+
+            //var count = newsTypeListBox.Items.Count;
+            //var itemsToAnimate = newsTypeListBox.GetItemsInViewPort();
+
+            ////SetupListItems(newsTypeListBox, -90);
+
+            //newsTypeListBox.Opacity = 1;
+        }
+
+        void newsTypeListBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            var listbox = sender as ListBox;
+            if (listbox == null)
+                return;
+
+            SetupListItems(listbox, -90);
+
+            listbox.Opacity = 1;
+
+            //SetupListItems(listbox, 0);
+        }
+
+        private void SetupListItems(ListBox listbox, double degree)
+        {
+            var itemsToAnimate = listbox.GetItemsInViewPort();
+
+            for (var i = 0; i < itemsToAnimate.Count; i++)
+            {
+                var item = (FrameworkElement)itemsToAnimate[i].Target;
+                if (null == item) continue;
+
+                var p = (PlaneProjection)item.Projection;
+                if (null == p)
+                {
+                    p = new PlaneProjection();
+                    item.Projection = p;
+                }
+                p.RotationX = degree;
+            }
         }
 
         private async void LoadCachedNews()
@@ -285,17 +328,18 @@ namespace LolWikiApp
                 {
                     if (!newsInfo.IsFlipNews)
                     {
-                        NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative)); 
+                        if (newsCategoryPopup.IsOpen)
+                        {
+                            newsCategoryPopup.IsOpen = false;
+                            SetAppbarForNewsList();
+                        }
+
+                        NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative));
                     }
-                    
+
                 }
             }
         }
-
-        //private void MoreNewsButton_OnClick(object sender, RoutedEventArgs e)
-        //{
-        //    NavigationService.Navigate(new Uri("/NewsListPage.xaml", UriKind.Relative));
-        //}
 
         private void NewsLongListSelector_OnRefreshTriggered(object sender, EventArgs e)
         {
@@ -661,15 +705,21 @@ namespace LolWikiApp
 
         private void HorizontalFlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           
+
         }
 
         private void HorizontalFlipView_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            var item = ((FlipView) sender).SelectedItem as NewsListInfo;
+            var item = ((FlipView)sender).SelectedItem as NewsListInfo;
             if (item != null)
             {
-                NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative)); 
+                if (newsCategoryPopup.IsOpen)
+                {
+                    newsCategoryPopup.IsOpen = false;
+                    SetAppbarForNewsList();
+                }
+
+                NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative));
             }
         }
     }

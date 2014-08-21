@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -438,11 +439,13 @@ namespace LolWikiApp
             this.OnSelectionChanged(e);
         }
 
+        private const double Tolerance = 0.1;
+
         void _innerSelector_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             //在此处判断是否第一次到达顶部
             if (this.ItemsSource != null && this.ItemsSource.Count > 0 &&
-                _viewportControl.Bounds.Top == _viewportControl.Viewport.Top && _innerSelector.ListHeaderTemplate == null)
+                Math.Abs(_viewportControl.Bounds.Top - _viewportControl.Viewport.Top) < Tolerance && _innerSelector.ListHeaderTemplate == null)
             {
                 if (!this._isTopOnce)
                 {
@@ -459,7 +462,7 @@ namespace LolWikiApp
                 //    _viewportControl.Bounds.Bottom == _viewportControl.Viewport.Bottom &&
                 //    _innerSelector.ListFooterTemplate == null)
                 if (this.ItemsSource != null && this.ItemsSource.Count > 0 &&
-                   _viewportControl.Bounds.Bottom == _viewportControl.Viewport.Bottom &&
+                   Math.Abs(_viewportControl.Bounds.Bottom - _viewportControl.Viewport.Bottom) < Tolerance &&
                     (_innerSelector.ListFooterTemplate == null || _innerSelector.ListFooterTemplate == _noMoreDataTemplateBottom))
                 {
                     if (!this._isBottomOnce)
@@ -476,7 +479,7 @@ namespace LolWikiApp
             //再此到顶
             if (!this._isRefreshing && this._isTopOnce)
             {
-                if (_viewportControl.Bounds.Top == _viewportControl.Viewport.Top)
+                if (Math.Abs(_viewportControl.Bounds.Top - _viewportControl.Viewport.Top) < Tolerance)
                 {
                     this._isRefreshing = true;
                     _innerSelector.ListHeaderTemplate = this._refreshingDataTemplate;
@@ -494,7 +497,7 @@ namespace LolWikiApp
                 //再次到底部
                 if (!this._isGettingMore && this._isBottomOnce)
                 {
-                    if (_viewportControl.Bounds.Bottom == _viewportControl.Viewport.Bottom)
+                    if (Math.Abs(_viewportControl.Bounds.Bottom - _viewportControl.Viewport.Bottom) < Tolerance)
                     {
                         this._isGettingMore = true;
                         _innerSelector.ListFooterTemplate = this._refreshingDataTemplateBottom;

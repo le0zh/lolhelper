@@ -90,20 +90,21 @@
                                     Loaded="NewsLongListSelector_OnLoaded"
                                     Margin="0 0 0 12"
                                     GettingMoreTriggered="NewsLongListSelector_OnGettingMoreTriggered"
-                                    RefreshTriggered="NewsLongListSelector_OnRefreshTriggered">
+                                    RefreshTriggered="NewsLongListSelector_OnRefreshTriggered"
+                                    MinWidth="440">
                         <local:RefreshableListBox.ItemTemplate>
                             <DataTemplate>
                                 <local:NewsListItemDataTemplateSelector Content="{Binding}">
                                     <local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6">
+                                            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6" MinWidth="440">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="110"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="110" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Thumb_img, Converter={StaticResource ImageSourceConverter}}"></Image>
+                                                    <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="110" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
                                                     <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
                                                         <TextBlock Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
                                                         <TextBlock Text="{Binding DescDisplay}"
@@ -124,11 +125,13 @@
                                             <toolkit:FlipView x:Name="HorizontalFlipView"
                                                       ItemsSource="{Binding BannerListInfos}"
                                                       UseTouchAnimationsForAllNavigation="True"
-                                                      SelectionChanged="HorizontalFlipView_OnSelectionChanged" Tap="HorizontalFlipView_Tap"
-                                                       >
+                                                      SelectionChanged="HorizontalFlipView_OnSelectionChanged" 
+                                                      Tap="HorizontalFlipView_Tap"
+                                                      MinWidth="440"
+                                                      Height="200">
                                                 <toolkit:FlipView.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Image Source="{Binding Img}" Height="210"></Image>
+                                                        <Image Source="{Binding Img}" Height="200" Stretch="Fill" ></Image>
                                                     </DataTemplate>
                                                 </toolkit:FlipView.ItemTemplate>
                                             </toolkit:FlipView>

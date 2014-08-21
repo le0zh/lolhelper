@@ -170,7 +170,27 @@
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <DataTemplate x:Key="NewsTypeListBoxTemplate">
-            <TextBlock Text="{Binding DisplayName}"  Margin="24 12 0 12" Foreground="White" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+            <StackPanel x:Name="ItemStackPanel" Opacity="0">
+                <StackPanel.Projection>
+                    <PlaneProjection RotationX='-120'/>
+                </StackPanel.Projection>
+                <StackPanel.Triggers>
+                    <EventTrigger RoutedEvent="StackPanel.Loaded">
+                        <BeginStoryboard>
+                            <BeginStoryboard.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="ItemStackPanel" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
+                                    <DoubleAnimation Storyboard.TargetName="ItemStackPanel"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"></DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard.Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </StackPanel.Triggers>
+                
+                <TextBlock x:Name="Details" Text="{Binding DisplayName}" Margin="24 12 0 12" Foreground="White" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                </TextBlock>
+            </StackPanel>
+            
         </DataTemplate>
         
         <Style x:Key="NewsTypeListBoxItemStyle" TargetType="ListBoxItem">
@@ -227,6 +247,7 @@
                                 
                             </VisualStateManager.VisualStateGroups>
                             <StackPanel x:Name="Border" Orientation="Horizontal" VerticalAlignment="Center">
+                                
                                 <ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                 <!--<CheckBox x:Name="CheckBox" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, 
                                                                         Path=IsSelected, Mode=TwoWay}" DataContext="{TemplateBinding IsSelected}" 
