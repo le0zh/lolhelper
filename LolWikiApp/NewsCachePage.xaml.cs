@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net;
+﻿using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 
 namespace LolWikiApp
 {
@@ -52,7 +44,6 @@ namespace LolWikiApp
             App.NewsViewModel.NewsRepository.NewsContentCacheCompletedEventHandler += (s, e) =>
             {
                 InfoTextBlock2.Text = "资讯内容缓存完成";
-                //StartButton.IsEnabled = true;
                 var tost = ToastPromts.GetToastWithImgAndTitle("资讯内容缓存完成!");
                 tost.Show();
 
@@ -82,7 +73,7 @@ namespace LolWikiApp
         {
             await App.NewsViewModel.FileRepository.ClearNewsCache();
 
-            var tost = ToastPromts.GetToastWithImgAndTitle("清除成功!");
+            var tost = ToastPromts.GetToastWithImgAndTitle("资讯缓存内容清除完成!");
             tost.Show();
         }
 

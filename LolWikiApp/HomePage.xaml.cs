@@ -610,27 +610,16 @@ namespace LolWikiApp
             }
             else
             {
-                //e.Cancel = true;
-                //this.Dispatcher.BeginInvoke(delegate
-                //{
-                //    if (MessageBoxResult.OK == MessageBox.Show("要退出英雄联盟助手吗?", "确认", MessageBoxButton.OKCancel))
-                //    {
-                //        //TODO:save any data needed before app is terminated.
-                //        Application.Current.Terminate();
-                //    }
-                //});
+                if (_isQuitConfirmOpened) return;
 
-                if (_isQuitConfirmOpened == false)
+                var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("再按一次退出英雄联盟助手!");
+                _isQuitConfirmOpened = true;
+                confirmQuiToastPromt.Show();
+                e.Cancel = true;
+                confirmQuiToastPromt.Completed+= (s, e2) =>
                 {
-                    var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("再按一次退出 英雄联盟助手!");
-                    _isQuitConfirmOpened = true;
-                    confirmQuiToastPromt.Show();
-                    e.Cancel = true;
-                    confirmQuiToastPromt.Completed+= (s, e2) =>
-                    {
-                        _isQuitConfirmOpened = false;
-                    };
-                }
+                    _isQuitConfirmOpened = false;
+                };
             }
         }
 

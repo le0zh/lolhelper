@@ -90,7 +90,7 @@
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="White" Margin="12 0 12 0">
+    <Grid x:Name="LayoutRoot" Background="White" Margin="0 0 0 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -98,21 +98,21 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,12,0,0">
-            <Border MinWidth="400" BorderThickness="15 0 0 0" Margin="0 0 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
+        <StackPanel Grid.Row="0" Margin="12,4,12,0">
+            <Border MinWidth="400" BorderThickness="15 0 0 0" Margin="12 0 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
                 <TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center"
                                FontSize="{StaticResource PhoneFontSizeLarge}" >
                 </TextBlock>
             </Border>
-            <TextBlock Text="离线阅读" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-            <TextBlock Text="为保证离线成功，在离线完成前，请先不要关闭该页面，给您带来不便，请谅解。" TextWrapping="Wrap" 
+            <TextBlock Margin="12 0 0 0" Text="离线阅读" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+            <TextBlock  Text="为保证离线成功，在离线完成前，请先不要关闭该页面，给您带来不便，请谅解。" TextWrapping="Wrap" 
                        Foreground="{StaticResource PhoneSubtleBrush}"
-                       Margin="0 12 0 12"
+                       Margin="12"
                        FontSize="{StaticResource PhoneFontSizeNormal}"></TextBlock>
         </StackPanel>
         <!--ContentPanel - place additional content here-->
-        <ScrollViewer Grid.Row="1" Margin="0,0,12,0">
-            <StackPanel>
+        <ScrollViewer Grid.Row="1" Margin="12,0,12,0">
+            <StackPanel Margin="12 0 12 0">
                 <StackPanel x:Name="ListReadingTipStackPanel" Visibility="Collapsed">
                     <ProgressBar IsIndeterminate="True"></ProgressBar>
                     <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="缓存资讯列表中"></TextBlock>
@@ -138,8 +138,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <StackPanel Grid.Row="2">
-
+        <StackPanel Grid.Row="2" Margin="12 0 12 0">
         </StackPanel>
 
     </Grid>
