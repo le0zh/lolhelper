@@ -43,7 +43,7 @@ namespace LolWikiApp
 
         public void Show()
         {
-            PrepareAppForFullScreen();
+            //PrepareAppForFullScreen();
             SetOrientation();
             _hostPopup.IsOpen = true;
         }
@@ -51,7 +51,7 @@ namespace LolWikiApp
         public void Hide()
         {
             _hostPopup.IsOpen = false;
-            RestoreSettings();
+            //RestoreSettings();
         }
 
         public bool IsOpen

@@ -13,7 +13,9 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="1"
+    shell:SystemTray.Opacity="0"
+    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.ForegroundColor="Black"
     Style="{StaticResource TransitionPageStyle}"
     toolkit:TiltEffect.IsTiltEnabled="True">
 

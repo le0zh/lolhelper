@@ -355,14 +355,14 @@ namespace LolWikiApp
         {
             get
             {
-                if (Price.Contains(','))
+                if (Price!=null && Price.Contains(','))
                 {
                     string[] prices = Price.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     return string.Format("金币：{0}, 点券：{1}", prices[0], prices[1]);
                 }
                 else
                 {
-                    return Price;
+                    return Price??string.Empty;
                 }
             }
         }

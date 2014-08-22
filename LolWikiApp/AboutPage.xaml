@@ -14,7 +14,9 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="1"
+    shell:SystemTray.Opacity="0"
+    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.ForegroundColor="Black"
     Style="{StaticResource TransitionPageStyle}">
     
     <!--LayoutRoot is the root grid where all page content is placed-->

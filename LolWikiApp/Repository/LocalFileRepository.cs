@@ -38,6 +38,16 @@ namespace LolWikiApp.Repository
             }
         }
 
+        public async Task<ulong> GetNewsCacheSizeInByte()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
+
+            var properties = await newsCacheRootFolder.GetBasicPropertiesAsync();
+
+            return properties.Size;
+        }
+
         private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
         {
             var localFolder = ApplicationData.Current.LocalFolder;

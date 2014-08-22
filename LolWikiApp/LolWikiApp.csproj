@@ -538,8 +538,9 @@
     <EmbeddedResource Include="Resources\AppResources.zh-Hans.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Coding4Fun.Toolkit.Controls">
-      <HintPath>..\bin\Coding4Fun.Toolkit.Controls.dll</HintPath>
+    <Reference Include="Coding4Fun.Toolkit.Controls, Version=2.0.7.0, Culture=neutral, PublicKeyToken=c5fd7b72b1a17ce4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\Coding4Fun.Toolkit.Controls.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\sl4-windowsphone71\HtmlAgilityPack.dll</HintPath>

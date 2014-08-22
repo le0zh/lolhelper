@@ -87,8 +87,7 @@
                                     Visibility="Collapsed"
                                     x:Name="NewsLongListSelector" 
                                     IsGetMoreEnabled="True"
-                                    Loaded="NewsLongListSelector_OnLoaded"
-                                    Margin="0 0 0 12"
+                                    Margin="0 0 0 4"
                                     GettingMoreTriggered="NewsLongListSelector_OnGettingMoreTriggered"
                                     RefreshTriggered="NewsLongListSelector_OnRefreshTriggered"
                                     MinWidth="440">
@@ -125,7 +124,6 @@
                                             <toolkit:FlipView x:Name="HorizontalFlipView"
                                                       ItemsSource="{Binding BannerListInfos}"
                                                       UseTouchAnimationsForAllNavigation="True"
-                                                      SelectionChanged="HorizontalFlipView_OnSelectionChanged" 
                                                       Tap="HorizontalFlipView_Tap"
                                                       MinWidth="440"
                                                       Height="200">

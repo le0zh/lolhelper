@@ -74,7 +74,23 @@
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>
                             <Border Margin="0 0 0 12" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}">
-                                <StackPanel Orientation="Vertical" Margin="0 0 0 12">
+                                <StackPanel Orientation="Vertical" Margin="0 0 0 12" x:Name="AbilitiesStackPanel">
+                                    <!--<StackPanel.Projection>
+                                        <PlaneProjection RotationX='-120'/>
+                                    </StackPanel.Projection>-->
+                                    <StackPanel.Triggers>
+                                        <EventTrigger RoutedEvent="StackPanel.Loaded">
+                                            <BeginStoryboard>
+                                                <BeginStoryboard.Storyboard>
+                                                    <Storyboard>
+                                                        <!--<DoubleAnimation Storyboard.TargetName="AbilitiesStackPanel" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />-->
+                                                        <DoubleAnimation Storyboard.TargetName="AbilitiesStackPanel"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.6"></DoubleAnimation>
+                                                    </Storyboard>
+                                                </BeginStoryboard.Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </StackPanel.Triggers>
+
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="64"></ColumnDefinition>

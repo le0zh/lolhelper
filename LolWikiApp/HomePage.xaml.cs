@@ -13,12 +13,14 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Coding4Fun.Toolkit.Controls;
 using HtmlAgilityPack;
 using LolWikiApp.Resources;
 using LolWikiApp.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Color = Microsoft.Xna.Framework.Color;
+using TiltEffect = Microsoft.Phone.Controls.TiltEffect;
 
 namespace LolWikiApp
 {
@@ -29,6 +31,8 @@ namespace LolWikiApp
         private NewsType _currentNewsType;
         private bool _isPivotFirstLoaded = false;
         private readonly FullScreenPopup _newsCategoryPopup;
+
+        private bool _isQuitConfirmOpened = false;
 
         public HomePage()
         {
@@ -166,7 +170,7 @@ namespace LolWikiApp
             foreach (var item in newsTypeListBox.Items)
             {
                 var type = item as NewsTypeWrapper;
-                if (type.Type == _currentNewsType)
+                if (type != null && type.Type == _currentNewsType)
                 {
                     break;
                 }
@@ -239,7 +243,7 @@ namespace LolWikiApp
             {
                 //this.NewsRetryNetPanel.Visibility = Visibility.Visible;
 
-                var toast = ToastPromt.GetToastWithImgAndTitle("加载失败，读取离线文章。");
+                var toast = ToastPromts.GetToastWithImgAndTitle("加载失败，读取离线文章。");
                 toast.Show();
 
                 App.NewsViewModel.LoadeNewsListInfoFromCache(_currentNewsType);
@@ -274,7 +278,6 @@ namespace LolWikiApp
 
                         NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative));
                     }
-
                 }
             }
         }
@@ -607,31 +610,33 @@ namespace LolWikiApp
             }
             else
             {
-                e.Cancel = true;
-                this.Dispatcher.BeginInvoke(delegate
+                //e.Cancel = true;
+                //this.Dispatcher.BeginInvoke(delegate
+                //{
+                //    if (MessageBoxResult.OK == MessageBox.Show("要退出英雄联盟助手吗?", "确认", MessageBoxButton.OKCancel))
+                //    {
+                //        //TODO:save any data needed before app is terminated.
+                //        Application.Current.Terminate();
+                //    }
+                //});
+
+                if (_isQuitConfirmOpened == false)
                 {
-                    if (MessageBoxResult.OK == MessageBox.Show("要退出英雄联盟助手吗?", "确认", MessageBoxButton.OKCancel))
+                    var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("再按一次退出 英雄联盟助手!");
+                    _isQuitConfirmOpened = true;
+                    confirmQuiToastPromt.Show();
+                    e.Cancel = true;
+                    confirmQuiToastPromt.Completed+= (s, e2) =>
                     {
-                        //TODO:save any data needed before app is terminated.
-                        Application.Current.Terminate();
-                    }
-                });
+                        _isQuitConfirmOpened = false;
+                    };
+                }
             }
-        }
-
-        private void NewsLongListSelector_OnLoaded(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void VideoButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/VideoPage.xaml", UriKind.Relative));
-        }
-
-        private void HorizontalFlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
         private void HorizontalFlipView_Tap(object sender, System.Windows.Input.GestureEventArgs e)

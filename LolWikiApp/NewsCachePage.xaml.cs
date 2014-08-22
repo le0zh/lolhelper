@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Coding4Fun.Toolkit.Controls;
@@ -19,11 +21,18 @@ namespace LolWikiApp
             InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            ReadNewsCachedSize();
+        }
+
         private async void CacheNewsList()
         {
             App.NewsViewModel.NewsRepository.NewsListCacheProgreessChangedEventHandler += (s, e) =>
             {
-                InfoTextBlock.Text = "缓存资讯列表中: " + e.Value.ToString();
+                InfoTextBlock.Text = "缓存资讯列表中: " + e.Value.ToString(CultureInfo.InvariantCulture);
             };
 
             App.NewsViewModel.NewsRepository.NewsListCacheCompletedEventHandler += (s, e) =>
@@ -44,8 +53,11 @@ namespace LolWikiApp
             {
                 InfoTextBlock2.Text = "资讯内容缓存完成";
                 //StartButton.IsEnabled = true;
-                var tost = ToastPromt.GetToastWithImgAndTitle("资讯内容缓存完成!");
+                var tost = ToastPromts.GetToastWithImgAndTitle("资讯内容缓存完成!");
                 tost.Show();
+
+                var sbShow = this.Resources["ShowCacheStoryboard"] as Storyboard;
+                if (sbShow != null) sbShow.Begin();
             };
 
             await App.NewsViewModel.NewsRepository.CacheNews();
@@ -61,16 +73,26 @@ namespace LolWikiApp
 
             ListReadingTipStackPanel.Visibility = Visibility.Visible;
             StartButton.Visibility = Visibility.Collapsed;
+
+            var sbHide = this.Resources["HideCacheStoryboard"] as Storyboard;
+            if (sbHide != null) sbHide.Begin();
         }
 
         private async void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
             await App.NewsViewModel.FileRepository.ClearNewsCache();
 
-            var tost = ToastPromt.GetToastWithImgAndTitle("清除成功!");
+            var tost = ToastPromts.GetToastWithImgAndTitle("清除成功!");
             tost.Show();
         }
 
+        private async void ReadNewsCachedSize()
+        {
+            var size = await App.NewsViewModel.FileRepository.GetNewsCacheSizeInByte();
+            CachedSizeTextBlock.Text = string.Format("已缓存内容：{0} KB", size/1024);
 
+            var sbShow = this.Resources["ShowCacheStoryboard"] as Storyboard;
+            if (sbShow != null) sbShow.Begin();
+        }
     }
 }

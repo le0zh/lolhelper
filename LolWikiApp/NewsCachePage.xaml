@@ -77,6 +77,16 @@
         		</Setter.Value>
         	</Setter>
         </Style>
+
+        <Storyboard x:Key="ShowCacheStoryboard">
+            <DoubleAnimation Storyboard.TargetName="DeleteCacheStackPanel" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
+            <DoubleAnimation Storyboard.TargetName="DeleteCacheStackPanel"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"></DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="HideCacheStoryboard">
+            <DoubleAnimation Storyboard.TargetName="DeleteCacheStackPanel" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="0" To="-120" Duration="0:0:0.5" />
+            <DoubleAnimation Storyboard.TargetName="DeleteCacheStackPanel"  Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.5"></DoubleAnimation>
+        </Storyboard>
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -103,13 +113,6 @@
         <!--ContentPanel - place additional content here-->
         <ScrollViewer Grid.Row="1" Margin="0,0,12,0">
             <StackPanel>
-                <!--<toolkit:ToggleSwitch Header="最新资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
-                <toolkit:ToggleSwitch Header="热评资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
-                <toolkit:ToggleSwitch Header="官方资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
-                <toolkit:ToggleSwitch Header="外服资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
-                <toolkit:ToggleSwitch Header="赛事资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>
-                <toolkit:ToggleSwitch Header="攻略资讯" HeaderTemplate="{StaticResource ToggleHeaderTemplate}"  ContentTemplate="{StaticResource ToggleContentTemplate}"/>-->
-
                 <StackPanel x:Name="ListReadingTipStackPanel" Visibility="Collapsed">
                     <ProgressBar IsIndeterminate="True"></ProgressBar>
                     <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="缓存资讯列表中"></TextBlock>
@@ -121,7 +124,17 @@
                 </StackPanel>
 
                 <Button x:Name="StartButton" Content="开始离线" Click="ButtonBase_OnClick"></Button>
-                <Button x:Name="DeleteButton" Content="删除缓存-Test" Click="DeleteButton_OnClick"></Button>
+
+                <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0.6 0 0" Margin="0 12 0 0">
+                    <StackPanel x:Name="DeleteCacheStackPanel" Opacity="0">
+                        <StackPanel.Projection>
+                            <PlaneProjection RotationX="0"></PlaneProjection>
+                        </StackPanel.Projection>
+                        <TextBlock x:Name="CachedSizeTextBlock" Margin="12 8 0 12"></TextBlock>
+                        <Button x:Name="DeleteButton" Content="删除缓存" Click="DeleteButton_OnClick"></Button>
+                    </StackPanel>
+                </Border>
+
             </StackPanel>
         </ScrollViewer>
 
