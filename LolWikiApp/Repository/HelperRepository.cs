@@ -86,11 +86,11 @@ namespace LolWikiApp.Repository
 
         public static void SaveImage(string fileName, BitmapImage source)
         {
-            MemoryStream ms = new MemoryStream();
+            var ms = new MemoryStream();
             try
             {
-                MediaLibrary library = new MediaLibrary();
-                WriteableBitmap bitmap = new WriteableBitmap(source);
+                var library = new MediaLibrary();
+                var bitmap = new WriteableBitmap(source);
                 bitmap.SaveJpeg(ms, bitmap.PixelWidth, bitmap.PixelHeight, 0, 100);
                 ms.Seek(0, SeekOrigin.Begin);
                 ms.Seek(0, SeekOrigin.Current);

@@ -371,7 +371,7 @@ namespace LolWikiApp
             try
             {
                 _freeHeros.Clear();
-                this.wrapPanel.Children.Clear();
+                this.HeroWrapPanel.Children.Clear();
                 _freeHeros = await App.ViewModel.LoadFreeHeroInfoListAsync(isForced);
                 _freeHeros.ForEach(AddFreeHeroItem);
             }
@@ -397,26 +397,28 @@ namespace LolWikiApp
 
             StackPanel stackPanel = new StackPanel();
             stackPanel.Orientation = System.Windows.Controls.Orientation.Vertical;
-            stackPanel.Margin = new Thickness(0, 8, 18, 8);
+            stackPanel.Margin = new Thickness(0, 8, 24, 8);
             //stackPanel.Height = 76;
             //stackPanel.Width = 76;
 
-            Image img = new Image();
-            img.Source = new BitmapImage(new Uri(hero.ImageUrl, UriKind.Relative));
-            img.Height = 90;
-            img.Width = 90;
-            img.Stretch = Stretch.UniformToFill;
+            var img = new Image
+            {
+                Source = new BitmapImage(new Uri(hero.ImageUrl, UriKind.Relative)),
+                Height = 90,
+                Width = 90,
+                Stretch = Stretch.UniformToFill
+            };
             img.Tap += (s, e) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative));
 
-            TextBlock textBlock = new TextBlock();
+            var textBlock = new TextBlock();
 
-            string tmpTitle = hero.Title.Length > 4 ? hero.Title.Substring(0, 4) + ".." : hero.Title;
+            var tmpTitle = hero.Title.Length > 4 ? hero.Title.Substring(0, 4) + ".." : hero.Title;
             textBlock.Text = tmpTitle;
 
             stackPanel.Children.Add(img);
             stackPanel.Children.Add(textBlock);
 
-            wrapPanel.Children.Add(stackPanel);
+            HeroWrapPanel.Children.Add(stackPanel);
         }
         #endregion
 

@@ -69,29 +69,29 @@ namespace LolWikiApp
                 case 0: //技能
                     break;
                 case 1: //出装
-                    loadEquipList();
+                    LoadEquipList();
                     break;
                 case 2: //数据
                     break;
                 case 3: //排行
-                    loadRankList();
+                    LoadRankList();
                     break;
                 case 4: //背景
                     break;
                 case 5: //皮肤
-                    loadSkinList();
+                    LoadSkinList();
                     break;
             }
         }
 
-        private void showRetryPanelAppBar(Action retryAction)
+        private void ShowRetryPanelAppBar(Action retryAction)
         {
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 1.0;
-            ApplicationBarIconButton refreshButton = new ApplicationBarIconButton();
-
-            refreshButton.IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative);
-            refreshButton.Text = "刷新";
+            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            var refreshButton = new ApplicationBarIconButton
+            {
+                IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
+                Text = "刷新"
+            };
 
             refreshButton.Click += (s, e) => retryAction();
             //refreshButton.Click += (s, e) =>  NavigationService.Navigate(new Uri("/NewsListPage.xaml", UriKind.Relative));
@@ -99,7 +99,7 @@ namespace LolWikiApp
             ApplicationBar.Buttons.Add(refreshButton);
         }
 
-        private async void loadEquipList()
+        private async void LoadEquipList()
         {
             if (equipmentRecommends.Count != 0)
             {
@@ -124,7 +124,7 @@ namespace LolWikiApp
             {
                 Equipment404TextBlock.Visibility = Visibility.Visible;
 
-                showRetryPanelAppBar(loadEquipList);
+                ShowRetryPanelAppBar(LoadEquipList);
             }
             finally
             {
@@ -132,7 +132,7 @@ namespace LolWikiApp
             }
         }
 
-        private async void loadSkinList()
+        private async void LoadSkinList()
         {
             if (heroSkins.Count != 0)
             {
@@ -156,7 +156,7 @@ namespace LolWikiApp
             catch (System.Net.Http.HttpRequestException exception404)
             {
                 Skin404TextBlock.Visibility = Visibility.Visible;
-                showRetryPanelAppBar(loadSkinList);
+                ShowRetryPanelAppBar(LoadSkinList);
             }
             finally
             {
@@ -164,7 +164,7 @@ namespace LolWikiApp
             }
         }
 
-        private async void loadRankList()
+        private async void LoadRankList()
         {
             if (heroRankList.Count != 0)
             {
@@ -191,7 +191,7 @@ namespace LolWikiApp
             catch (System.Net.Http.HttpRequestException exception404)
             {
                 rank404TextBlock.Visibility = Visibility.Visible;
-                showRetryPanelAppBar(loadRankList);
+                ShowRetryPanelAppBar(LoadRankList);
             }
             finally
             {

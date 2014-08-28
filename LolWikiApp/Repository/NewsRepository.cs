@@ -81,6 +81,9 @@ p{
 	margin-bottom: 0.5em;
 }
 
+li{
+    list-style-type:none;
+}
 </style>
 
 <script lang='javascript'> 
@@ -207,7 +210,7 @@ p{
         public async Task CacheNews()
         {
             var latestNewsList = await GetPagedNewsList(NewsType.Latest);
-            _newsToCacheCount += latestNewsList.Count+1;//+1是因为要缓存该类型的list信息
+            _newsToCacheCount += latestNewsList.Count + 1;//+1是因为要缓存该类型的list信息
             NewsListCacheProgreessChanged();
 
             NewsListCacheCompleted();

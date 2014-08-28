@@ -21,13 +21,13 @@
     BackKeyPress="DetailsPage_OnBackKeyPress"
     Style="{StaticResource TransitionPageStyle}">
 
-
     <!--Data context is set to sample data above and first item in sample data collection below and LayoutRoot contains the root grid where all other page content is placed-->
 
     <phone:Pivot Title="{Binding}" x:Name="HeroDetailMainPivot" SelectionChanged="HeroDetailMainPivot_OnSelectionChanged">
         <phone:Pivot.TitleTemplate>
             <DataTemplate>
-                    <Grid Background="Black" Width="480" Margin="-24 -18 -24 0">
+                <Border Background="White" Width="480" Margin="-24 -18 -24 4"  BorderThickness="0"  BorderBrush="{StaticResource PhoneAccentBrush}">
+                    <Grid Background="Black">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -56,7 +56,7 @@
                             </TextBlock>
                         </StackPanel>
                     </Grid>
-              
+              </Border>
             </DataTemplate>
         </phone:Pivot.TitleTemplate>
 
@@ -69,7 +69,7 @@
         </phone:Pivot.HeaderTemplate>
         
         <phone:PivotItem Header="技能">
-            <ScrollViewer Margin="12 0 0 18" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Margin="12 0 0 4" VerticalScrollBarVisibility="Auto">
                 <phone:LongListSelector ItemsSource="{Binding Abilities}" IsEnabled="False">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>
@@ -172,12 +172,10 @@
                     </local:RefreshableListBox.ItemTemplate>
                 </local:RefreshableListBox>
             </Grid>
-           
-
         </phone:PivotItem>
         
         <phone:PivotItem Header="数据">
-            <ScrollViewer Margin="12 0 0 18" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Margin="12 0 0 4" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
                     <Grid>
                         <Grid.Resources>
@@ -313,7 +311,7 @@
         </phone:PivotItem>
         
         <phone:PivotItem Header="排行">
-            <StackPanel Margin="12 0 0 18">
+            <StackPanel Margin="12 0 0 4">
                
                 <ProgressBar x:Name="TopPlayerLoadingBar" Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
 
@@ -361,7 +359,7 @@
         </phone:PivotItem>
         
         <phone:PivotItem Header="背景">
-            <ScrollViewer Margin="0 0 0 18" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Margin="0 0 0 4" VerticalScrollBarVisibility="Auto">
                 <TextBlock Text="{Binding DisplayDescription}" TextWrapping="Wrap" LineHeight="10" Style="{StaticResource PhoneTextNormalStyle}"></TextBlock>
             </ScrollViewer>
         </phone:PivotItem>

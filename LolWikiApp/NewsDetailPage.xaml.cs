@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +21,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using System.Xml.XPath;
+using Microsoft.Xna.Framework.Media;
 
 namespace LolWikiApp
 {
@@ -42,7 +45,9 @@ namespace LolWikiApp
         {
             RetryNetPanel.Visibility = Visibility.Collapsed;
 
-            NewsLoadingBar.Visibility = Visibility.Visible;
+            //NewsLoadingBar.Visibility = Visibility.Visible;
+            LoadingIndicator.IsRunning = true;
+
             try
             {
 
@@ -61,6 +66,7 @@ namespace LolWikiApp
                         _newsDetail = await App.NewsViewModel.GetNewsDetailAsync(artId);
                         var content = App.NewsViewModel.NewsRepository.RenderNewsHtmlContent(_newsDetail);
                         DataContext = _newsDetail;
+                        Debug.WriteLine(content);
                         ContentWebBrowser.NavigateToString(content);
                     }
                 }
@@ -73,7 +79,8 @@ namespace LolWikiApp
             }
             finally
             {
-                NewsLoadingBar.Visibility = Visibility.Collapsed;
+                //NewsLoadingBar.Visibility = Visibility.Collapsed;
+                LoadingIndicator.IsRunning = false;
             }
 
 
@@ -101,12 +108,95 @@ namespace LolWikiApp
         {
             ContentWebBrowser.Visibility = Visibility.Visible;
             DisplayScrollBar.Visibility = Visibility.Visible;
+
+            try
+            {
+                ContentWebBrowser.InvokeScript("eval",
+                    @"
+    window.onLinkPressed = function() {
+        var elem = event.srcElement;
+        if ( elem != null ) {
+            window.external.notify(elem.getAttribute('link'));
+        }
+        return false;
+    }
+    window.BindLinks = function() {
+        var elems = document.getElementsByTagName('img');
+        for (var i = 0; i < elems.length; i++) {
+            var elem = elems[i];
+            var link = elem.getAttribute('src');
+            elem.setAttribute('link', link);
+            if(link.indexOf('.gif')>0){
+                elem.parentNode.removeChild(elem);
+            }else{
+                elem.attachEvent('onmouseup', onLinkPressed);
+            }
+        }
+    }");
+                ContentWebBrowser.InvokeScript("BindLinks");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            Debug.WriteLine("新闻页面加载完成");
         }
 
         private int _scrollHeight = 0;
 
+        private void ShowImagePopUp(string input)
+        {
+            if (!Regex.IsMatch(input, @"http://[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)")) return;
+
+            var bitmap = new BitmapImage(new Uri(input, UriKind.Absolute));
+
+            PanZoom.Source = bitmap;
+            
+            BigImageWindow.VerticalAlignment = VerticalAlignment.Center;
+            BigImageWindow.IsOpen = true;
+            
+            ApplicationBar = new ApplicationBar { Opacity = 1 };
+
+            var downloadButton = new ApplicationBarIconButton();
+            var closeButton = new ApplicationBarIconButton();
+
+            downloadButton.IconUri = new Uri("/Assets/AppBar/save.png", UriKind.Relative);
+            downloadButton.Text = "保存";
+
+            closeButton.IconUri = new Uri("/Assets/AppBar/close.png", UriKind.Relative);
+            closeButton.Text = "关闭";
+
+            downloadButton.Click += (s2, e2) =>
+            {
+                try
+                {
+                    HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), bitmap);
+
+                    var tost = ToastPromts.GetToastWithImgAndTitle("图片保存成功");
+                    tost.Show();
+                }
+                catch
+                {
+                    var tost = ToastPromts.GetToastWithImgAndTitle("保存图片失败");
+                    tost.Show();
+                }
+            };
+
+            closeButton.Click += (s3, e3) => HideImagePopUp();
+
+            ApplicationBar.Buttons.Add(downloadButton);
+            ApplicationBar.Buttons.Add(closeButton);
+        }
+
+
         void ContentWebBrowser_ScriptNotify(object sender, NotifyEventArgs e)
         {
+            if (Regex.IsMatch(e.Value, @"http://[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)"))
+            {
+                ShowImagePopUp(e.Value);
+                return;
+            }
+
             // split 
             var parts = e.Value.Split('=');
             if (parts.Length != 2)
@@ -115,7 +205,7 @@ namespace LolWikiApp
             }
 
             // parse
-            int number = 0;
+            var number = 0;
             if (!int.TryParse(parts[1], out number))
             {
                 return;
@@ -133,20 +223,28 @@ namespace LolWikiApp
             {
                 // 确定ScrollBar位置.
                 DisplayScrollBar.Value = number;
-                //Debug.WriteLine("{0}/{1},{2}", DisplayScrollBar.Value, DisplayScrollBar.Maximum, DisplayScrollBar.Maximum - DisplayScrollBar.Value);
             }
         }
 
         private void NewsDetailPage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
-            if (_popUp.IsOpen)
+            if (BigImageWindow.IsOpen)
             {
-                //HideImagePopUp();
+                HideImagePopUp();
 
                 e.Cancel = true;
             }
 
             base.OnBackKeyPress(e);
+        }
+
+        private void HideImagePopUp()
+        {
+            if ( BigImageWindow.IsOpen)
+            {
+                BigImageWindow.IsOpen = false;
+                ApplicationBar = null;
+            }
         }
     }
 }

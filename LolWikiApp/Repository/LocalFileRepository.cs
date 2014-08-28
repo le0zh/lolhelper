@@ -43,9 +43,29 @@ namespace LolWikiApp.Repository
             var localFolder = ApplicationData.Current.LocalFolder;
             var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
 
-            var properties = await newsCacheRootFolder.GetBasicPropertiesAsync();
+            var totalSize = await GetTotalSizeForFolder(newsCacheRootFolder);
 
-            return properties.Size;
+            return totalSize;
+        }
+
+        private async Task<ulong> GetTotalSizeForFolder(StorageFolder folder)
+        {
+            var totalSize = 0UL;
+
+            var files = await folder.GetFilesAsync();
+            foreach (var storageFile in files)
+            {
+                var properties = await storageFile.GetBasicPropertiesAsync();
+                totalSize += properties.Size;
+            }
+
+            var subFolders = await folder.GetFoldersAsync();
+            foreach (var subFolder in subFolders)
+            {
+                totalSize += await GetTotalSizeForFolder(subFolder);
+            }
+
+            return totalSize;
         }
 
         private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
@@ -110,7 +130,7 @@ namespace LolWikiApp.Repository
             if (imgList.Count == 0)
                 return true;
 
-            downloadImgList(imgList,cacheFolder);
+            downloadImgList(imgList, cacheFolder);
 
             foreach (var newsListInfo in list)
             {

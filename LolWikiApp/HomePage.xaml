@@ -40,19 +40,26 @@
         <phone:Pivot Title="英雄联盟助手" SelectionChanged="MainPivot_OnSelectionChanged" x:Name="MainPivot" Background="#FFFFFBFB" Foreground="black">
             <phone:Pivot.TitleTemplate>
                 <DataTemplate>
-                    <Border MinWidth="400" BorderThickness="15 0 0 0" Margin="0 -12 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
+                    <!--<Border MinWidth="400" BorderThickness="15 0 0 0" Margin="0 -12 0 4" BorderBrush="{StaticResource PhoneAccentBrush}">
 
                         <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center"
                                FontSize="{StaticResource PhoneFontSizeLarge}" >
                         </TextBlock>
+                    </Border>-->
+
+                    <Border Background="White" Width="480" Margin="-24 -18 -24 4"  BorderThickness="0 6 0 0"  BorderBrush="{StaticResource PhoneAccentBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Data/logo.png" Height="40" Margin="12 0 0 0"></Image>
+                            <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                        </StackPanel>
                     </Border>
 
                 </DataTemplate>
             </phone:Pivot.TitleTemplate>
-
+            
             <phone:Pivot.HeaderTemplate>
                 <DataTemplate>
-                    <StackPanel  Margin="0 0 0 -12">
+                    <StackPanel  Margin="-12 0 0 -20">
                         <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
@@ -60,7 +67,7 @@
 
             <!--PivotItem item 1-->
             <phone:PivotItem Header="资讯">
-                <Grid Margin="12 0 0 0">
+                <Grid Margin="0 0 0 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -80,31 +87,31 @@
                             <Run Text="加载资讯列表失败。"></Run>
                         </TextBlock>
                     </StackPanel>
-
+                    
                     <!--Row2-->
                     <local:RefreshableListBox Grid.Row="2"
                                     Tap="NewsLongListSelector_Tap"
                                     Visibility="Collapsed"
                                     x:Name="NewsLongListSelector" 
                                     IsGetMoreEnabled="True"
-                                    Margin="0 0 0 4"
+                                    Margin="0 0 -12 2"
                                     GettingMoreTriggered="NewsLongListSelector_OnGettingMoreTriggered"
                                     RefreshTriggered="NewsLongListSelector_OnRefreshTriggered"
-                                    MinWidth="440">
+                                    MinWidth="452">
                         <local:RefreshableListBox.ItemTemplate>
                             <DataTemplate>
                                 <local:NewsListItemDataTemplateSelector Content="{Binding}">
                                     <local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6" MinWidth="440">
-                                                <Grid>
+                                            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6" >
+                                                <Grid MinWidth="452">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="110"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
 
                                                     <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="110" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
-                                                    <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 8 0">
+                                                    <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
                                                         <TextBlock Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
                                                         <TextBlock Text="{Binding DescDisplay}"
 								                                   Foreground="Gray"
@@ -125,7 +132,8 @@
                                                       ItemsSource="{Binding BannerListInfos}"
                                                       UseTouchAnimationsForAllNavigation="True"
                                                       Tap="HorizontalFlipView_Tap"
-                                                      MinWidth="440"
+                                                      MinWidth="452"
+                                                       Margin="2 0 0 0"
                                                       Height="200">
                                                 <toolkit:FlipView.ItemTemplate>
                                                     <DataTemplate>
@@ -140,7 +148,7 @@
                         </local:RefreshableListBox.ItemTemplate>
 
                     </local:RefreshableListBox>
-
+                   
                     <!--Row3-->
                     <StackPanel Grid.Row="3" Margin="12 12 0 12" Visibility="Collapsed" x:Name="NewsListGetMoreRetryNetPanel">
                         <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="Gray" Text="网络不太稳定，加载获取失败。"></TextBlock>
@@ -157,10 +165,10 @@
 
             <!--PivotItem item 2-->
             <phone:PivotItem Header="周免英雄">
-                <ScrollViewer Margin="12 0 12 12" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Margin="0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical">
-                            <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                            <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,12,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                             <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                         </StackPanel>
 
@@ -172,7 +180,7 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <toolkit:WrapPanel x:Name="wrapPanel" Orientation="Horizontal" />
+                        <toolkit:WrapPanel x:Name="HeroWrapPanel" Orientation="Horizontal" />
 
                     </StackPanel>
 
@@ -181,14 +189,14 @@
 
             <!--Panorama item 3-->
             <phone:PivotItem Header="我的">
-                <ScrollViewer Margin="14,0,10,12">
+                <ScrollViewer Margin="0,0,10,12">
                     <StackPanel Orientation="Vertical">
                         <StackPanel x:Name="MyDataLoadingBar" Visibility="Collapsed" Orientation="Vertical">
-                            <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                            <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,12,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                             <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                         </StackPanel>
 
-                        <StackPanel Visibility="Collapsed" x:Name="NeedBindPlayerInfoPanel" Margin="0">
+                        <StackPanel Visibility="Collapsed" x:Name="NeedBindPlayerInfoPanel" Margin="0 24 0 0">
                             <TextBlock Text="您还没有关绑定唤师信息。" FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                             <!--<Button Width="150" HorizontalAlignment="Left" Content="绑定" Margin="-12 12 0 0" x:Name="AddFollowButton" Click="AddFollowButton_OnClick"></Button>-->
                         </StackPanel>
@@ -357,38 +365,38 @@
 
             <phone:PivotItem Header="工具" >
                 <ScrollViewer>
-                    <StackPanel Margin="12 0 12 12">
-
-                        <Button Margin="-16 12 0 0" x:Name="VideoButton" Click="VideoButton_OnClick" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
-                            <StackPanel Width="350" HorizontalAlignment="Left" Background="{StaticResource PhoneAccentBrush}">
-                                <TextBlock Margin="12 12 0 0" Text="视频中心"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                                <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="最新英雄联盟比赛、解说视频。"
-                                   FontSize="{StaticResource PhoneFontSizeMedium}" 
-                                   Foreground="WhiteSmoke">
-                                </TextBlock>
+                    <StackPanel Margin="-12 0 0 0">
+                        
+                        <Button Margin="0 12 0 0" x:Name="VideoButton" Click="VideoButton_OnClick" Padding="0" Width="450" HorizontalAlignment="Left" BorderThickness="0">
+                            <StackPanel Width="450" HorizontalAlignment="Left" Background="{StaticResource PhoneAccentBrush}" Orientation="Horizontal">
+                                <Path Width="44" Height="38" Margin="12 0 0 0" Stretch="Fill" Fill="#FF000000" Data="F1 M 22,19L 54,19L 54,22L 61,22L 61,52L 54,52L 54,57L 22,57L 22,54L 17,54L 17,24L 22,24L 22,19 Z M 25,22.0001L 25,48L 51,48L 51,22L 25,22.0001 Z M 20,27.0001L 20,45L 22,45L 22,27.0001L 20,27.0001 Z M 54,43L 57.9999,43L 57.9999,25L 54,25L 54,43 Z M 30,33L 30,37L 28,37L 28,33L 30,33 Z M 40.25,32C 41.0784,32 42,32.9216 42,33.75L 42,39.25C 42,40.0784 41.0784,41 40.25,41L 31,41L 31,32.0001L 40.25,32 Z M 43,34L 48,30L 48,42L 43,38L 43,34 Z "/>
+                                <StackPanel>
+                                    <TextBlock Margin="12 12 0 0" Text="视频中心"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                                    <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="最新英雄联盟比赛、解说视频。" FontSize="{StaticResource PhoneFontSizeSmall}"  Foreground="WhiteSmoke">
+                                    </TextBlock>
+                                </StackPanel>
                             </StackPanel>
                         </Button>
 
-                        <Button Margin="-16 12 0 0" x:Name="ShakeItButton" Click="ShakeItButton_OnClick" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
-                            <StackPanel Width="350" HorizontalAlignment="Left" Background="{StaticResource PhoneAccentBrush}">
-                                <TextBlock Margin="12 12 0 0" Text="摇一摇"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                                <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="游戏读条时， 摇动手机以获取对阵信息。"
-                                   FontSize="{StaticResource PhoneFontSizeMedium}" 
-                                   Foreground="WhiteSmoke">
-                                </TextBlock>
+                        <Button Margin="0 12 0 0" x:Name="ShakeItButton" Click="ShakeItButton_OnClick" Padding="0" Width="450" HorizontalAlignment="Left" BorderThickness="0">
+                            <StackPanel Width="450" HorizontalAlignment="Left" Background="{StaticResource PhoneAccentBrush}" Orientation="Horizontal">
+                                <Path Width="40.3897" Height="26.8424" Margin="12 0 0 0" Stretch="Fill" StrokeThickness="1" StrokeLineJoin="Round" Stroke="#FFFFFFFF" Fill="#FF000000" Data="F1 M 38,28.5C 41.1667,28.5 50.2708,20.5833 55.0208,30.0833C 59.7708,39.5833 58.5833,52.25 55.4167,52.25C 47.5,52.25 52.25,44.3333 38,44.3333C 23.75,44.3333 28.5,52.25 20.5833,52.25C 17.4167,52.25 16.2292,39.5833 20.9792,30.0833C 25.7292,20.5834 34.8333,28.5 38,28.5 Z M 26.9167,32.0625L 26.9167,34.8334L 24.1458,34.8334L 24.1458,38L 26.9167,38L 26.9167,40.7709L 30.0833,40.7709L 30.0833,38L 32.8542,38L 32.8542,34.8334L 30.0833,34.8334L 30.0833,32.0625L 26.9167,32.0625 Z M 45.125,34.0417C 44.2505,34.0417 43.5416,34.7506 43.5416,35.625C 43.5416,36.4995 44.2505,37.2084 45.125,37.2084C 45.9994,37.2084 46.7083,36.4995 46.7083,35.625C 46.7083,34.7506 45.9994,34.0417 45.125,34.0417 Z M 48.2917,31.2708C 47.4172,31.2708 46.7083,31.9797 46.7083,32.8542C 46.7083,33.7286 47.4172,34.4375 48.2917,34.4375C 49.1661,34.4375 49.875,33.7286 49.875,32.8542C 49.875,31.9797 49.1661,31.2708 48.2917,31.2708 Z M 48.2917,37.2083C 47.4172,37.2083 46.7083,37.9172 46.7083,38.7917C 46.7083,39.6661 47.4172,40.375 48.2917,40.375C 49.1661,40.375 49.875,39.6661 49.875,38.7917C 49.875,37.9172 49.1661,37.2083 48.2917,37.2083 Z M 51.4583,34.0417C 50.5839,34.0417 49.875,34.7505 49.875,35.625C 49.875,36.4995 50.5839,37.2083 51.4583,37.2083C 52.3328,37.2083 53.0417,36.4995 53.0417,35.625C 53.0417,34.7505 52.3328,34.0417 51.4583,34.0417 Z "/>
+                                <StackPanel>
+                                    <TextBlock Margin="12 12 0 0" Text="摇一摇"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                                    <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="游戏读条时， 摇动手机以获取对阵信息。" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="WhiteSmoke"></TextBlock>
+                                </StackPanel>
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="SearchRecordButton" Click="SearchRecordButton_OnClick" Margin="-16 12 0 0" Padding="0" Width="380" HorizontalAlignment="Left" BorderThickness="0">
-                            <StackPanel  Width="350"  Background="{StaticResource PhoneAccentBrush}">
-                                <TextBlock Margin="12 12 0 0" Text="战绩查询"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                                <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="查询召唤师的战绩。"
-                                   FontSize="{StaticResource PhoneFontSizeMedium}" 
-                                    Foreground="WhiteSmoke">
-                                </TextBlock>
+                        <Button x:Name="SearchRecordButton" Click="SearchRecordButton_OnClick" Margin="0 12 0 0" Padding="0" Width="450" HorizontalAlignment="Left" BorderThickness="0">
+                            <StackPanel  Width="450"  Background="{StaticResource PhoneAccentBrush}" Orientation="Horizontal">
+                                <Path Width="50" Height="43" Margin="12 0 0 0" Stretch="Fill" Fill="#FF000000" Data="F1 M 39.5,38C 44.1944,38 48,41.8056 48,46.5C 48,51.1944 44.1944,55 39.5,55C 38.0628,55 36.7089,54.6433 35.5219,54.0136L 30.2678,59.2678C 29.2915,60.2441 27.7085,60.2441 26.7322,59.2678C 25.7559,58.2915 25.7559,56.7085 26.7322,55.7322L 31.9864,50.4781C 31.3567,49.2912 31,47.9372 31,46.5C 31,41.8056 34.8056,38 39.5,38 Z M 39.5,42C 37.0147,42 35,44.0147 35,46.5C 35,48.9853 37.0147,51 39.5,51C 41.9853,51 44,48.9853 44,46.5C 44,44.0147 41.9853,42 39.5,42 Z M 24.7333,23C 27.6789,23 30.0667,25.3878 30.0667,28.3333C 30.0667,31.2789 27.6789,33.6667 24.7333,33.6667C 21.7878,33.6667 19.4,31.2789 19.4,28.3333C 19.4,25.3878 21.7878,23 24.7333,23 Z M 19.4,40.3834C 18.6889,40.7389 17.2667,43.5833 17.2667,43.5833C 17.2667,43.5833 16.5556,44.65 16.2,48.9166L 13,47.85L 14.0667,42.5167C 14.0667,42.5167 16.2,35.05 20.4666,35.0501L 27.8503,35.0501C 28.7183,32.8756 30.6793,29.0501 33.7333,29.0501L 42.2666,29.0501C 45.3206,29.0501 47.2817,32.8756 48.1497,35.0501L 55.5332,35.0501C 59.8,35.05 61.9333,42.5167 61.9333,42.5167L 63,47.85L 59.8,48.9167C 59.4444,44.65 58.7334,43.5833 58.7334,43.5833C 58.7334,43.5833 57.3111,40.7389 56.6,40.3833L 57.031,50.0704C 55.4095,50.7029 53.6453,51.05 51.8,51.05C 50.6941,51.05 49.6172,50.9253 48.5828,50.6893C 49.1716,49.415 49.5,47.9959 49.5,46.5C 49.5,40.9772 45.0228,36.5 39.5,36.5C 35.8593,36.5 32.6731,38.4455 30.9242,41.3536C 30.612,40.8873 30.3008,40.5004 30.0666,40.3834L 30.1775,42.8745C 29.74,43.9985 29.5,45.2212 29.5,46.5C 29.5,47.8005 29.7482,49.043 30.2,50.1828C 28.6611,50.7439 26.9996,51.05 25.2666,51.05C 23.0173,51.05 20.8884,50.5343 18.9918,49.6146L 19.4,40.3834 Z M 43.3333,34.3834L 43.4489,36.9807C 43.7874,36.5864 44.156,36.2274 44.5548,35.9288C 44.1353,35.2331 43.6595,34.5464 43.3333,34.3834 Z M 38,17C 40.9455,17 43.3333,19.3878 43.3333,22.3334C 43.3333,25.2789 40.9455,27.6667 38,27.6667C 35.0545,27.6667 32.6667,25.2789 32.6667,22.3334C 32.6667,19.3878 35.0545,17 38,17 Z M 32.6667,34.3834C 32.3405,34.5464 31.8647,35.2332 31.4452,35.9289C 31.8442,36.2276 32.2131,36.5869 32.5518,36.9815L 32.6667,34.3834 Z M 51.2667,23C 54.2122,23 56.6,25.3878 56.6,28.3334C 56.6,31.2789 54.2122,33.6667 51.2667,33.6667C 48.3211,33.6667 45.9333,31.2789 45.9333,28.3334C 45.9333,25.3878 48.3211,23 51.2667,23 Z "/>
+                                <StackPanel>
+                                    <TextBlock Margin="12 12 0 0" Text="战绩查询"  FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                                    <TextBlock Margin="12 8 0 12" TextWrapping="Wrap" Text="查询召唤师的战绩。" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="WhiteSmoke"/>
+                                </StackPanel>
                             </StackPanel>
                         </Button>
-
                     </StackPanel>
                 </ScrollViewer>
 

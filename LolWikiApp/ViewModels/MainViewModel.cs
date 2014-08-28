@@ -50,24 +50,24 @@ namespace LolWikiApp.ViewModels
 
         #region 读取图片html模板
 
-        private string imageHtmlTemplateCache;
+        private string _imageHtmlTemplateCache;
         public async Task<string> GetImageHtmlTemplate()
         {
-            if (string.IsNullOrEmpty(imageHtmlTemplateCache))
+            if (string.IsNullOrEmpty(_imageHtmlTemplateCache))
             {
-                imageHtmlTemplateCache = await HelperRepository.ReadImageHtmlTemplage();
+                _imageHtmlTemplateCache = await HelperRepository.ReadImageHtmlTemplage();
             }
 
             if (Application.Current.GetTheme() == Theme.Light)
             {
-                imageHtmlTemplateCache = imageHtmlTemplateCache.Replace("$theme$", "fff");
+                _imageHtmlTemplateCache = _imageHtmlTemplateCache.Replace("$theme$", "fff");
             }
             else
             {
-                imageHtmlTemplateCache = imageHtmlTemplateCache.Replace("$theme$", "000");
+                _imageHtmlTemplateCache = _imageHtmlTemplateCache.Replace("$theme$", "000");
             }
 
-            return imageHtmlTemplateCache;
+            return _imageHtmlTemplateCache;
         }
         #endregion
 
