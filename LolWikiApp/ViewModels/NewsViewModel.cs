@@ -19,6 +19,11 @@ namespace LolWikiApp.ViewModels
 
         public NewsCacheListInfo NewsCacheListInfo { get; private set; }
 
+        /// <summary>
+        /// 标识离线是否在进行中
+        /// </summary>
+        public bool IsNewsCaching { get; set; }
+
         private NewsType _oldNewsType;
         public ObservableCollection<NewsListInfo> NewsListInfObservableCollection { get; private set; }
 
@@ -54,28 +59,6 @@ namespace LolWikiApp.ViewModels
             NewsCacheListInfo = new NewsCacheListInfo();
         }
 
-        //public async Task LoadHeadLineListForHomePageAsync(int size = 10)
-        //{
-        //    List<News> list = await this.newsRepository.GetRecentNewsListAsync(size);
-
-        //    HeadLineListForHomePage.Clear();
-        //    foreach (var n in list)
-        //    {
-        //        HeadLineListForHomePage.Add(n);
-        //    }
-        //}
-
-        //public async Task LoadHeaderLinesListForListPageAsync()
-        //{
-        //    List<News> list = await this.newsRepository.GetTopicNewsListAsync();
-
-        //    HeaderLinesListForListPage.Clear();
-        //    foreach (var n in list)
-        //    {
-        //        HeaderLinesListForListPage.Add(n);
-        //    }
-        //}
-
         public async Task<List<NewsListInfo>> LoadNewsListInfoListAsync(NewsType type, int page = 1)
         {
             List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
@@ -94,10 +77,17 @@ namespace LolWikiApp.ViewModels
 
                 if (type == NewsType.Latest)
                 {
-                    var bannerList = await NewsRepository.GetBannerNewsList();
-                    var bannerNewsInfo = new NewsListInfo() {IsFlipNews = true};
-                    bannerNewsInfo.BannerListInfos.AddRange(bannerList);
-                    NewsListInfObservableCollection.Add(bannerNewsInfo);
+                    try
+                    {
+                        var bannerList = await NewsRepository.GetBannerNewsList();
+                        var bannerNewsInfo = new NewsListInfo() { IsFlipNews = true };
+                        bannerNewsInfo.BannerListInfos.AddRange(bannerList);
+                        NewsListInfObservableCollection.Add(bannerNewsInfo);
+                    }
+                    catch
+                    {
+                        Debug.WriteLine("Banner News not found.");
+                    }
                 }
             }
             

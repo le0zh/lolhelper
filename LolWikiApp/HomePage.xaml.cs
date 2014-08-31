@@ -340,10 +340,9 @@ namespace LolWikiApp
         #region 每周免费英雄
         private void BindFreeHeroInfoAsync()
         {
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 1.0;
-            ApplicationBarIconButton refreshButton = new ApplicationBarIconButton();
-            ApplicationBarIconButton moreButton = new ApplicationBarIconButton();
+            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            var refreshButton = new ApplicationBarIconButton();
+            var moreButton = new ApplicationBarIconButton();
 
             refreshButton.IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative);
             refreshButton.Text = "刷新";
@@ -352,18 +351,18 @@ namespace LolWikiApp
             moreButton.Text = "全部英雄";
 
             moreButton.Click += (s, e) => NavigationService.Navigate(new Uri("/AllHeroPage.xaml", UriKind.Relative));
-            refreshButton.Click += (s1, e1) => refreshFreeHeroList(true);
+            refreshButton.Click += (s1, e1) => RefreshFreeHeroList(true);
 
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(moreButton);
 
             if (_freeHeros.Count == 0)
             {
-                refreshFreeHeroList();
+                RefreshFreeHeroList();
             }
         }
 
-        private async void refreshFreeHeroList(bool isForced = false)
+        private async void RefreshFreeHeroList(bool isForced = false)
         {
             FreeHeroLoadingBar.Visibility = Visibility.Visible;
             this.FreeHeroRetryNetPanel.Visibility = Visibility.Collapsed;
@@ -395,9 +394,11 @@ namespace LolWikiApp
             if (hero == null)
                 return;
 
-            StackPanel stackPanel = new StackPanel();
-            stackPanel.Orientation = System.Windows.Controls.Orientation.Vertical;
-            stackPanel.Margin = new Thickness(0, 8, 24, 8);
+            var stackPanel = new StackPanel
+            {
+                Orientation = System.Windows.Controls.Orientation.Vertical,
+                Margin = new Thickness(0, 8, 32, 8)
+            };
             //stackPanel.Height = 76;
             //stackPanel.Width = 76;
 

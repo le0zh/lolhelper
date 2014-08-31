@@ -37,25 +37,8 @@
 
     <!--LayoutRoot contains the root grid where all other page content is placed-->
     <Grid x:Name="LayoutRoot">
-        <phone:Pivot Title="英雄联盟助手" SelectionChanged="MainPivot_OnSelectionChanged" x:Name="MainPivot" Background="#FFFFFBFB" Foreground="black">
-            <phone:Pivot.TitleTemplate>
-                <DataTemplate>
-                    <!--<Border MinWidth="400" BorderThickness="15 0 0 0" Margin="0 -12 0 4" BorderBrush="{StaticResource PhoneAccentBrush}">
-
-                        <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center"
-                               FontSize="{StaticResource PhoneFontSizeLarge}" >
-                        </TextBlock>
-                    </Border>-->
-
-                    <Border Background="White" Width="480" Margin="-24 -18 -24 4"  BorderThickness="0 6 0 0"  BorderBrush="{StaticResource PhoneAccentBrush}">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="Data/logo.png" Height="40" Margin="12 0 0 0"></Image>
-                            <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                        </StackPanel>
-                    </Border>
-
-                </DataTemplate>
-            </phone:Pivot.TitleTemplate>
+        <phone:Pivot Title="英雄联盟助手" SelectionChanged="MainPivot_OnSelectionChanged" x:Name="MainPivot" Background="White" Foreground="black"
+                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
             
             <phone:Pivot.HeaderTemplate>
                 <DataTemplate>
@@ -165,7 +148,7 @@
 
             <!--PivotItem item 2-->
             <phone:PivotItem Header="周免英雄">
-                <ScrollViewer Margin="0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical">
                             <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,12,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
@@ -189,7 +172,7 @@
 
             <!--Panorama item 3-->
             <phone:PivotItem Header="我的">
-                <ScrollViewer Margin="0,0,10,12">
+                <ScrollViewer Margin="0">
                     <StackPanel Orientation="Vertical">
                         <StackPanel x:Name="MyDataLoadingBar" Visibility="Collapsed" Orientation="Vertical">
                             <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,12,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>

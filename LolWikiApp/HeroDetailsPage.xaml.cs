@@ -322,22 +322,20 @@ namespace LolWikiApp
 
         private async void SkinImage_OnTap(object sender, GestureEventArgs e)
         {
-            Image img = sender as Image;
+            var img = sender as Image;
             if (img == null)
                 return;
 
-            BitmapImage bitmap = img.Source as BitmapImage;
+            var bitmap = img.Source as BitmapImage;
 
-            string htmlContent = await App.ViewModel.GetImageHtmlTemplate();
+            var htmlContent = await App.ViewModel.GetImageHtmlTemplate();
             htmlContent = htmlContent.Replace("$src$", img.Tag.ToString())
                                      .Replace("$w2$", (bitmap.PixelWidth / 2).ToString())
                                      .Replace("$h2$", (bitmap.PixelHeight / 2).ToString())
                                      .Replace("$w$", bitmap.PixelWidth.ToString())
                                      .Replace("$h$", bitmap.DecodePixelHeight.ToString());
 
-            WebBrowser wb = new WebBrowser();
-            wb.Height = 800;
-            wb.Width = 480;
+            var wb = new WebBrowser {Height = 800, Width = 480};
             wb.NavigateToString(htmlContent);
 
             wb.Background = Application.Current.GetTheme() == Theme.Dark ? new SolidColorBrush(Colors.Black)
@@ -346,8 +344,8 @@ namespace LolWikiApp
 
             ApplicationBar = new ApplicationBar();
             ApplicationBar.Opacity = 0.8;
-            ApplicationBarIconButton downloadButton = new ApplicationBarIconButton();
-            ApplicationBarIconButton closeButton = new ApplicationBarIconButton();
+            var downloadButton = new ApplicationBarIconButton();
+            var closeButton = new ApplicationBarIconButton();
 
             downloadButton.IconUri = new Uri("/Assets/AppBar/save.png", UriKind.Relative);
             downloadButton.Text = "保存";
@@ -357,7 +355,16 @@ namespace LolWikiApp
 
             downloadButton.Click += (s2, e2) =>
             {
-                HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), bitmap);
+                var isSuccess = HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), bitmap);
+                if (isSuccess)
+                {
+                    ToastPromts.GetToastWithImgAndTitle("图片保存成功").Show();
+                }
+                else
+                {
+                    ToastPromts.GetToastWithImgAndTitle("图片保存失败").Show();
+                }
+
             };
 
             closeButton.Click += (s3, e3) => HideImagePopUp();

@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
@@ -27,55 +28,55 @@
             <TextBlock HorizontalAlignment="Right" FontSize="{StaticResource PhoneFontSizeSmall}" Text="{Binding}"/>
         </DataTemplate>
         <Style x:Key="MyProgressBarStyle" TargetType="ProgressBar">
-        	<Setter Property="Foreground" Value="{StaticResource PhoneAccentBrush}"/>
-        	<Setter Property="Background" Value="{StaticResource PhoneProgressBarBackgroundBrush}"/>
-        	<Setter Property="Maximum" Value="100"/>
-        	<Setter Property="IsHitTestVisible" Value="False"/>
-        	<Setter Property="Padding" Value="{StaticResource PhoneHorizontalMargin}"/>
-        	<Setter Property="Template">
-        		<Setter.Value>
-        			<ControlTemplate TargetType="ProgressBar">
-        				<Grid>
-        					<VisualStateManager.VisualStateGroups>
-        						<VisualStateGroup x:Name="CommonStates">
-        							<VisualState x:Name="Determinate"/>
-        							<VisualState x:Name="Indeterminate">
-        								<Storyboard Duration="00:00:00" RepeatBehavior="Forever">
-        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="IndeterminateRoot">
-        										<DiscreteObjectKeyFrame KeyTime="0">
-        											<DiscreteObjectKeyFrame.Value>
-        												<Visibility>Visible</Visibility>
-        											</DiscreteObjectKeyFrame.Value>
-        										</DiscreteObjectKeyFrame>
-        									</ObjectAnimationUsingKeyFrames>
-        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeterminateRoot">
-        										<DiscreteObjectKeyFrame KeyTime="0">
-        											<DiscreteObjectKeyFrame.Value>
-        												<Visibility>Collapsed</Visibility>
-        											</DiscreteObjectKeyFrame.Value>
-        										</DiscreteObjectKeyFrame>
-        									</ObjectAnimationUsingKeyFrames>
-        								</Storyboard>
-        							</VisualState>
-        						</VisualStateGroup>
-        					</VisualStateManager.VisualStateGroups>
-        					<Grid x:Name="DeterminateRoot" Visibility="Visible" Margin="12,0">
-        						<Rectangle x:Name="ProgressBarTrack" Height="30" Fill="{StaticResource PhoneSubtleBrush}"/>
-        						<Rectangle x:Name="ProgressBarIndicator" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="30"/>
-        					</Grid>
-        					<Border x:Name="IndeterminateRoot" Margin="{TemplateBinding Padding}" Visibility="Collapsed">
-        						<Grid x:Name="SliderContainer" IsHitTestVisible="False">
-        							<Rectangle x:Name="Slider0" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
-        							<Rectangle x:Name="Slider1" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
-        							<Rectangle x:Name="Slider2" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
-        							<Rectangle x:Name="Slider3" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
-        							<Rectangle x:Name="Slider4" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
-        						</Grid>
-        					</Border>
-        				</Grid>
-        			</ControlTemplate>
-        		</Setter.Value>
-        	</Setter>
+            <Setter Property="Foreground" Value="{StaticResource PhoneAccentBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PhoneProgressBarBackgroundBrush}"/>
+            <Setter Property="Maximum" Value="100"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Padding" Value="{StaticResource PhoneHorizontalMargin}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Determinate"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard Duration="00:00:00" RepeatBehavior="Forever">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="IndeterminateRoot">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeterminateRoot">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Collapsed</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid x:Name="DeterminateRoot" Visibility="Visible" Margin="12,0">
+                                <Rectangle x:Name="ProgressBarTrack" Height="30" Fill="{StaticResource PhoneSubtleBrush}"/>
+                                <Rectangle x:Name="ProgressBarIndicator" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="30"/>
+                            </Grid>
+                            <Border x:Name="IndeterminateRoot" Margin="{TemplateBinding Padding}" Visibility="Collapsed">
+                                <Grid x:Name="SliderContainer" IsHitTestVisible="False">
+                                    <Rectangle x:Name="Slider0" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
+                                    <Rectangle x:Name="Slider1" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
+                                    <Rectangle x:Name="Slider2" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
+                                    <Rectangle x:Name="Slider3" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
+                                    <Rectangle x:Name="Slider4" CacheMode="BitmapCache" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="4" Width="4"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Storyboard x:Key="ShowCacheStoryboard">
@@ -89,58 +90,78 @@
         </Storyboard>
     </phone:PhoneApplicationPage.Resources>
 
-    <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="White" Margin="0 0 0 0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid x:Name="LayoutRoot">
+        <phone:Pivot Title="英雄联盟助手" x:Name="MainPivot" Background="White" Foreground="black"
+                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,4,12,0">
-            <Border MinWidth="400" BorderThickness="15 0 0 0" Margin="12 0 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
-                <TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center"
-                               FontSize="{StaticResource PhoneFontSizeLarge}" >
-                </TextBlock>
-            </Border>
-            <TextBlock Margin="12 0 0 0" Text="离线阅读" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-            <TextBlock  Text="为保证离线成功，在离线完成前，请先不要关闭该页面，给您带来不便，请谅解。" TextWrapping="Wrap" 
-                       Foreground="{StaticResource PhoneSubtleBrush}"
-                       Margin="12"
-                       FontSize="{StaticResource PhoneFontSizeNormal}"></TextBlock>
-        </StackPanel>
-        <!--ContentPanel - place additional content here-->
-        <ScrollViewer Grid.Row="1" Margin="12,0,12,0">
-            <StackPanel Margin="12 0 12 0">
-                <StackPanel x:Name="ListReadingTipStackPanel" Visibility="Collapsed">
-                    <ProgressBar IsIndeterminate="True"></ProgressBar>
-                    <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="缓存资讯列表中"></TextBlock>
-                </StackPanel>
-
-                <StackPanel x:Name="ContentReadingTipStackPanel" Visibility="Collapsed">
-                    <TextBlock Margin="12" x:Name="InfoTextBlock2" TextWrapping="Wrap" Text="资讯内容缓存中:"></TextBlock>
-                    <ProgressBar IsIndeterminate="False" x:Name="CachingProgressBar" Style="{StaticResource MyProgressBarStyle}" ></ProgressBar>
-                </StackPanel>
-
-                <Button x:Name="StartButton" Content="开始离线" Click="ButtonBase_OnClick"></Button>
-
-                <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0.6 0 0" Margin="0 12 0 0">
-                    <StackPanel x:Name="DeleteCacheStackPanel" Opacity="0">
-                        <StackPanel.Projection>
-                            <PlaneProjection RotationX="0"></PlaneProjection>
-                        </StackPanel.Projection>
-                        <TextBlock x:Name="CachedSizeTextBlock" Margin="12 8 0 12"></TextBlock>
-                        <Button x:Name="DeleteButton" Content="删除缓存" Click="DeleteButton_OnClick"></Button>
+            <phone:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel  Margin="-12 0 0 -20">
+                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
                     </StackPanel>
-                </Border>
+                </DataTemplate>
+            </phone:Pivot.HeaderTemplate>
+            
+            <!--PivotItem item 1-->
+            <phone:PivotItem Header="离线阅读">
+                <Grid Background="White" Margin="0 0 0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            </StackPanel>
-        </ScrollViewer>
 
-        <StackPanel Grid.Row="2" Margin="12 0 12 0">
-        </StackPanel>
+                    <!--ContentPanel - place additional content here-->
 
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}" Text="默认将离线缓存各个资讯类别的前20条内容，离线后，可以再无网络环境下查看资讯内容。" TextWrapping="Wrap"></TextBlock>
+                    </StackPanel>
+                    
+                    <ScrollViewer Grid.Row="1">
+                        <StackPanel>
+                            <StackPanel x:Name="ListReadingTipStackPanel" Visibility="Collapsed">
+                                <ProgressBar IsIndeterminate="True"></ProgressBar>
+                                <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="缓存资讯列表中"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel x:Name="ContentReadingTipStackPanel" Visibility="Collapsed">
+                                <TextBlock Margin="12" x:Name="InfoTextBlock2" TextWrapping="Wrap" Text="资讯内容缓存中:"></TextBlock>
+                                <ProgressBar IsIndeterminate="False" x:Name="CachingProgressBar" Style="{StaticResource MyProgressBarStyle}" ></ProgressBar>
+                            </StackPanel>
+
+                            <Button x:Name="StartButton" Content="开始离线" Click="ButtonBase_OnClick"></Button>
+
+                            <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0.6 0 0" Margin="0 12 0 0">
+                                <StackPanel>
+                                    <telerikPrimitives:RadBusyIndicator Margin="0 12 0 12" Background="White"
+                                           x:Name="CachedSizeLoadingIndicator"
+                                            Content="已缓存内容读取中"
+                                            IsRunning="True"
+                                            AnimationStyle="AnimationStyle9"/>
+
+                                    <StackPanel x:Name="DeleteCacheStackPanel" Opacity="0">
+                                        <StackPanel.Projection>
+                                            <PlaneProjection RotationX="0"></PlaneProjection>
+                                        </StackPanel.Projection>
+                                        <TextBlock x:Name="CachedSizeTextBlock" Margin="12 8 0 12"></TextBlock>
+                                        <Button x:Name="DeleteButton" Content="删除缓存" Click="DeleteButton_OnClick"></Button>
+                                    </StackPanel>
+
+                                </StackPanel>
+
+
+                            </Border>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2">
+                    </StackPanel>
+
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
     </Grid>
 
 </phone:PhoneApplicationPage>

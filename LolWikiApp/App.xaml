@@ -338,6 +338,16 @@
             <Setter Property="Background" Value="White"></Setter>
         </Style>
         
+        <!--data template for main pivot for every page-->
+        <DataTemplate x:Key="MainPivotTitleTemplate">
+            <Border Background="White" Width="480" Margin="-24 -18 -24 8"  BorderThickness="0 6 0 0"  BorderBrush="{StaticResource PhoneAccentBrush}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Data/logo.png" Height="40" Margin="12 0 0 0"></Image>
+                    <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

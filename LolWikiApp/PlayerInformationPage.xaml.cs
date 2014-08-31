@@ -50,7 +50,7 @@ namespace LolWikiApp
                     isToBind = true;
             }
 
-            TitleTextBlock.Text = isToBind ? "绑定召唤师信息" : "搜索召唤师";
+            PivotItem1.Header = isToBind ? "绑定召唤师信息" : "搜索召唤师";
 
             base.OnNavigatedTo(e);
         }
@@ -63,19 +63,17 @@ namespace LolWikiApp
         private async void SearchBarIconButton_OnClick(object sender, EventArgs e)
         {
             this.Focus();
-            string userName = this.PlayerNameTextBox.Text;
-            ServerInfo serverInfo = (ServerInfo)this.ServerListPicker.SelectedItem;
-            string serverName = serverInfo.Value;
+            var userName = this.PlayerNameTextBox.Text;
+            var serverInfo = (ServerInfo)this.ServerListPicker.SelectedItem;
 
-            ApplicationBarIconButton searchButton = this.ApplicationBar.Buttons[0] as ApplicationBarIconButton;
-
-            //const string foundTitle = "";
-
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(serverName))
+            if (string.IsNullOrEmpty(userName) || serverInfo == null)
             {
-                MessageBox.Show("请输入召唤师和服务器信息。");
+                ToastPromts.GetToastWithImgAndTitle("请输入召唤师和服务器名称!").Show();
                 return;
             }
+
+            var serverName = serverInfo.Value;
+            var searchButton = this.ApplicationBar.Buttons[0] as ApplicationBarIconButton;
 
             NotFoundTextBlock.Visibility = Visibility.Collapsed;
             SearchLoadingBar.Visibility = Visibility.Visible;

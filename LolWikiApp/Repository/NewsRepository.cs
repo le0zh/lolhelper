@@ -18,8 +18,8 @@ namespace LolWikiApp.Repository
 
     public class NewsRepository : Repository
     {
-        public EventHandler<ProgressChangedArgs> NewsListCacheProgreessChangedEventHandler;
-        public EventHandler<ProgressChangedArgs> NewsListCacheCompletedEventHandler;
+        public EventHandler<ProgressChangedArgs> ReadNewsListToCacheProgreessChangedEventHandler;
+        public EventHandler<ProgressChangedArgs> ReadNewsListToCacheCompletedEventHandler;
 
         public EventHandler<ProgressChangedArgs> NewsContentCacheProgressChangedEventHandler;
         public EventHandler<ProgressChangedArgs> NewsContentCacheCompletedEventHandler;
@@ -175,6 +175,81 @@ li{
             return count;
         }
 
+        private int _newsToCacheCount = 5;//初始化为5，因为是5种类型
+        private int _newsCachedCount;
+
+        private readonly Dictionary<NewsType, List<NewsListInfo>> _newsTypeAndListDict = new Dictionary<NewsType, List<NewsListInfo>>()
+        {
+            {NewsType.Latest, new List<NewsListInfo>()},
+            {NewsType.MostCommented, new List<NewsListInfo>()},
+            {NewsType.Offical, new List<NewsListInfo>()},
+            {NewsType.OutsideServer, new List<NewsListInfo>()},
+            {NewsType.Match, new List<NewsListInfo>()},
+            {NewsType.Guide, new List<NewsListInfo>()}
+        };
+
+        /// <summary>
+        /// 缓存新闻内容
+        /// </summary>
+        public async Task CacheNews()
+        {
+            _newsToCacheCount = 6;
+            _newsCachedCount = 0;
+
+            //Read news list to cache
+            foreach (var type in _newsTypeAndListDict.Keys)
+            {
+                var listTmp = await GetPagedNewsList(type);
+                _newsTypeAndListDict[type].Clear();
+                _newsTypeAndListDict[type].AddRange(listTmp);
+                _newsToCacheCount += listTmp.Count;
+                ReadNewsListToCacheProgreessChanged();
+            }
+            
+            ReadNewsListToCacheCompleted();
+
+            //Save news each by each
+            foreach (var list in _newsTypeAndListDict.Values)
+            {
+                await SaveNewsListContent(list);
+            }
+
+            NewsContentCacheCompleted();
+        }
+
+        private async Task SaveNewsListContent(IEnumerable<NewsListInfo> listInfos)
+        {
+            foreach (var listInfo in listInfos)
+            {
+                var isCached = await _localFileRepository.CheckNewsIsCachedOrNot(listInfo.Id);
+                if (isCached)
+                {
+                    Debug.WriteLine(listInfo.Id + " is cached.");
+                    _newsCachedCount++;
+                }
+                else
+                {
+                    Debug.WriteLine("going to cache:" + listInfo.Id + ".html//" + listInfo.Title);
+                    //TODO: EXCEPTION HANDER HERE
+                    try
+                    {
+                        NewsDetail detail = await GetNewsDetailAsync(listInfo.Id);
+                        var content = RenderNewsHtmlContent(detail);
+
+                        var path = await _localFileRepository.SaveNewsContentToCacheFolder(listInfo.Id, content);
+                        _newsCachedCount++;
+                        Debug.WriteLine("##Cached: " + path);
+                        NewsContentCacheProgreessChanged();
+                        App.NewsViewModel.NewsCacheListInfo.LatestNewsCacheList.Add(listInfo);
+                    }
+                    catch (HttpRequestException)
+                    {
+                        Debug.WriteLine("4O4:" + listInfo.Id + ".html");
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// 缓存列表，仅仅是列表，没有内容
         /// </summary>
@@ -183,86 +258,54 @@ li{
         public async Task<int> SaveNewsCacheList(NewsCacheListInfo cacheListInfo)
         {
             var count = 0;
-            //TODO:暂时只是缓存了最新资讯
-            await _localFileRepository.SaveNewsListCacheAsync("Latest.json", cacheListInfo.FileNameAndListDcit["Latest.json"]);
-            count++;
 
-            _newsCachedCount++;
-            NewsContentCacheProgreessChanged();
-            //foreach (var fileName in cacheListInfo.FileNameAndListDcit.Keys)
-            //{
-            //    await _localFileRepository.SaveNewsListCacheAsync(fileName, cacheListInfo.FileNameAndListDcit[fileName]);
-            //    count++;
+            const string latestJsonFile = "Latest.json";
+            const string mostCommentedJsonFile = "MostCommented.json";
+            const string officalJsonFile = "Offical.json";
+            const string outsideServerJsonFile = "OutsideServer.json";
+            const string matchJsonFile = "Match.json";
+            const string guideJsonFile = "Guide.json";
 
-            //    _newsCachedCount++;
-            //    NewsContentCacheProgreessChanged();
-            //}
+            var jsonFileList = new List<string> { latestJsonFile, mostCommentedJsonFile, officalJsonFile, outsideServerJsonFile, matchJsonFile, guideJsonFile };
+
+            foreach (var jsonFile in jsonFileList)
+            {
+                await _localFileRepository.SaveNewsListCacheAsync(jsonFile, cacheListInfo.FileNameAndListDcit[jsonFile]);
+                count++;
+            }
+
+            //_newsCachedCount++;
+            //NewsContentCacheProgreessChanged();
+
+            foreach (var fileName in cacheListInfo.FileNameAndListDcit.Keys)
+            {
+                await _localFileRepository.SaveNewsListCacheAsync(fileName, cacheListInfo.FileNameAndListDcit[fileName]);
+                count++;
+
+                _newsCachedCount++;
+                NewsContentCacheProgreessChanged();
+            }
+
             cacheListInfo.IsDataLoaded = true;
             return count;
         }
 
-        private int _newsToCacheCount;
-        private int _newsCachedCount;
-
-        /// <summary>
-        /// 缓存新闻内容
-        /// </summary>
-        public async Task CacheNews()
-        {
-            var latestNewsList = await GetPagedNewsList(NewsType.Latest);
-            _newsToCacheCount += latestNewsList.Count + 1;//+1是因为要缓存该类型的list信息
-            NewsListCacheProgreessChanged();
-
-            NewsListCacheCompleted();
-
-            foreach (var newsListInfo in latestNewsList)
-            {
-                var isCached = await _localFileRepository.CheckNewsIsCachedOrNot(newsListInfo.Id);
-                if (isCached)
-                {
-                    Debug.WriteLine(newsListInfo.Id + " is cached.");
-                }
-                else
-                {
-                    Debug.WriteLine("going to cache:" + newsListInfo.Id + ".html//" + newsListInfo.Title);
-                    //TODO: EXCEPTION HANDER HERE
-                    try
-                    {
-                        NewsDetail detail = await GetNewsDetailAsync(newsListInfo.Id);
-                        var content = RenderNewsHtmlContent(detail);
-
-                        var path = await _localFileRepository.SaveNewsContentToCacheFolder(newsListInfo.Id, content);
-                        _newsCachedCount++;
-                        Debug.WriteLine("##Cached: " + path);
-                        NewsContentCacheProgreessChanged();
-                        App.NewsViewModel.NewsCacheListInfo.LatestNewsCacheList.Add(newsListInfo);
-                    }
-                    catch (HttpRequestException)
-                    {
-                        Debug.WriteLine("4O4:" + newsListInfo.Id + ".html");
-                    }
-                }
-            }
-
-            NewsContentCacheCompleted();
-        }
-
         #region Event hook
-        private void NewsListCacheProgreessChanged()
+        private void ReadNewsListToCacheProgreessChanged()
         {
-            if (NewsListCacheProgreessChangedEventHandler != null)
+            if (ReadNewsListToCacheProgreessChangedEventHandler != null)
             {
                 var progressChangedArgs = new ProgressChangedArgs() { Value = _newsToCacheCount };
-                NewsListCacheProgreessChangedEventHandler(this, progressChangedArgs);
+                ReadNewsListToCacheProgreessChangedEventHandler(this, progressChangedArgs);
             }
         }
 
-        private void NewsListCacheCompleted()
+        private void ReadNewsListToCacheCompleted()
         {
-            if (NewsListCacheCompletedEventHandler != null)
+            if (ReadNewsListToCacheCompletedEventHandler != null)
             {
                 var progressChangedArgs = new ProgressChangedArgs() { Value = _newsToCacheCount };
-                NewsListCacheCompletedEventHandler(this, progressChangedArgs);
+                ReadNewsListToCacheCompletedEventHandler(this, progressChangedArgs);
             }
         }
 

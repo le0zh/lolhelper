@@ -28,11 +28,11 @@ namespace LolWikiApp.Repository
         private const string NewsCacheFolerName = "NewsCache";
 
 
-        public async void SetBitmapSource(string imgName, BitmapSource bitmapSource, string id="")
+        public async void SetBitmapSource(string imgName, BitmapSource bitmapSource, string id = "")
         {
-            if(string.IsNullOrEmpty(imgName))
+            if (string.IsNullOrEmpty(imgName))
                 return;
-            
+
             var localFolder = ApplicationData.Current.LocalFolder;
             var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
             StorageFile file;
@@ -85,7 +85,7 @@ namespace LolWikiApp.Repository
         private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
         {
             var localFolder = ApplicationData.Current.LocalFolder;
-            
+
             var newsCacheRootFolder = await localFolder.CreateFolderAsync(NewsCacheFolerName, CreationCollisionOption.OpenIfExists);
             if (string.IsNullOrEmpty(id))
             {
@@ -183,7 +183,29 @@ namespace LolWikiApp.Repository
 
         private const string ImgNotFoundSrc = "Not found";
 
-        
+        private void ConvertPNodes(HtmlNode pNode, List<string> imgSrcList)
+        {
+            var imgNodes = pNode.SelectNodes("img");
+            if (imgNodes != null && imgNodes.Count > 0)
+            {
+                foreach (HtmlNode imgNode in imgNodes)
+                {
+                    var src = imgNode.GetAttributeValue("src", ImgNotFoundSrc);
+                    imgSrcList.Add(src);
+                    Debug.WriteLine(src.GetImgFileNameFromSrc());
+                    imgNode.SetAttributeValue("src", src.GetImgFileNameFromSrc());
+                }
+            }
+
+            var subPNodes = pNode.SelectNodes("p");
+            if (subPNodes != null && subPNodes.Count > 0)
+            {
+                foreach (var subPNode in subPNodes)
+                {
+                    ConvertPNodes(subPNode, imgSrcList);
+                }
+            }
+        }
 
         /// <summary>
         /// 将新闻内容缓存到本地的html文件中
@@ -206,18 +228,7 @@ namespace LolWikiApp.Repository
             {
                 foreach (HtmlNode node in pNodes)
                 {
-                    var imgNodes = node.SelectNodes("img");
-                    if (imgNodes != null && imgNodes.Count > 0)
-                    {
-                        foreach (HtmlNode imgNode in imgNodes)
-                        {
-                            var src = imgNode.GetAttributeValue("src", ImgNotFoundSrc);
-                            imgSrcList.Add(src);
-                            Debug.WriteLine(src);
-                            Debug.WriteLine(src.GetImgFileNameFromSrc());
-                            imgNode.SetAttributeValue("src", src.GetImgFileNameFromSrc());
-                        }
-                    }
+                    ConvertPNodes(node, imgSrcList);
                 }
             }
 
@@ -236,7 +247,7 @@ namespace LolWikiApp.Repository
             var htmlPath = Path.Combine(newsCacheFolder.Path, id + ".html");
             //doc.ToString();
             Debug.WriteLine("#Caching###################################");
-            
+
             try
             {
                 downloadImgList(imgSrcList, newsCacheFolder);
@@ -251,7 +262,7 @@ namespace LolWikiApp.Repository
                 Debug.WriteLine(ex.Message);
                 throw;
             }
-          
+
 
             return htmlPath;
         }
@@ -303,7 +314,7 @@ namespace LolWikiApp.Repository
             catch (FileNotFoundException)
             {
 
-            }               
+            }
         }
     }
 }

@@ -27,10 +27,10 @@ namespace LolWikiApp
             SystemTray.ProgressIndicator = indicator;
 
             heroPanels = new WrapPanel[] { 
-                this.allHeroWrapPanel, 
-                this.fighterHeroWrapPanel, this.mageHeroWrapPanel, 
-                this.assassinHeroWrapPanel, this.tankHeroWrapPanel, 
-                this.marksmanHeroWrapPanel, this.supportHeroWrapPanel };
+                this.AllHeroWrapPanel, 
+                this.FighterHeroWrapPanel, this.MageHeroWrapPanel, 
+                this.AssassinHeroWrapPanel, this.TankHeroWrapPanel, 
+                this.MarksmanHeroWrapPanel, this.SupportHeroWrapPanel };
         }
 
         private void LoadHeroList(int index)
@@ -81,7 +81,7 @@ namespace LolWikiApp
 
             StackPanel stackPanel = new StackPanel();
             stackPanel.Orientation = System.Windows.Controls.Orientation.Vertical;
-            stackPanel.Margin = new Thickness(0, 8, 20, 8);
+            stackPanel.Margin = new Thickness(0, 8, 30, 8);
             //stackPanel.Height = 76;
             //stackPanel.Width = 76;
 

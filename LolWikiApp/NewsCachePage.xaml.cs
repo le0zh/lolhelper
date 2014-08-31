@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
@@ -18,17 +20,29 @@ namespace LolWikiApp
         {
             base.OnNavigatedTo(e);
 
-            ReadNewsCachedSize();
+            if (App.NewsViewModel.IsNewsCaching == false)
+            {
+                ReadNewsCachedSize();
+            }
+            else
+            {
+                Debug.WriteLine("------------------------------CACHING--------------------");
+                HideCachedSizeLoadingIndicator();
+                DeleteCacheStackPanel.Visibility = Visibility.Collapsed;
+                ContentReadingTipStackPanel.Visibility = Visibility.Visible;
+                StartButton.Visibility = Visibility.Collapsed;
+                BindNewsCacheEvent();
+            }
         }
 
-        private async void CacheNewsList()
-        {
-            App.NewsViewModel.NewsRepository.NewsListCacheProgreessChangedEventHandler += (s, e) =>
+        private void BindNewsCacheEvent()
+        {            
+            App.NewsViewModel.NewsRepository.ReadNewsListToCacheProgreessChangedEventHandler += (s, e) =>
             {
                 InfoTextBlock.Text = "缓存资讯列表中: " + e.Value.ToString(CultureInfo.InvariantCulture);
             };
 
-            App.NewsViewModel.NewsRepository.NewsListCacheCompletedEventHandler += (s, e) =>
+            App.NewsViewModel.NewsRepository.ReadNewsListToCacheCompletedEventHandler += (s, e) =>
             {
                 CachingProgressBar.Maximum = e.Value;
                 ListReadingTipStackPanel.Visibility = Visibility.Collapsed;
@@ -45,20 +59,28 @@ namespace LolWikiApp
                 }
                 else
                 {
-                    InfoTextBlock2.Text = "资讯内容缓存中 " + string.Format("{0:F2}%", e.Value / CachingProgressBar.Maximum * 100);
+                    var message = "资讯内容缓存中 " + string.Format("{0:F2}%    {1}/{2}", e.Value / CachingProgressBar.Maximum * 100, e.Value, CachingProgressBar.Maximum);
+                    InfoTextBlock2.Text = message;
+                    Debug.WriteLine("[caching]: " + message);
                 }
             };
 
             App.NewsViewModel.NewsRepository.NewsContentCacheCompletedEventHandler += (s, e) =>
             {
-                
+
                 var tost = ToastPromts.GetToastWithImgAndTitle("资讯内容缓存完成!");
                 tost.Show();
+                App.NewsViewModel.IsNewsCaching = false;
 
-                //var sbShow = this.Resources["ShowCacheStoryboard"] as Storyboard;
-                //if (sbShow != null) sbShow.Begin();
+                ShowCachedSizeLoadingIndicator();
+
                 ReadNewsCachedSize();
             };
+        }
+
+        private async void CacheNewsList()
+        {
+            BindNewsCacheEvent();
 
             await App.NewsViewModel.NewsRepository.CacheNews();
 
@@ -69,6 +91,9 @@ namespace LolWikiApp
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
+            HideCachedSizeLoadingIndicator();
+
+            App.NewsViewModel.IsNewsCaching = true;
             CacheNewsList();
 
             ListReadingTipStackPanel.Visibility = Visibility.Visible;
@@ -102,7 +127,7 @@ namespace LolWikiApp
             }
             else if (size < 1048576)
             {
-                sizeDisplay = string.Format("{0:F} KB", size/ 1024.0);
+                sizeDisplay = string.Format("{0:F} KB", size / 1024.0);
             }
             else
             {
@@ -111,8 +136,22 @@ namespace LolWikiApp
 
             CachedSizeTextBlock.Text = string.Format("已缓存内容：{0}", sizeDisplay);
 
+            HideCachedSizeLoadingIndicator();
+
             var sbShow = this.Resources["ShowCacheStoryboard"] as Storyboard;
             if (sbShow != null) sbShow.Begin();
+        }
+
+        private void ShowCachedSizeLoadingIndicator()
+        {
+            CachedSizeLoadingIndicator.IsRunning = true;
+            CachedSizeLoadingIndicator.Visibility = Visibility.Visible;
+        }
+
+        private void HideCachedSizeLoadingIndicator()
+        {
+            CachedSizeLoadingIndicator.IsRunning = false;
+            CachedSizeLoadingIndicator.Visibility = Visibility.Collapsed;
         }
     }
 }

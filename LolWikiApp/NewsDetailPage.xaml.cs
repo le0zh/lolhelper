@@ -30,6 +30,7 @@ namespace LolWikiApp
         private NewsDetail _newsDetail;
         private string _articleId;
         private readonly Popup _popUp;
+        private string _artId;
 
         public NewsDetailPage()
         {
@@ -89,11 +90,10 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            string artId;
-            if (NavigationContext.QueryString.TryGetValue("newsId", out artId))
+            if (NavigationContext.QueryString.TryGetValue("newsId", out _artId))
             {
-                _articleId = artId;
-                LoadNewsDetailAsync(artId);
+                _articleId = _artId;
+                LoadNewsDetailAsync(_artId);
             }
 
             base.OnNavigatedTo(e);
@@ -144,17 +144,27 @@ namespace LolWikiApp
 
         private int _scrollHeight = 0;
 
+
         private void ShowImagePopUp(string input)
         {
-            if (!Regex.IsMatch(input, @"http://[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)")) return;
-
-            var bitmap = new BitmapImage(new Uri(input, UriKind.Absolute));
-
+            BitmapImage bitmap;
+            Debug.WriteLine("------->" + input);
+            if (Regex.IsMatch(input, @"http://[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)"))
+            {
+                bitmap = new BitmapImage(new Uri(input, UriKind.Absolute));
+            }
+            else
+            {
+               
+                bitmap = new BitmapImage();
+                App.NewsViewModel.FileRepository.SetBitmapSource(input, bitmap, _artId);
+            }
+           
             PanZoom.Source = bitmap;
-            
+
             BigImageWindow.VerticalAlignment = VerticalAlignment.Center;
             BigImageWindow.IsOpen = true;
-            
+
             ApplicationBar = new ApplicationBar { Opacity = 1 };
 
             var downloadButton = new ApplicationBarIconButton();
@@ -168,18 +178,17 @@ namespace LolWikiApp
 
             downloadButton.Click += (s2, e2) =>
             {
-                try
-                {
-                    HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), bitmap);
+                var isSuccess = HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), bitmap);
 
-                    var tost = ToastPromts.GetToastWithImgAndTitle("图片保存成功");
-                    tost.Show();
-                }
-                catch
+                if (isSuccess)
                 {
-                    var tost = ToastPromts.GetToastWithImgAndTitle("保存图片失败");
-                    tost.Show();
+                    ToastPromts.GetToastWithImgAndTitle("图片保存成功").Show();
                 }
+                else
+                {
+                    ToastPromts.GetToastWithImgAndTitle("图片保存失败").Show();
+                }
+
             };
 
             closeButton.Click += (s3, e3) => HideImagePopUp();
@@ -191,7 +200,7 @@ namespace LolWikiApp
 
         void ContentWebBrowser_ScriptNotify(object sender, NotifyEventArgs e)
         {
-            if (Regex.IsMatch(e.Value, @"http://[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)"))
+            if (Regex.IsMatch(e.Value, @"[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)"))
             {
                 ShowImagePopUp(e.Value);
                 return;
@@ -240,7 +249,7 @@ namespace LolWikiApp
 
         private void HideImagePopUp()
         {
-            if ( BigImageWindow.IsOpen)
+            if (BigImageWindow.IsOpen)
             {
                 BigImageWindow.IsOpen = false;
                 ApplicationBar = null;

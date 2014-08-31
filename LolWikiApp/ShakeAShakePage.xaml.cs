@@ -48,7 +48,7 @@ namespace LolWikiApp
             {
                 this.BindPlayerPanel.Visibility = Visibility.Collapsed;
                 this.PlayerNameTextBlock.Text =
-                    string.Format("摇一摇 ({0}  {1})", App.ViewModel.BindedPlayer.Name, App.ViewModel.BindedPlayer.ServerInfo.DisplayName);
+                    string.Format("{0}  {1}", App.ViewModel.BindedPlayer.Name, App.ViewModel.BindedPlayer.ServerInfo.DisplayName);
                 this.PlayerNameTextBlock.Visibility = Visibility.Visible;
             }
 
@@ -89,7 +89,7 @@ namespace LolWikiApp
         {
             //show loading
             RetrayShakeTextBlock.Visibility = Visibility.Collapsed;
-            
+            NoGamingPanel.Visibility = Visibility.Collapsed;
             LoadingPanel.Visibility = Visibility.Visible;
             CurrentGameInfo gameInfo;
 

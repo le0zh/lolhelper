@@ -84,8 +84,9 @@ namespace LolWikiApp.Repository
             return content;
         }
 
-        public static void SaveImage(string fileName, BitmapImage source)
+        public static bool SaveImage(string fileName, BitmapImage source)
         {
+            var isSuccess = false;
             var ms = new MemoryStream();
             try
             {
@@ -96,16 +97,18 @@ namespace LolWikiApp.Repository
                 ms.Seek(0, SeekOrigin.Current);
                 library.SavePicture(fileName, ms);
                 ms.Close();
-                MessageBox.Show("保存图片成功");
+                isSuccess = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("保存图片失败");
+                isSuccess = false;
             }
             finally
             {
                 ms.Close();
             }
+
+            return isSuccess;
         }
     }
 }
