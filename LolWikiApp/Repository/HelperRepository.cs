@@ -83,7 +83,7 @@ namespace LolWikiApp.Repository
             }
             return content;
         }
-
+        
         public static bool SaveImage(string fileName, BitmapImage source)
         {
             var isSuccess = false;

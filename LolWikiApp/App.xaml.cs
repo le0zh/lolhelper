@@ -95,7 +95,17 @@ namespace LolWikiApp
             //PhoneSubtleBrush
             //PhoneBorderBrush
             ((SolidColorBrush)Application.Current.Resources["PhoneSubtleBrush"]).Color = Colors.DarkGray;
-            ((SolidColorBrush)Application.Current.Resources["PhoneBorderBrush"]).Color = Colors.DarkGray;      
+            ((SolidColorBrush)Application.Current.Resources["PhoneBorderBrush"]).Color = Colors.DarkGray;
+
+            //PhoneTextLowContrastBrush
+            if (Current.GetTheme() == Theme.Light)
+            {
+                ((SolidColorBrush)Application.Current.Resources["PhoneTextLowContrastBrush"]).Color = Colors.Black;
+            }
+            else if (Current.GetTheme() == Theme.Dark)
+            {
+                ((SolidColorBrush)Application.Current.Resources["PhoneTextLowContrastBrush"]).Color = Colors.White;
+            }
         }
 
         // Code to execute when the application is launching (eg, from Start)

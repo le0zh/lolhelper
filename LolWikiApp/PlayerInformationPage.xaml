@@ -54,9 +54,10 @@
 
                     <StackPanel Orientation="Vertical" Grid.Row="0">
                         <TextBlock Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
-                        <TextBox x:Name="PlayerNameTextBox" Text="" Background="White" Padding="0" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
+                        <TextBox x:Name="PlayerNameTextBox" Padding="6 0 0 0"  Text="" Background="White" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
                         <toolkit:PickerBox x:Name="ServerListPicker" 
                                    Header="服务器名称:" BorderThickness="0 0 0 1.5" 
+                                          
                                    FullModeHeader="请选择服务器：">
                             <toolkit:PickerBox.HeaderTemplate>
                                 <DataTemplate>
@@ -72,7 +73,7 @@
 
                             <toolkit:PickerBox.FullModeItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding DisplayName}" Foreground="White" Margin="18 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
+                                    <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource PhoneTextLowContrastBrush}" Margin="18 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
                                 </DataTemplate>
                             </toolkit:PickerBox.FullModeItemTemplate>
 
