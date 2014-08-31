@@ -54,10 +54,10 @@
 
                     <StackPanel Orientation="Vertical" Grid.Row="0">
                         <TextBlock Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
-                        <TextBox x:Name="PlayerNameTextBox" Text="" Padding="0" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
+                        <TextBox x:Name="PlayerNameTextBox" Text="" Background="White" Padding="0" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
                         <toolkit:PickerBox x:Name="ServerListPicker" 
                                    Header="服务器名称:" BorderThickness="0 0 0 1.5" 
-                                   FullModeHeader=" ">
+                                   FullModeHeader="请选择服务器：">
                             <toolkit:PickerBox.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding}" Foreground="Black"></TextBlock>
@@ -95,16 +95,16 @@
                                     <Image Height="100" Source="{Binding PhotoUrl}"></Image>
                                     <StackPanel Margin="12 0 0 0">
                                         <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-                                <Run Text="{Binding Name}"></Run>
-                                <Run Text="{Binding Level}"></Run>
-                                <Run Text="级"></Run>
+                                            <Run Text="{Binding Name}"></Run>
+                                            <Run Text="{Binding Level}"></Run>
+                                            <Run Text="级"></Run>
                                         </TextBlock>
                                         <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-                                <Run Text="{Binding ServerInfo.DisplayName}"></Run>
+                                            <Run Text="{Binding ServerInfo.DisplayName}"></Run>
                                         </TextBlock>
                                         <TextBlock>
-                                <Run Text="战斗力："></Run>
-                                <Run Text="{Binding Power}"></Run>
+                                            <Run Text="战斗力："></Run>
+                                            <Run Text="{Binding Power}"></Run>
                                         </TextBlock>
                                     </StackPanel>
                                 </StackPanel>
@@ -119,6 +119,6 @@
         </phone:Pivot>
     </Grid>
 
-    
+
 
 </phone:PhoneApplicationPage>

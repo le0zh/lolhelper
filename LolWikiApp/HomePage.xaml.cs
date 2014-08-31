@@ -19,6 +19,7 @@ using LolWikiApp.Resources;
 using LolWikiApp.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 using Color = Microsoft.Xna.Framework.Color;
 using TiltEffect = Microsoft.Phone.Controls.TiltEffect;
 
@@ -644,6 +645,12 @@ namespace LolWikiApp
 
                 NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative));
             }
+        }
+
+        private void RateButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var reviewTask = new MarketplaceReviewTask();
+            reviewTask.Show();
         }
     }
 }

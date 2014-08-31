@@ -64,7 +64,7 @@
                     </StackPanel>
 
                     <!--ContentPanel - place additional content here-->
-                    <ScrollViewer x:Name="ContentPanel" Visibility="Collapsed" Grid.Row="2" Margin="0">
+                    <ScrollViewer x:Name="ContentPanel" Visibility="Collapsed" Grid.Row="2" Margin="0 8 0 0">
                         <StackPanel>
                             <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
                     <Run Text="当前战斗："></Run>
@@ -78,7 +78,6 @@
                                         <Border BorderThickness="0 0 0 1" Margin="0 0 12 12" BorderBrush="{StaticResource PhoneBorderBrush}">
                                             <TextBlock Margin="0 0 0 8" Text="紫色方军团（按战斗力排序）"></TextBlock>
                                         </Border>
-
                                     </DataTemplate>
                                 </phone:LongListSelector.ListHeaderTemplate>
                                 <phone:LongListSelector.ItemTemplate>
