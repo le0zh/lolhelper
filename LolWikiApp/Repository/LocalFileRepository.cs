@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Windows.Foundation.Metadata;
 using Windows.Storage.Search;
@@ -22,16 +23,28 @@ namespace LolWikiApp.Repository
 {
     public class LocalFileRepository
     {
+        private object _lockobj = new object();
         private const string VideoCacheFolerName = "VideoCache";
         private const string NewsCacheFolerName = "NewsCache";
 
 
-        public async void SetBitmapSource(string imgName, BitmapSource bitmapSource)
+        public async void SetBitmapSource(string imgName, BitmapSource bitmapSource, string id="")
         {
+            if(string.IsNullOrEmpty(imgName))
+                return;
+            
             var localFolder = ApplicationData.Current.LocalFolder;
             var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
-
-            var file = await newsCacheRootFolder.GetFileAsync(imgName);
+            StorageFile file;
+            if (!string.IsNullOrEmpty(id))
+            {
+                var htmlFolder = await newsCacheRootFolder.CreateFolderAsync(id, CreationCollisionOption.OpenIfExists);
+                file = await htmlFolder.GetFileAsync(imgName);
+            }
+            else
+            {
+                file = await newsCacheRootFolder.GetFileAsync(imgName);
+            }
             using (var stream = await file.OpenReadAsync())
             {
                 bitmapSource.SetSource(stream.AsStreamForRead());
@@ -43,6 +56,7 @@ namespace LolWikiApp.Repository
             var localFolder = ApplicationData.Current.LocalFolder;
             var newsCacheRootFolder = await localFolder.CreateFolderAsync("NewsCache", CreationCollisionOption.OpenIfExists);
 
+            var folderProperties = await newsCacheRootFolder.GetBasicPropertiesAsync();
             var totalSize = await GetTotalSizeForFolder(newsCacheRootFolder);
 
             return totalSize;
@@ -71,6 +85,7 @@ namespace LolWikiApp.Repository
         private async Task<StorageFolder> GetNewsCacheFolderAsync(string id = "")
         {
             var localFolder = ApplicationData.Current.LocalFolder;
+            
             var newsCacheRootFolder = await localFolder.CreateFolderAsync(NewsCacheFolerName, CreationCollisionOption.OpenIfExists);
             if (string.IsNullOrEmpty(id))
             {
@@ -166,7 +181,9 @@ namespace LolWikiApp.Repository
             return path;
         }
 
-        private const string imgNotFoundSrc = "Not found";
+        private const string ImgNotFoundSrc = "Not found";
+
+        
 
         /// <summary>
         /// 将新闻内容缓存到本地的html文件中
@@ -194,7 +211,7 @@ namespace LolWikiApp.Repository
                     {
                         foreach (HtmlNode imgNode in imgNodes)
                         {
-                            var src = imgNode.GetAttributeValue("src", imgNotFoundSrc);
+                            var src = imgNode.GetAttributeValue("src", ImgNotFoundSrc);
                             imgSrcList.Add(src);
                             Debug.WriteLine(src);
                             Debug.WriteLine(src.GetImgFileNameFromSrc());
@@ -208,7 +225,7 @@ namespace LolWikiApp.Repository
             {
                 foreach (var imgNode in rootImgNodes)
                 {
-                    var src = imgNode.GetAttributeValue("src", imgNotFoundSrc);
+                    var src = imgNode.GetAttributeValue("src", ImgNotFoundSrc).Trim();
                     imgSrcList.Add(src);
                     Debug.WriteLine(src);
                     Debug.WriteLine(src.GetImgFileNameFromSrc());
@@ -219,8 +236,22 @@ namespace LolWikiApp.Repository
             var htmlPath = Path.Combine(newsCacheFolder.Path, id + ".html");
             //doc.ToString();
             Debug.WriteLine("#Caching###################################");
-            downloadImgList(imgSrcList, newsCacheFolder);
-            doc.Save(htmlPath);
+            
+            try
+            {
+                downloadImgList(imgSrcList, newsCacheFolder);
+
+                if (!File.Exists(htmlPath))
+                {
+                    doc.Save(htmlPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+          
 
             return htmlPath;
         }
@@ -234,11 +265,11 @@ namespace LolWikiApp.Repository
             {
                 Debug.WriteLine("Downloading:{0}", src);
 
-                if (string.IsNullOrEmpty(src))
+                if (string.IsNullOrEmpty(src) || !src.ToLower().StartsWith("http://"))
                     continue;
 
-                HttpWebRequest request = WebRequest.CreateHttp(src);
-                string src1 = src;
+                var request = WebRequest.CreateHttp(src);
+                var src1 = src;
                 request.BeginGetResponse(async (result) =>
                 {
                     var response = request.EndGetResponse(result);
@@ -262,10 +293,17 @@ namespace LolWikiApp.Repository
 
         public async Task ClearNewsCache()
         {
-            var cacheFolder = await GetNewsCacheFolderAsync();
-            await cacheFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            try
+            {
+                var cacheFolder = await GetNewsCacheFolderAsync();
+                await cacheFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
 
-            App.NewsViewModel.NewsCacheListInfo.Clear();
+                App.NewsViewModel.NewsCacheListInfo.Clear();
+            }
+            catch (FileNotFoundException)
+            {
+
+            }               
         }
     }
 }
