@@ -146,7 +146,7 @@ namespace LolWikiApp
             var titleTextBlock = new TextBlock()
             {
                 Text = "请选择资讯类型 ",
-                Foreground = new SolidColorBrush(Colors.DarkGray),
+                Foreground = Application.Current.Resources["PhoneTextLowContrastBrush"] as SolidColorBrush,
                 FontSize = (double)Application.Current.Resources["PhoneFontSizeLarge"],
                 Margin = new Thickness(24, 12, 12, 0),
             };

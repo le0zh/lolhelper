@@ -194,6 +194,7 @@ namespace LolWikiApp.Repository
                     imgSrcList.Add(src);
                     Debug.WriteLine(src.GetImgFileNameFromSrc());
                     imgNode.SetAttributeValue("src", src.GetImgFileNameFromSrc());
+                    imgNode.SetAttributeValue("title", "img");
                 }
             }
 
@@ -241,6 +242,7 @@ namespace LolWikiApp.Repository
                     Debug.WriteLine(src);
                     Debug.WriteLine(src.GetImgFileNameFromSrc());
                     imgNode.SetAttributeValue("src", src.GetImgFileNameFromSrc());
+                    imgNode.SetAttributeValue("title", "img");
                 }
             }
 

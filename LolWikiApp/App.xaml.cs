@@ -10,13 +10,15 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using LolWikiApp.Resources;
 using LolWikiApp.ViewModels;
+using Microsoft.Phone.Notification;
+using Microsoft.WindowsAzure.Messaging; 
 
 namespace LolWikiApp
 {
     public partial class App : Application
     {
-        private static MainViewModel viewModel = null;
-        private static NewsViewModel newsViewModel = null;
+        private static MainViewModel _viewModel = null;
+        private static NewsViewModel _newsViewModel = null;
         
         /// <summary>
         /// A static ViewModel used by the views to bind against.
@@ -27,19 +29,19 @@ namespace LolWikiApp
             get
             {
                 // Delay creation of the view model until necessary
-                if (viewModel == null)
-                    viewModel = new MainViewModel();
+                if (_viewModel == null)
+                    _viewModel = new MainViewModel();
 
-                if(viewModel.IsDataLoaded == false)
-                    viewModel.LoadHeroBaiscInfoDataAsync();
+                if(_viewModel.IsDataLoaded == false)
+                    _viewModel.LoadHeroBaiscInfoDataAsync();
 
-                return viewModel;
+                return _viewModel;
             }
         }
 
         public static NewsViewModel NewsViewModel
         {
-            get { return newsViewModel ?? (newsViewModel = new NewsViewModel()); }
+            get { return _newsViewModel ?? (_newsViewModel = new NewsViewModel()); }
         }
 
         /// <summary>
@@ -117,6 +119,19 @@ namespace LolWikiApp
             HelperRepository.CopyContentToIsolatedStorage("Data/html/global_black.css");
             HelperRepository.CopyContentToIsolatedStorage("Data/html/global_light.css");
             HelperRepository.CopyContentToIsolatedStorage("Data/html/reset.css");
+
+            var channel = HttpNotificationChannel.Find("MyLolHelperPushChannel");
+            if (channel == null)
+            {
+                channel = new HttpNotificationChannel("MyLolHelperPushChannel");
+                channel.Open();
+                channel.BindToShellToast();
+            }
+            channel.ChannelUriUpdated += async (o, args) =>
+            {
+                var hub = new NotificationHub("lolhelper", "Endpoint=sb://le0zhhub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ljIlC7gsVKyj8Z/HzNj3CHYeFjIdgVNZ20S23i1fDdw=");
+                await hub.RegisterNativeAsync(args.ChannelUri.ToString());
+            }; 
         }
 
         // Code to execute when the application is activated (brought to foreground)

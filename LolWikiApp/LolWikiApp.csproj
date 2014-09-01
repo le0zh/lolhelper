@@ -553,6 +553,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Messaging">
+      <HintPath>..\Bin\Microsoft.WindowsAzure.Messaging.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
