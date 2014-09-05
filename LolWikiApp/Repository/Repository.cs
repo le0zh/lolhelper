@@ -9,10 +9,10 @@ namespace LolWikiApp.Repository
 {
     public class Repository
     {
-        protected async Task<String> GetJsonStringViaHTTPAsync(string url)
+        protected async Task<String> GetJsonStringViaHttpAsync(string url)
         {
-            HttpClient client = new HttpClient();
-            string json = await client.GetStringAsync(new Uri(url));
+            var client = new HttpClient {Timeout = TimeSpan.FromMinutes(3)};
+            var json = await client.GetStringAsync(new Uri(url));
             return json;
         }
     }

@@ -73,6 +73,29 @@ namespace LolWikiApp
             base.OnNavigatedTo(e);
         }
 
+        private void HomePage_OnBackKeyPress(object sender, CancelEventArgs e)
+        {
+            if (_newsCategoryPopup.IsOpen)
+            {
+                _newsCategoryPopup.Hide();
+                SetAppbarForNewsList();
+                e.Cancel = true;
+            }
+            else
+            {
+                if (_isQuitConfirmOpened) return;
+
+                var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("再按一次退出英雄联盟助手!");
+                _isQuitConfirmOpened = true;
+                confirmQuiToastPromt.Show();
+                e.Cancel = true;
+                confirmQuiToastPromt.Completed += (s, e2) =>
+                {
+                    _isQuitConfirmOpened = false;
+                };
+            }
+        }
+
         #region Pivot
         private void MainPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -122,6 +145,11 @@ namespace LolWikiApp
             categoryButton.Click += (s, e) => ShowNewsCategoriesPopup();
             cacheButton.Click += (s, e) => NavigationService.Navigate(new Uri("/NewsCachePage.xaml", UriKind.Relative));
 
+            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
+            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
+
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(categoryButton);
             ApplicationBar.Buttons.Add(cacheButton);
@@ -140,7 +168,7 @@ namespace LolWikiApp
                 Background = Application.Current.Resources["PhoneChromeBrush"] as SolidColorBrush,
                 Orientation = System.Windows.Controls.Orientation.Vertical,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Margin = new Thickness(0,0,0,72)
+                Margin = new Thickness(0, 0, 0, 72)
             };
 
             var titleTextBlock = new TextBlock()
@@ -157,7 +185,7 @@ namespace LolWikiApp
                 Width = 480,
                 ItemsSource = App.NewsViewModel.NewsTypeList,
                 Margin = new Thickness(0, 12, 0, 0),
-                Padding = new Thickness(0,4,0,0),
+                Padding = new Thickness(0, 4, 0, 0),
                 SelectionMode = SelectionMode.Single,
                 Background = new SolidColorBrush(Colors.DarkGray),
                 ItemTemplate = Application.Current.Resources["NewsTypeListBoxTemplate"] as DataTemplate,
@@ -233,6 +261,7 @@ namespace LolWikiApp
                 _newsCategoryPopup.Hide();
             }
 
+            this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
             this.NewsLoadingBar.Visibility = Visibility.Visible;
             try
             {
@@ -240,15 +269,20 @@ namespace LolWikiApp
 
                 await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsType, 1, true);
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
-                //this.NewsRetryNetPanel.Visibility = Visibility.Visible;
-
                 var toast = ToastPromts.GetToastWithImgAndTitle("加载失败，读取离线文章。");
                 toast.Show();
 
                 App.NewsViewModel.LoadeNewsListInfoFromCache(_currentNewsType);
-                this.NewsLongListSelector.Visibility = Visibility.Visible;
+                if (App.NewsViewModel.NewsListInfObservableCollection.Count > 0)
+                {
+                    this.NewsLongListSelector.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    this.NewsRetryNetPanel.Visibility = Visibility.Visible;
+                }
 
                 return;
             }
@@ -285,7 +319,8 @@ namespace LolWikiApp
 
         private void NewsLongListSelector_OnRefreshTriggered(object sender, EventArgs e)
         {
-            NewsDataBindAsync();
+            //NewsDataBindAsync();
+            LoadNewsData();
             this.NewsLongListSelector.HideRefreshPanel();
         }
 
@@ -319,7 +354,7 @@ namespace LolWikiApp
                 Debug.WriteLine("load more news : " + _currentNewsType);
                 await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsType, nextPage);
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 NewsListGetMoreRetryNetPanel.Visibility = Visibility.Visible;
                 return;
@@ -336,12 +371,27 @@ namespace LolWikiApp
 
             _currentPage = App.NewsViewModel.CurrentPage;
         }
+
+        private void HorizontalFlipView_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var item = ((FlipView)sender).SelectedItem as NewsListInfo;
+            if (item != null)
+            {
+                if (_newsCategoryPopup.IsOpen)
+                {
+                    _newsCategoryPopup.Hide();
+                    SetAppbarForNewsList();
+                }
+
+                NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative));
+            }
+        }
         #endregion
 
         #region 每周免费英雄
         private void BindFreeHeroInfoAsync()
         {
-            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
             var refreshButton = new ApplicationBarIconButton();
             var moreButton = new ApplicationBarIconButton();
 
@@ -353,6 +403,11 @@ namespace LolWikiApp
 
             moreButton.Click += (s, e) => NavigationService.Navigate(new Uri("/AllHeroPage.xaml", UriKind.Relative));
             refreshButton.Click += (s1, e1) => RefreshFreeHeroList(true);
+
+            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
+            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
 
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(moreButton);
@@ -375,7 +430,7 @@ namespace LolWikiApp
                 _freeHeros = await App.ViewModel.LoadFreeHeroInfoListAsync(isForced);
                 _freeHeros.ForEach(AddFreeHeroItem);
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 Debug.WriteLine("refresh free hero 404");
                 this.FreeHeroRetryNetPanel.Visibility = Visibility.Visible;
@@ -425,44 +480,50 @@ namespace LolWikiApp
         #endregion
 
         #region 战绩
-
-        private void setBindAppBar()
+        private void SetBindAppBar()
         {
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 1.0;
-            ApplicationBarIconButton pinButton = new ApplicationBarIconButton();
-
-            pinButton.IconUri = new Uri("/Assets/AppBar/pin-1.png", UriKind.Relative);
-            pinButton.Text = "绑定";
+            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            var pinButton = new ApplicationBarIconButton
+            {
+                IconUri = new Uri("/Assets/AppBar/pin-1.png", UriKind.Relative),
+                Text = "绑定"
+            };
 
             pinButton.Click += (s, e) => NavigationService.Navigate(new Uri("/PlayerInformationPage.xaml?mode=bind", UriKind.Relative));
 
+            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
+            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
 
             ApplicationBar.Buttons.Add(pinButton);
         }
 
-        private void setRetryAppBar()
+        private void SetRetryAppBar()
         {
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 1.0;
-            ApplicationBarIconButton retryButton = new ApplicationBarIconButton();
-
-            retryButton.IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative);
-            retryButton.Text = "重试";
+            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            var retryButton = new ApplicationBarIconButton
+            {
+                IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
+                Text = "重试"
+            };
 
             retryButton.Click += (s, e) => BindRecords(); ;
 
+            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
+            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
 
             ApplicationBar.Buttons.Add(retryButton);
         }
 
-        private void setMoreUnBindAndSearchAppBar()
+        private void SetMoreUnBindAndSearchAppBar()
         {
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 1.0;
-            ApplicationBarIconButton moreButton = new ApplicationBarIconButton();
-            ApplicationBarIconButton unpinButton = new ApplicationBarIconButton();
-            ApplicationBarIconButton searchButton = new ApplicationBarIconButton();
+            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            var moreButton = new ApplicationBarIconButton();
+            var unpinButton = new ApplicationBarIconButton();
+            var searchButton = new ApplicationBarIconButton();
 
             moreButton.IconUri = new Uri("/Assets/AppBar/more-1.png", UriKind.Relative);
             moreButton.Text = "更多信息";
@@ -479,6 +540,11 @@ namespace LolWikiApp
 
             searchButton.Click += (s3, e3) => SearchPlayer();
 
+            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
+            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
+
             ApplicationBar.Buttons.Add(moreButton);
             ApplicationBar.Buttons.Add(searchButton);
             ApplicationBar.Buttons.Add(unpinButton);
@@ -491,7 +557,7 @@ namespace LolWikiApp
                 NeedBindPlayerInfoPanel.Visibility = Visibility.Visible;
                 PlayerRecordPanel.Visibility = Visibility.Collapsed;
 
-                setBindAppBar();
+                SetBindAppBar();
             }
             else
             {
@@ -507,7 +573,7 @@ namespace LolWikiApp
                     PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
 
                     MyInfomationRetryNetPanel.Visibility = Visibility.Collapsed;
-                    setMoreUnBindAndSearchAppBar();
+                    SetMoreUnBindAndSearchAppBar();
                 }
             }
         }
@@ -554,12 +620,12 @@ namespace LolWikiApp
                 case ActionResult.Exception404:
                     MyInfomationRetryNetPanel.Visibility = Visibility.Visible;
                     PlayerRecordPanel.Visibility = Visibility.Collapsed;
-                    setRetryAppBar();
+                    SetRetryAppBar();
                     break;
                 case ActionResult.NotFound:
                     NeedBindPlayerInfoPanel.Visibility = Visibility.Visible;
                     PlayerRecordPanel.Visibility = Visibility.Collapsed;
-                    setBindAppBar();
+                    SetBindAppBar();
                     break;
 
                 case ActionResult.Success:
@@ -581,7 +647,7 @@ namespace LolWikiApp
                     PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
 
                     MyInfomationRetryNetPanel.Visibility = Visibility.Collapsed;
-                    setMoreUnBindAndSearchAppBar();
+                    SetMoreUnBindAndSearchAppBar();
                     break;
             }
         }
@@ -598,59 +664,16 @@ namespace LolWikiApp
             SearchPlayer();
         }
 
-        private void AboutRecordButton_OnClick(object sender, RoutedEventArgs e)
+        private void RateButton_OnClick(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-        }
-        #endregion
-
-        private void HomePage_OnBackKeyPress(object sender, CancelEventArgs e)
-        {
-            if (_newsCategoryPopup.IsOpen)
-            {
-                _newsCategoryPopup.Hide();
-                SetAppbarForNewsList();
-                e.Cancel = true;
-            }
-            else
-            {
-                if (_isQuitConfirmOpened) return;
-
-                var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("再按一次退出英雄联盟助手!");
-                _isQuitConfirmOpened = true;
-                confirmQuiToastPromt.Show();
-                e.Cancel = true;
-                confirmQuiToastPromt.Completed+= (s, e2) =>
-                {
-                    _isQuitConfirmOpened = false;
-                };
-            }
+            var reviewTask = new MarketplaceReviewTask();
+            reviewTask.Show();
         }
 
         private void VideoButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/VideoPage.xaml", UriKind.Relative));
         }
-
-        private void HorizontalFlipView_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            var item = ((FlipView)sender).SelectedItem as NewsListInfo;
-            if (item != null)
-            {
-                if (_newsCategoryPopup.IsOpen)
-                {
-                    _newsCategoryPopup.Hide();
-                    SetAppbarForNewsList();
-                }
-
-                NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative));
-            }
-        }
-
-        private void RateButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var reviewTask = new MarketplaceReviewTask();
-            reviewTask.Show();
-        }
+        #endregion
     }
 }

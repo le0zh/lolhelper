@@ -168,7 +168,7 @@ namespace LolWikiApp
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             //TODO:handle the unhandled exception
-            MessageBox.Show(e.ExceptionObject.Message + "\n" + e.ExceptionObject.StackTrace);
+            MessageBox.Show(e.ExceptionObject.Message);
 
             if (Debugger.IsAttached)
             {

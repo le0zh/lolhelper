@@ -32,7 +32,7 @@ namespace LolWikiApp.Repository
         public async Task<List<EquipmentRecommend>> GetEquipmentRecommendListAsync(string heroEnName)
         {
             string url = string.Format(equipmentRecommendRequestUrl, heroEnName);
-            string json = await GetJsonStringViaHTTPAsync(url);
+            string json = await GetJsonStringViaHttpAsync(url);
 
             List<EquipmentRecommend> equipmentRecommendList = JsonConvert.DeserializeObject<List<EquipmentRecommend>>(json);
             return equipmentRecommendList;
@@ -46,7 +46,7 @@ namespace LolWikiApp.Repository
         public async Task<List<HeroSkin>> GetHeroSkinListAsync(string heroEnName)
         {
             string url = string.Format(skinListRequestUrl, heroEnName);
-            string json = await GetJsonStringViaHTTPAsync(url);
+            string json = await GetJsonStringViaHttpAsync(url);
 
             List<HeroSkin> equipmentRecommendList = JsonConvert.DeserializeObject<List<HeroSkin>>(json);
             return equipmentRecommendList;
@@ -110,7 +110,7 @@ namespace LolWikiApp.Repository
             #endregion
 
 
-            string json = await GetJsonStringViaHTTPAsync(freeHeroListRequestUrl);
+            string json = await GetJsonStringViaHttpAsync(freeHeroListRequestUrl);
             Debug.WriteLine("free hero HTTP requested.");
 
             JObject jObject = JObject.Parse(json);

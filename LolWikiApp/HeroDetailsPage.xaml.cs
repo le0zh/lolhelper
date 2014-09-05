@@ -120,7 +120,7 @@ namespace LolWikiApp
 
                 EquipmentLongListSelector.Visibility = Visibility.Visible;
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 Equipment404TextBlock.Visibility = Visibility.Visible;
 
@@ -153,7 +153,7 @@ namespace LolWikiApp
 
                 SkinLongListSelector.Visibility = Visibility.Visible;
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 Skin404TextBlock.Visibility = Visibility.Visible;
                 ShowRetryPanelAppBar(LoadSkinList);
@@ -188,7 +188,7 @@ namespace LolWikiApp
 
                 HeroRanListBox.Visibility = Visibility.Visible;
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 rank404TextBlock.Visibility = Visibility.Visible;
                 ShowRetryPanelAppBar(LoadRankList);

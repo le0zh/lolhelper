@@ -23,6 +23,8 @@ namespace LolWikiApp.ViewModels
         /// 标识离线是否在进行中
         /// </summary>
         public bool IsNewsCaching { get; set; }
+        public int CachedNewsCount { get; set; }
+        public int TotalToCacheCount { get; set; }
 
         private NewsType _oldNewsType;
         public ObservableCollection<NewsListInfo> NewsListInfObservableCollection { get; private set; }

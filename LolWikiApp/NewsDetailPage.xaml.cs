@@ -72,7 +72,7 @@ namespace LolWikiApp
                     }
                 }
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 Debug.WriteLine("NewsDetailPage: " + exception404.Message);
                 RetryNetPanel.Visibility = Visibility.Visible;

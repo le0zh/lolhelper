@@ -63,14 +63,8 @@
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
-                    <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed" x:Name="NewsRetryNetPanel">
-                        <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="Gray" >
-                            <Run Text="貌似网络不太稳定..."></Run>
-                            <LineBreak></LineBreak>
-                            <Run Text="加载资讯列表失败。"></Run>
-                        </TextBlock>
-                    </StackPanel>
-                    
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="NewsRetryNetPanel" Message="加载资讯列表失败。"/>
                     <!--Row2-->
                     <local:RefreshableListBox Grid.Row="2"
                                     Tap="NewsLongListSelector_Tap"
@@ -155,14 +149,9 @@
                             <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                         </StackPanel>
 
-                        <StackPanel Orientation="Vertical" Margin="0 24 0 0" Visibility="Collapsed" x:Name="FreeHeroRetryNetPanel">
-                            <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneSubtleBrush}" >
-                            <Run Text="貌似网络不太稳定..."></Run>
-                            <LineBreak></LineBreak>
-                            <Run Text="加载周免英雄失败。"></Run>
-                            </TextBlock>
-                        </StackPanel>
-
+                        <local:HttpRequest404Control Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="FreeHeroRetryNetPanel" Message="加载周免英雄失败。"/>
+                       
                         <toolkit:WrapPanel x:Name="HeroWrapPanel" Orientation="Horizontal" />
 
                     </StackPanel>
@@ -184,14 +173,8 @@
                             <!--<Button Width="150" HorizontalAlignment="Left" Content="绑定" Margin="-12 12 0 0" x:Name="AddFollowButton" Click="AddFollowButton_OnClick"></Button>-->
                         </StackPanel>
 
-                        <StackPanel Orientation="Vertical" Margin="0 24 0 0" Visibility="Collapsed"
-                                    x:Name="MyInfomationRetryNetPanel">
-                            <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneSubtleBrush}" >
-                            <Run Text="貌似网络不太稳定..."></Run>
-                            <LineBreak></LineBreak>
-                            <Run Text="加载召唤师信息失败。"></Run>
-                            </TextBlock>
-                        </StackPanel>
+                        <local:HttpRequest404Control Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="MyInfomationRetryNetPanel" Message="加载召唤师信息失败。"/>
 
                         <Grid x:Name="PlayerRecordPanel" Visibility="Collapsed">
                             <Grid.RowDefinitions>

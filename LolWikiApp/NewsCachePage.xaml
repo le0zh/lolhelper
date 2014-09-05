@@ -101,7 +101,7 @@
                     </StackPanel>
                 </DataTemplate>
             </phone:Pivot.HeaderTemplate>
-            
+
             <!--PivotItem item 1-->
             <phone:PivotItem Header="离线阅读">
                 <Grid Background="White" Margin="0 0 0 0">
@@ -115,11 +115,11 @@
                     <!--ContentPanel - place additional content here-->
 
                     <StackPanel Grid.Row="0">
-                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}" Text="默认将离线缓存各个资讯类别的前20条内容，离线后，可以再无网络环境下查看资讯内容。" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}" Text="默认将离线缓存各个资讯类别的前20条内容，离线后，可以在无网络环境下查看资讯内容。" TextWrapping="Wrap"></TextBlock>
                     </StackPanel>
-                    
+
                     <ScrollViewer Grid.Row="1">
-                        <StackPanel>
+                        <StackPanel >
                             <StackPanel x:Name="ListReadingTipStackPanel" Visibility="Collapsed">
                                 <ProgressBar IsIndeterminate="True"></ProgressBar>
                                 <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="缓存资讯列表中"></TextBlock>
@@ -130,7 +130,7 @@
                                 <ProgressBar IsIndeterminate="False" x:Name="CachingProgressBar" Style="{StaticResource MyProgressBarStyle}" ></ProgressBar>
                             </StackPanel>
 
-                            <Button x:Name="StartButton" Content="开始离线" Click="ButtonBase_OnClick"></Button>
+                            <Button x:Name="StartButton" Visibility="Collapsed" Content="开始离线" Click="ButtonBase_OnClick"></Button>
 
                             <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0.6 0 0" Margin="0 12 0 0">
                                 <StackPanel>

@@ -18,48 +18,49 @@
     shell:SystemTray.BackgroundColor="White"
     shell:SystemTray.ForegroundColor="Black"
     Style="{StaticResource TransitionPageStyle}">
-    
-    <!--LayoutRoot is the root grid where all page content is placed-->
-	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
 
-		<!--TitlePanel contains the name of the application and page title-->
-		<StackPanel Grid.Row="0" Margin="12,17,0,28">
-			<Border BorderThickness="15 0 0 0" Margin="0 -12 0 8" BorderBrush="{StaticResource PhoneAccentBrush}">
-				<TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center"
-					FontSize="{StaticResource PhoneFontSizeLarge}" />
-			</Border>
-            
-			<TextBlock  Margin="0 12 0 -12" Text="关于" FontSize="{StaticResource PhoneFontSizeExtraLarge}"/>
-            
-		</StackPanel>
+    <Grid x:Name="LayoutRoot">
+        <phone:Pivot Title="英雄联盟助手" x:Name="MainPivot" Background="White" Foreground="black"
+                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
 
-		<StackPanel Grid.Row="1" Margin="12,0,12,0" >
-            
-			<TextBlock Margin="0 8 0 0">
-				<Run Text="软件版本： v1.0"/>
-			</TextBlock>
+            <phone:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel  Margin="-12 0 0 -20">
+                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </phone:Pivot.HeaderTemplate>
 
-			<TextBlock Margin="0 8 0 0">
-				<Run Text="官方数据版本："/>
-				<Run Text="{Binding DataVersion}"/>
-			</TextBlock>
+            <!--PivotItem item 1-->
+            <phone:PivotItem Header="关于">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-			<TextBlock Margin="0 8 0 0">
-				<Run Text="更新日期："/>
-				<Run Text="{Binding DataLastUpdated}"/>
-			</TextBlock>
-            
-			<ListBox Height="50">
-				
-                
-            </ListBox>
-		</StackPanel>
+                    <StackPanel Grid.Row="1" Margin="0" >
 
-      
-	</Grid>
+                        <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+				                <Run Text="软件版本： v1.5"/>
+                        </TextBlock>
 
+                        <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+				            <Run Text="官方数据版本："/>
+				            <Run Text="{Binding DataVersion}"/>
+                        </TextBlock>
+
+                        <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+				            <Run Text="数据更新日期："/>
+				            <Run Text="2014-08-29"/>
+                        </TextBlock>
+                      
+                    </StackPanel>
+
+
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
+
+    </Grid>
 </phone:PhoneApplicationPage>

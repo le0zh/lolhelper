@@ -35,6 +35,9 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public string RenderNewsHtmlContent(NewsDetail detail)
         {
+            if (detail == null)
+                return string.Empty;
+
             #region HtmlTemplate
             const string htmlTemplate = @"
 <html>
@@ -142,7 +145,7 @@ li{
             var r = new Random(DateTime.Now.Millisecond);
             var random = r.Next();
             var url = string.Format(NewsContentRequestUrl, artId, random);
-            var json = await GetJsonStringViaHTTPAsync(url);
+            var json = await GetJsonStringViaHttpAsync(url);
 
             var newsDetail = JsonConvert.DeserializeObject<NewsDetail>(json);
 
@@ -225,28 +228,20 @@ li{
                 if (isCached)
                 {
                     Debug.WriteLine(listInfo.Id + " is cached.");
-                    _newsCachedCount++;
                 }
                 else
                 {
                     Debug.WriteLine("going to cache:" + listInfo.Id + ".html//" + listInfo.Title);
                     //TODO: EXCEPTION HANDER HERE
-                    try
-                    {
-                        NewsDetail detail = await GetNewsDetailAsync(listInfo.Id);
-                        var content = RenderNewsHtmlContent(detail);
-
-                        var path = await _localFileRepository.SaveNewsContentToCacheFolder(listInfo.Id, content);
-                        _newsCachedCount++;
-                        Debug.WriteLine("##Cached: " + path);
-                        NewsContentCacheProgreessChanged();
-                        App.NewsViewModel.NewsCacheListInfo.LatestNewsCacheList.Add(listInfo);
-                    }
-                    catch (HttpRequestException)
-                    {
-                        Debug.WriteLine("4O4:" + listInfo.Id + ".html");
-                    }
+                    var detail = await GetNewsDetailAsync(listInfo.Id);
+                    var content = RenderNewsHtmlContent(detail);
+                    var path = await _localFileRepository.SaveNewsContentToCacheFolder(listInfo.Id, content);
+                    Debug.WriteLine("##Cached: " + path);
+                    App.NewsViewModel.NewsCacheListInfo.LatestNewsCacheList.Add(listInfo);
                 }
+
+                _newsCachedCount++;
+                NewsContentCacheProgreessChanged();
             }
         }
 
@@ -273,9 +268,6 @@ li{
                 await _localFileRepository.SaveNewsListCacheAsync(jsonFile, cacheListInfo.FileNameAndListDcit[jsonFile]);
                 count++;
             }
-
-            //_newsCachedCount++;
-            //NewsContentCacheProgreessChanged();
 
             foreach (var fileName in cacheListInfo.FileNameAndListDcit.Keys)
             {
@@ -379,12 +371,16 @@ li{
         /// <returns></returns>
         public async Task<List<NewsListInfo>> GetPagedNewsList(NewsType type = NewsType.Latest, int page = 1)
         {
-            string url = getNewsListRequestUrl(type, page);
-            string json = await GetJsonStringViaHTTPAsync(url);
+            var url = getNewsListRequestUrl(type, page);
+            var json = await GetJsonStringViaHttpAsync(url);
 
             var newsList = JsonConvert.DeserializeObject<List<NewsListInfo>>(json);
 
-            return newsList;
+            var selectedNewsList = from n in newsList
+                where n.Site != "超级辅助"
+                select n;
+
+            return selectedNewsList.ToList();
         }
 
         /// <summary>
@@ -397,7 +393,7 @@ li{
             var random = r.Next();
             var url = string.Format("http://lolbox.oss.aliyuncs.com/json/v3/news/banner.json?r={0}", random);
 
-            string json = await GetJsonStringViaHTTPAsync(url);
+            string json = await GetJsonStringViaHttpAsync(url);
 
             var newsList = JsonConvert.DeserializeObject<List<NewsListInfo>>(json);
 

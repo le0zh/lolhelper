@@ -26,8 +26,8 @@ namespace LolWikiApp
 {
     public partial class PlayerInformationPage : PhoneApplicationPage
     {
-        private Player selectedPlayer;
-        private bool isToBind = false;
+        private Player _selectedPlayer;
+        private bool _isToBind;
 
         public PlayerInformationPage()
         {
@@ -39,7 +39,7 @@ namespace LolWikiApp
 
             this.ServerListPicker.SelectionChanged += ServerListPicker_SelectionChanged;
 
-            SetApplicationBarTOSearch();
+            SetApplicationBarToSearch();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -48,10 +48,10 @@ namespace LolWikiApp
             if (NavigationContext.QueryString.TryGetValue("mode", out mode))
             {
                 if (mode == "bind")
-                    isToBind = true;
+                    _isToBind = true;
             }
 
-            PivotItem1.Header = isToBind ? "绑定召唤师信息" : "搜索召唤师";
+            PivotItem1.Header = _isToBind ? "绑定召唤师信息" : "搜索召唤师";
 
             base.OnNavigatedTo(e);
         }
@@ -80,62 +80,57 @@ namespace LolWikiApp
             SearchLoadingBar.Visibility = Visibility.Visible;
 
             if (searchButton != null) searchButton.IsEnabled = false;
-            string content;
-
-            HttpActionResult actionResult = await App.ViewModel.GetPlayerDetailInfo(serverName, userName);
+       
+            var actionResult = await App.ViewModel.GetPlayerDetailInfo(serverName, userName);
            
             SearchLoadingBar.Visibility = Visibility.Collapsed;
             if (searchButton != null) searchButton.IsEnabled = true;
 
-            if (actionResult.Result == ActionResult.Exception404)
+            switch (actionResult.Result)
             {
-                MessageBox.Show("网络不稳定");
-            }
-            else if (actionResult.Result == ActionResult.NotFound)
-            {
-                NotFoundTextBlock.Visibility = Visibility.Visible;
-            }
-            else if (actionResult.Result == ActionResult.Success)
-            {
-                selectedPlayer = actionResult.Value as Player;
-
-                if (selectedPlayer == null)
-                {
+                case ActionResult.Exception404:
+                    ToastPromts.GetToastWithImgAndTitle("貌似网络不稳定，稍后重试.").Show();
+                    break;
+                case ActionResult.NotFound:
                     NotFoundTextBlock.Visibility = Visibility.Visible;
-                    return;
-                }
-
-                selectedPlayer.ServerInfo = serverInfo;
-                PlayerInfoViewer.Visibility = Visibility.Visible;
-                this.PlayerInfoViewer.DataContext = selectedPlayer;
-
-                if (isToBind)
-                {
-                    SetApplicationBarTOAcceptOrCancel();
-                }
+                    break;
+                case ActionResult.Success:
+                    _selectedPlayer = actionResult.Value as Player;
+                    if (_selectedPlayer == null)
+                    {
+                        NotFoundTextBlock.Visibility = Visibility.Visible;
+                        return;
+                    }
+                    _selectedPlayer.ServerInfo = serverInfo;
+                    PlayerInfoViewer.Visibility = Visibility.Visible;
+                    this.PlayerInfoViewer.DataContext = _selectedPlayer;
+                    if (_isToBind)
+                    {
+                        SetApplicationBarToAcceptOrCancel();
+                    }
+                    break;
             }
         }
 
-        private void SetApplicationBarTOSearch()
+        private void SetApplicationBarToSearch()
         {
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 1.0;
-            ApplicationBarIconButton searchButton = new ApplicationBarIconButton();
-
-            searchButton.IconUri = new Uri("/Assets/AppBar/feature.search.png", UriKind.Relative);
-            searchButton.Text = "搜索";
+            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            var searchButton = new ApplicationBarIconButton
+            {
+                IconUri = new Uri("/Assets/AppBar/feature.search.png", UriKind.Relative),
+                Text = "搜索"
+            };
 
             searchButton.Click += SearchBarIconButton_OnClick;
 
             ApplicationBar.Buttons.Add(searchButton);
         }
 
-        private void SetApplicationBarTOAcceptOrCancel()
+        private void SetApplicationBarToAcceptOrCancel()
         {
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 1.0;
-            ApplicationBarIconButton acceptButton = new ApplicationBarIconButton();
-            ApplicationBarIconButton cancelButton = new ApplicationBarIconButton();
+            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            var acceptButton = new ApplicationBarIconButton();
+            var cancelButton = new ApplicationBarIconButton();
 
             acceptButton.IconUri = new Uri("/Assets/AppBar/check.png", UriKind.Relative);
             cancelButton.IconUri = new Uri("/Assets/AppBar/cancel.png", UriKind.Relative);
@@ -153,8 +148,8 @@ namespace LolWikiApp
         private void acceptButton_Click(object sender, EventArgs e)
         {
             //保存关注
-            App.ViewModel.BindedPlayer = selectedPlayer;
-            App.ViewModel.SavePlayerInfoToAppSettings(selectedPlayer);
+            App.ViewModel.BindedPlayer = _selectedPlayer;
+            App.ViewModel.SavePlayerInfoToAppSettings(_selectedPlayer);
 
             //返回上一页面
             if (NavigationService.CanGoBack)
@@ -164,12 +159,12 @@ namespace LolWikiApp
         private void cancelButton_Click(object sender, EventArgs e)
         {
             this.PlayerInfoViewer.Visibility = Visibility.Collapsed;
-            SetApplicationBarTOSearch();
+            SetApplicationBarToSearch();
         }
 
         private void UIElement_OnTap(object sender, GestureEventArgs e)
         {
-            App.ViewModel.SelectedPlayer = selectedPlayer;
+            App.ViewModel.SelectedPlayer = _selectedPlayer;
             NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml", UriKind.Relative));
         }
     }

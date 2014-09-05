@@ -100,7 +100,7 @@ namespace LolWikiApp
                 //TEST, MOCKING DATA
                 //gameInfo = mockingData();
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 RetrayShakeTextBlock.Visibility = Visibility.Visible;
                 return;

@@ -29,7 +29,7 @@ namespace LolWikiApp.Repository
         public async Task<CurrentGameInfo> GetCurrentGameInfoAsync(string serverName, string userName)
         {
             string url = string.Format(currentMatchUrlForamt, serverName, userName);
-            string json = await GetJsonStringViaHTTPAsync(url);
+            string json = await GetJsonStringViaHttpAsync(url);
             //string json = string.Empty;
 
             if (string.IsNullOrEmpty(json))
@@ -64,7 +64,7 @@ namespace LolWikiApp.Repository
 
             foreach (string s in sort200List)
             {
-                PlayerInfo p = JsonConvert.DeserializeObject<PlayerInfo>(jObject["playerInfo"][s].ToString());
+                var p = JsonConvert.DeserializeObject<PlayerInfo>(jObject["playerInfo"][s].ToString());
                 p.Name = s;
                 p.HeroName = user200HerosDict[s];
                 gameInfo.Sort200PlayerInfos.Add(p);
@@ -77,7 +77,7 @@ namespace LolWikiApp.Repository
         {
             var settings = IsolatedStorageSettings.ApplicationSettings;
 
-            PlayerInfoSettingWrapper wrapper = new PlayerInfoSettingWrapper()
+            var wrapper = new PlayerInfoSettingWrapper()
             {
                 Name = userName,
                 ServerInfo = serverInfo
@@ -283,7 +283,7 @@ namespace LolWikiApp.Repository
             {
                 content = await client.GetStringAsync(new Uri(url));
             }
-            catch (System.Net.Http.HttpRequestException exception404)
+            catch (Exception exception404)
             {
                 //HTTP请求有异常
                 httpActionResult.Result = ActionResult.Exception404;
