@@ -42,6 +42,7 @@ namespace LolWikiApp
             _currentPage = 0;
             _currentNewsType = NewsType.Latest;
             _newsCategoryPopup = new FullScreenPopup();
+            _newsCategoryPopup.PopUpHided += (s, e) => SetAppbarForNewsList();
         }
 
         private void HomePageMain()
@@ -78,7 +79,6 @@ namespace LolWikiApp
             if (_newsCategoryPopup.IsOpen)
             {
                 _newsCategoryPopup.Hide();
-                SetAppbarForNewsList();
                 e.Cancel = true;
             }
             else
@@ -171,6 +171,8 @@ namespace LolWikiApp
                 Margin = new Thickness(0, 0, 0, 72)
             };
 
+            mainStackPanel.Tap += (s, e) => e.Handled = true;
+
             var titleTextBlock = new TextBlock()
             {
                 Text = "请选择资讯类型 ",
@@ -227,13 +229,8 @@ namespace LolWikiApp
                     _currentNewsType = newsType == null ? NewsType.Latest : newsType.Type;
                     LoadNewsData();
                 }
-                SetAppbarForNewsList();
             };
-            cancelButton.Click += (s, e) =>
-            {
-                _newsCategoryPopup.Hide();
-                SetAppbarForNewsList();
-            };
+            cancelButton.Click += (s, e) => _newsCategoryPopup.Hide();
 
             ApplicationBar.Buttons.Add(selectButton);
             ApplicationBar.Buttons.Add(cancelButton);
@@ -308,7 +305,6 @@ namespace LolWikiApp
                         if (_newsCategoryPopup.IsOpen)
                         {
                             _newsCategoryPopup.Hide();
-                            SetAppbarForNewsList();
                         }
 
                         NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative));
@@ -319,8 +315,8 @@ namespace LolWikiApp
 
         private void NewsLongListSelector_OnRefreshTriggered(object sender, EventArgs e)
         {
-            //NewsDataBindAsync();
-            LoadNewsData();
+            NewsDataBindAsync();
+            //LoadNewsData();
             this.NewsLongListSelector.HideRefreshPanel();
         }
 
@@ -380,7 +376,7 @@ namespace LolWikiApp
                 if (_newsCategoryPopup.IsOpen)
                 {
                     _newsCategoryPopup.Hide();
-                    SetAppbarForNewsList();
+                    //SetAppbarForNewsList();
                 }
 
                 NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative));

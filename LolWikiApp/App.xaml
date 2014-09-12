@@ -163,6 +163,98 @@
            
         </DataTemplate>
 
+        <!--视频列表数据模板，通用列表, 在用-->
+        <DataTemplate x:Key="VideoListDataTemplate">
+            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Canvas Grid.Column="0" Width="150" Height="95">
+                        <Image Source="{Binding Img}" Width="150" Height="95" Stretch="UniformToFill"></Image>
+                        <StackPanel Width="150" Canvas.Top="68" Background="{StaticResource PhoneSemitransparentBrush}">
+                            <TextBlock HorizontalAlignment="Right" Text="{Binding Length}" VerticalAlignment="Center" Foreground="White" Margin="0 0 4 0"></TextBlock>
+                        </StackPanel>
+                    </Canvas>
+                    
+                    <!--<Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="150" MinHeight="95" Stretch="UniformToFill" HorizontalAlignment="Left" Source="{Binding Img}"></Image>-->
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
+                        <TextBlock Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                        <TextBlock Foreground="Gray"
+								   FontSize="15" TextWrapping="Wrap" VerticalAlignment="Bottom">
+                            <Run Text="时长："></Run>
+                            <Run Text="{Binding Length}"></Run>
+                        </TextBlock>
+                        <TextBlock Foreground="Black"  FontSize="15"  VerticalAlignment="Bottom">
+                            <Run Text="更新时间: "></Run>
+                            <Run Text="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}"></Run>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!--视频类型列表数据模板，最近两天有更新列表-->
+        <DataTemplate x:Key="VideoTypeListUpdatedDataTemplate">
+            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6"  MinWidth="452" Background="White">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="60" Height="60" HorizontalAlignment="Left" Stretch="UniformToFill" Source="{Binding Img}"></Image>
+                    <StackPanel Background="White"  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                        <TextBlock Foreground="Black"  FontSize="15" Margin="0 12 0 0">
+                            <Run Text="最后更新: "></Run>
+                              <Run Text="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}"></Run>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Border Grid.Column="2" CornerRadius="5"
+                            Margin="5" Padding="5" BorderThickness="0" Background="Red"
+                            VerticalAlignment="Center" HorizontalAlignment="Center">  
+                        
+                        <TextBlock  Text="{Binding Count}" Foreground="White"></TextBlock>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!--视频类型列表数据模板，最近无更新列表-->
+        <DataTemplate x:Key="VideoTypeListDataTemplate">
+            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6"  MinWidth="452" Background="White">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="60" Height="60" HorizontalAlignment="Left" Stretch="UniformToFill" Source="{Binding Img}"></Image>
+                    <StackPanel Background="White"  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                        <TextBlock Foreground="Black"  FontSize="15" Margin="0 12 0 0">
+                            <Run Text="最后更新: "></Run>
+                              <Run Text="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}"></Run>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Border Grid.Column="2" Background="DarkGray" CornerRadius="5"
+                            Margin="5" Padding="5" BorderThickness="0"
+                            VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock  Text="{Binding Count}"></TextBlock>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        
+        
+
         <!--图片源转换类-->
         <local:ImageSourceConverter x:Key="ImageSourceConverter" />
 
@@ -347,7 +439,19 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
-        
+
+        <DataTemplate x:Key="SubPageTitleTemplate">
+            <Border Background="White" Width="480" Margin="-24 -18 -24 8"  BorderThickness="0 6 0 0"  BorderBrush="{StaticResource PhoneAccentBrush}">
+                <StackPanel Orientation="Horizontal">
+                    <!--<Image Source="Data/logo.png" Height="40" Margin="12 0 0 0"></Image>-->
+
+                    <!--<Path Width="19" Height="38" Margin="12 0 0 0" Stretch="Fill" Fill="#FF000000" Data="F1 M 28.5,57L 28.5,19L 47.5,19L 47.5,57L 38,47.5L 28.5,57 Z "/>-->
+                    <Path Width="39.25" Height="28" Margin="12 0 0 0" VerticalAlignment="Center" Stretch="Fill" Fill="#FF000000" Data="F1 M 57,42L 57,34L 32.25,34L 42.25,24L 31.75,24L 17.75,38L 31.75,52L 42.25,52L 32.25,42L 57,42 Z "/>
+                    <TextBlock Text="{Binding}" Margin="12 0 0 0" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

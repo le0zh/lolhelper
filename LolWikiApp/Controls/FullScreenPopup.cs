@@ -31,12 +31,16 @@ namespace LolWikiApp
 
         public event EventHandler PopupCancelled;
 
+        public event EventHandler PopUpHided = delegate { };
+
         public FullScreenPopup()
         {
             _outerBorder = new Border
             {
                 Background = (SolidColorBrush)Application.Current.Resources["PhoneSemitransparentBrush"]
             };
+
+            _outerBorder.Tap += (s, e) => Hide();
 
             _hostPopup = new Popup {Child = _outerBorder};
         }
@@ -51,6 +55,7 @@ namespace LolWikiApp
         public void Hide()
         {
             _hostPopup.IsOpen = false;
+            PopUpHided(this, EventArgs.Empty);
             //RestoreSettings();
         }
 

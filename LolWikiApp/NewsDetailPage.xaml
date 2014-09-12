@@ -12,7 +12,7 @@
     xmlns:telerikCore="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Core"  
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="Portrait" Orientation="Landscape"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="False"
     BackKeyPress="NewsDetailPage_OnBackKeyPress"
@@ -27,20 +27,21 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,0,0,8">
+        <!--<StackPanel Grid.Row="0" Margin="12,0,0,8">-->
             <!--<StackPanel Margin="12 0 0 0" x:Name="NewsLoadingBar" Orientation="Vertical">
                 <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                 <TextBlock Text="加载中" Foreground="Black"></TextBlock>
             </StackPanel>-->
 
-            <StackPanel Margin="12 48 0 0" Visibility="Collapsed" x:Name="RetryNetPanel">
+            <StackPanel  Grid.Row="0" Margin="12 48 0 0" Visibility="Collapsed" x:Name="RetryNetPanel">
                 <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="Black" Text="貌似网络不太稳定，加载内容失败。"></TextBlock>
                 <Button Width="200" Margin="-12 12 0 0" Click="RetryButton_OnClick" Content="重试" x:Name="RetryButton" HorizontalAlignment="Left"></Button>
             </StackPanel>
-        </StackPanel>
+        <!--</StackPanel>-->
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
             <phone:WebBrowser x:Name="ContentWebBrowser" 
+                              Background="White"
                               Margin="0"
                               Padding="0"
                              IsScriptEnabled="True"></phone:WebBrowser>
@@ -48,7 +49,7 @@
                     x:Name="DisplayScrollBar"
                     Orientation="Vertical"
                     Visibility="Collapsed"
-                    Margin="0 0 8 0"
+                    Margin="0 0 3 0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Stretch"
                     Background="Gray"

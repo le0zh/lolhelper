@@ -54,10 +54,11 @@ namespace LolWikiApp
         private async void LoadAndBindPlayerInfo(string sn, string pn)
         {
             SystemTray.ProgressIndicator.IsVisible = true;
+            SystemTray.Opacity = 1;
 
-            HttpActionResult actionResult =
-                await App.ViewModel.GetPlayerDetailInfo(sn, pn);
+            var actionResult = await App.ViewModel.GetPlayerDetailInfo(sn, pn);
 
+            SystemTray.Opacity = 0;
             SystemTray.ProgressIndicator.IsVisible = false;
 
             switch (actionResult.Result)
@@ -74,7 +75,7 @@ namespace LolWikiApp
                     break;
 
                 case ActionResult.Success:
-                    Player detailPlayerInfo = actionResult.Value as Player;
+                    var detailPlayerInfo = actionResult.Value as Player;
                     if (detailPlayerInfo == null)
                     {
                         MessageBox.Show("无该召唤师信息。");

@@ -62,7 +62,7 @@ a img{border:none;}
 @-o-viewport{width:device-width}
 @viewport{width:device-width}
 img,video{ max-width: 100%; }
-.container{width:90%;margin-left:auto;margin-right:auto;}
+.container{width:95%;margin-left:auto;margin-right:auto;}
 .container div{ font-size: 1.3em;}
 body{
 	font-size: 100%;

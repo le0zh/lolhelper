@@ -87,10 +87,10 @@ namespace LolWikiApp
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
-            overwriteSystemColor();
+            OverwriteSystemColor();
         }
 
-        private void overwriteSystemColor()
+        private static void OverwriteSystemColor()
         {
             ((SolidColorBrush)Application.Current.Resources["PhoneBackgroundBrush"]).Color = Colors.White;
             ((SolidColorBrush)Application.Current.Resources["PhoneForegroundBrush"]).Color = Colors.Black;
@@ -130,6 +130,9 @@ namespace LolWikiApp
             channel.ChannelUriUpdated += async (o, args) =>
             {
                 var hub = new NotificationHub("lolhelper", "Endpoint=sb://le0zhhub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ljIlC7gsVKyj8Z/HzNj3CHYeFjIdgVNZ20S23i1fDdw=");
+                //TODO:CHECK THIS
+                //for test:
+                //var hub = new NotificationHub("hubtest", "Endpoint=sb://le0zhhub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=jOb95tZ003QgDpkX3KIdgUA1SlAZOWj9XF9WmBXqkd0=");
                 await hub.RegisterNativeAsync(args.ChannelUri.ToString());
             }; 
         }

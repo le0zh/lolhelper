@@ -43,6 +43,8 @@ namespace LolWikiApp
 
         public bool IsGetMoreEnabled { get; set; }
 
+        public bool IsRefreshEnabled { get; set; }
+
         public DateTime LastRefreshDateTime
         {
             get { return _lastRefreshDateTime; }
@@ -207,6 +209,7 @@ namespace LolWikiApp
         public RefreshableListBox()
         {
             IsGetMoreEnabled = false;
+            IsRefreshEnabled = true;
             this.DefaultStyleKey = typeof(RefreshableListBox);
         }
 
@@ -244,8 +247,12 @@ namespace LolWikiApp
                 _innerSelector.MouseLeave += _innerSelector_MouseLeave;
 
                 _viewportControl = _innerSelector.GetFirstLogicalChildByType<ViewportControl>(true);
-                _prepareRefreshDataTemplate = _innerSelector.Resources["PrepareRefreshDataTemplate"] as DataTemplate;
-                _refreshingDataTemplate = _innerSelector.Resources["RefreshingDataTemplate"] as DataTemplate;
+                
+                if (IsRefreshEnabled)
+                {
+                    _prepareRefreshDataTemplate = _innerSelector.Resources["PrepareRefreshDataTemplate"] as DataTemplate;
+                    _refreshingDataTemplate = _innerSelector.Resources["RefreshingDataTemplate"] as DataTemplate;
+                }
 
                 if (IsGetMoreEnabled)
                 {
@@ -443,17 +450,21 @@ namespace LolWikiApp
 
         void _innerSelector_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            //在此处判断是否第一次到达顶部
-            if (this.ItemsSource != null && this.ItemsSource.Count > 0 &&
-                Math.Abs(_viewportControl.Bounds.Top - _viewportControl.Viewport.Top) < Tolerance && _innerSelector.ListHeaderTemplate == null)
+            if (IsRefreshEnabled)
             {
-                if (!this._isTopOnce)
+                //在此处判断是否第一次到达顶部
+                if (this.ItemsSource != null && this.ItemsSource.Count > 0 &&
+                    Math.Abs(_viewportControl.Bounds.Top - _viewportControl.Viewport.Top) < Tolerance && _innerSelector.ListHeaderTemplate == null)
                 {
-                    this._isTopOnce = true;
-                    _innerSelector.ListHeaderTemplate = this._prepareRefreshDataTemplate;
-                }
+                    if (!this._isTopOnce)
+                    {
+                        this._isTopOnce = true;
+                        _innerSelector.ListHeaderTemplate = this._prepareRefreshDataTemplate;
+                    }
 
+                }
             }
+           
 
             if (IsGetMoreEnabled)
             {
@@ -476,21 +487,24 @@ namespace LolWikiApp
 
         void _innerSelector_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            //再此到顶
-            if (!this._isRefreshing && this._isTopOnce)
+            if (IsRefreshEnabled)
             {
-                if (Math.Abs(_viewportControl.Bounds.Top - _viewportControl.Viewport.Top) < Tolerance)
+                //再此到顶
+                if (!this._isRefreshing && this._isTopOnce)
                 {
-                    this._isRefreshing = true;
-                    _innerSelector.ListHeaderTemplate = this._refreshingDataTemplate;
-                    this.OnRefreshTriggered();
+                    if (Math.Abs(_viewportControl.Bounds.Top - _viewportControl.Viewport.Top) < Tolerance)
+                    {
+                        this._isRefreshing = true;
+                        _innerSelector.ListHeaderTemplate = this._refreshingDataTemplate;
+                        this.OnRefreshTriggered();
+                    }
+                    else
+                    {
+                        _innerSelector.ListHeaderTemplate = null;
+                    }
                 }
-                else
-                {
-                    _innerSelector.ListHeaderTemplate = null;
-                }
+                this._isTopOnce = false;
             }
-            this._isTopOnce = false;
 
             if (IsGetMoreEnabled)
             {
@@ -518,7 +532,7 @@ namespace LolWikiApp
             _lastRefreshDateTime = DateTime.Now;
 
             var handler = this.RefreshTriggered;
-            if (handler != null)
+            if (IsRefreshEnabled && handler != null)
             {
                 handler(this, new EventArgs());
             }
@@ -534,7 +548,6 @@ namespace LolWikiApp
                 handler(this, new EventArgs());
             }
         }
-
 
         #endregion
     }

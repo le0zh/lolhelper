@@ -25,6 +25,8 @@ namespace LolWikiApp.ViewModels
         public Player BindedPlayer { get; set; }
         public Player SelectedPlayer { get; set; }
 
+        public readonly VideoRepository VideoRepository;
+
         public LocalFileRepository LocalFileHelper
         {
             get { return _localFileRepository; }
@@ -46,6 +48,8 @@ namespace LolWikiApp.ViewModels
             _localFileRepository =new LocalFileRepository();
 
             BindedPlayer = GetPlayerInfoFromSettings();
+
+            VideoRepository = new VideoRepository();
         }
 
         #region 读取图片html模板

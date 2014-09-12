@@ -7,65 +7,170 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
+    xmlns:xapadStatistics="clr-namespace:XAPADStatistics;assembly=XAPADStatistics"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:local="clr-namespace:LolWikiApp"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="Portrait"  Orientation="Landscape"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.Opacity="0"
+    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.ForegroundColor="Black"
+    Style="{StaticResource TransitionPageStyle}"
+    toolkit:TiltEffect.IsTiltEnabled="True"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    BackKeyPress="VideoPage_OnBackKeyPress">
+    
+    <phone:PhoneApplicationPage.Resources>
+        
+    </phone:PhoneApplicationPage.Resources>
 
-    <ScrollViewer>
-   
-        <StackPanel>
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle1"/>
+    <Grid x:Name="LayoutRoot">
+        <phone:Pivot Title="视频中心" x:Name="MainPivot" Background="White" Foreground="black"
+                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}" SelectionChanged="MainPivot_SelectionChanged">
 
+            <phone:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel  Margin="-12 0 0 -20">
+                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </phone:Pivot.HeaderTemplate>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle2"/>
+            <!--PivotItem item 1-->
+            <phone:PivotItem Header="最新">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <!--<RowDefinition Height="80"></RowDefinition>-->
+                    </Grid.RowDefinitions>
+                   
+                    <StackPanel x:Name="LateastLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
 
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="LateastRetryNetPanel" Message="加载视频列表失败。"/>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle3"/>
+                    <local:RefreshableListBox x:Name="LatestVideoLongListSelector" 
+                                          Grid.Row ="2"
+                                          Margin="0 0 -12 2"
+                                          IsGetMoreEnabled="False"
+                                          IsRefreshEnabled ="False"
+                                          ItemTemplate="{StaticResource VideoListDataTemplate}" Tap="LatestVideoLongListSelector_Tap"/>
 
+                    <!--<xapadStatistics:AdItem Grid.Row="3"
+                                ADKey="64294ac6f3f1b5b2"
+                                AppID="10000655"
+                                Size="SizeW480H80" Width="480" Height="80" Background="Yellow"/>-->
+                </Grid>
+            </phone:PivotItem>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle4"/>
+            <phone:PivotItem Header="系列">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
 
+                    <StackPanel x:Name="SeriesLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle5"/>
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="SeriesRetryNetPanel" Message="加载视频列表失败。"/>
 
+                    <local:RefreshableListBox x:Name="SeriesVideoLongListSelector" 
+                                          Grid.Row ="2"
+                                          Margin="0 0 -12 2"
+                                          IsGetMoreEnabled="False"
+                                          IsRefreshEnabled ="False"
+                                              Tap="VideoTypeListSelector_Tap">
+                        <local:RefreshableListBox.ItemTemplate>
+                            <DataTemplate>
+                                <local:VideoTypeListItemDataTemplateSelector Content="{Binding}" 
+                                                                             NormalDataTemplate="{StaticResource VideoTypeListDataTemplate}" 
+                                                                             UpdatedDataTemplate="{StaticResource VideoTypeListUpdatedDataTemplate}" />
+                            </DataTemplate>
+                        </local:RefreshableListBox.ItemTemplate>
+                    </local:RefreshableListBox>
+                </Grid>
+            </phone:PivotItem>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                                Content="加载中"
-                                            AnimationStyle="AnimationStyle6"/>
+            <phone:PivotItem Header="赛事">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
 
+                    <StackPanel x:Name="GameLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle7"/>
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="GameRetryNetPanel" Message="加载视频列表失败。"/>
 
+                    <local:RefreshableListBox x:Name="GameVideoLongListSelector" 
+                                          Grid.Row ="2"
+                                          Margin="0 0 -12 2"
+                                          IsGetMoreEnabled="False"
+                                          IsRefreshEnabled ="False"
+                                              Tap="VideoTypeListSelector_Tap">
+                        <local:RefreshableListBox.ItemTemplate>
+                            <DataTemplate>
+                                <local:VideoTypeListItemDataTemplateSelector Content="{Binding}" 
+                                                                             NormalDataTemplate="{StaticResource VideoTypeListDataTemplate}" 
+                                                                             UpdatedDataTemplate="{StaticResource VideoTypeListUpdatedDataTemplate}" />
+                            </DataTemplate>
+                        </local:RefreshableListBox.ItemTemplate>
+                    </local:RefreshableListBox>
+                </Grid>
+            </phone:PivotItem>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle8"/>
+            <phone:PivotItem Header="解说">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
 
+                    <StackPanel x:Name="TalkerLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
 
-            <telerikPrimitives:RadBusyIndicator Background="#CC000000" 
-                                            IsRunning="True"
-                                            AnimationStyle="AnimationStyle9"/>
-            
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="TalkerRetryNetPanel" Message="加载视频列表失败。"/>
 
-        </StackPanel>
+                    <local:RefreshableListBox x:Name="TalkerVideoLongListSelector" 
+                                          Grid.Row ="2"
+                                          Margin="0 0 -12 2"
+                                          IsGetMoreEnabled="False"
+                                          IsRefreshEnabled ="False"
+                                          Tap="VideoTypeListSelector_Tap">
+                        <local:RefreshableListBox.ItemTemplate>
+                            <DataTemplate>
+                                <local:VideoTypeListItemDataTemplateSelector Content="{Binding}" 
+                                                                             NormalDataTemplate="{StaticResource VideoTypeListDataTemplate}" 
+                                                                             UpdatedDataTemplate="{StaticResource VideoTypeListUpdatedDataTemplate}" />
+                            </DataTemplate>
+                        </local:RefreshableListBox.ItemTemplate>
+                    </local:RefreshableListBox>
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
      
 
-    </ScrollViewer>
+    </Grid>
 
 </phone:PhoneApplicationPage>
