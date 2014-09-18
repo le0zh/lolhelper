@@ -14,7 +14,7 @@ namespace LolWikiApp
         public static ToastPrompt GetToastWithImgAndTitle(string message)
         {
             //var frameWidth = Application.Current.Host.Content.ActualWidth;
-
+          
             return new ToastPrompt
             {
                 TextOrientation = System.Windows.Controls.Orientation.Horizontal,

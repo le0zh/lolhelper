@@ -51,7 +51,6 @@ namespace LolWikiApp
 
             try
             {
-
                 var isCached = await App.NewsViewModel.FileRepository.CheckNewsIsCachedOrNot(artId);
                 if (isCached)
                 {
@@ -65,10 +64,17 @@ namespace LolWikiApp
                     if (DataContext == null)
                     {
                         _newsDetail = await App.NewsViewModel.GetNewsDetailAsync(artId);
-                        var content = App.NewsViewModel.NewsRepository.RenderNewsHtmlContent(_newsDetail);
-                        DataContext = _newsDetail;
-                        Debug.WriteLine(content);
-                        ContentWebBrowser.NavigateToString(content);
+                       
+                        var tmpFilePath = await App.NewsViewModel.NewsRepository.SaveHtmlToTempIsoFile(_newsDetail);
+                        ContentWebBrowser.Navigate(new Uri(tmpFilePath, UriKind.Relative));
+
+                        //TODO:在WP8.0中，直接NavigateToString会出现乱码问题，暂时通过先生成临时html文件，在Navigate的方式解决
+                        //var content = App.NewsViewModel.NewsRepository.RenderNewsHtmlContent(_newsDetail);
+                        //DataContext = _newsDetail;
+                        //Debug.WriteLine(content);
+                        //ContentWebBrowser.NavigateToString(content);
+
+                        //ContentWebBrowser.Navigate(new Uri("http://www.baidu.com"));
                     }
                 }
             }
@@ -116,10 +122,12 @@ namespace LolWikiApp
     window.onLinkPressed = function() {
         var elem = event.srcElement;
         if ( elem != null ) {
+            elem.hideFocus=true;
             window.external.notify(elem.getAttribute('link'));
         }
         return false;
     }
+
     window.BindLinks = function() {
         var elems = document.getElementsByTagName('img');
         for (var i = 0; i < elems.length; i++) {

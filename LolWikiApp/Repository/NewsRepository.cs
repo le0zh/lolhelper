@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -28,6 +30,21 @@ namespace LolWikiApp.Repository
         private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}   "; //{0}: artId, {1}: random
         private readonly LocalFileRepository _localFileRepository = new LocalFileRepository();
 
+        public async Task<string> SaveHtmlToTempIsoFile(string html)
+        {
+            Debug.WriteLine(html);
+            var path = await _localFileRepository.SaveStringToTempHtmlFile(html);
+            return path;
+        }
+
+        public async Task<string> SaveHtmlToTempIsoFile(NewsDetail detail)
+        {
+            var html = RenderNewsHtmlContent(detail);
+            Debug.WriteLine(html);
+            var path = await _localFileRepository.SaveStringToTempHtmlFile(html);
+            return path;
+        }
+
         /// <summary>
         /// 拼写新闻内容的html格式
         /// </summary>
@@ -40,8 +57,8 @@ namespace LolWikiApp.Repository
 
             #region HtmlTemplate
             const string htmlTemplate = @"
-<html>
-<head>
+<!Doctype html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
 <meta charset='UTF-8'>
 <title>$title$</title>
 <meta http-equiv='X-UA-Compatible' content='IE=edge' />
@@ -56,21 +73,21 @@ blockquote,q{quotes:;}
 a img{border:none;}
 
 /* Layout */
+
 @-webkit-viewport{width:device-width}
 @-moz-viewport{width:device-width}
 @-ms-viewport{width:device-width}
 @-o-viewport{width:device-width}
 @viewport{width:device-width}
 img,video{ max-width: 100%; }
-.container{width:95%;margin-left:auto;margin-right:auto;}
-.container div{ font-size: 1.3em;}
+.container{width:95%;margin-left:auto;margin-right:auto;font:1.2em 'Segoe WP';}
 body{
 	font-size: 100%;
 	line-height: 1.5;	
 }
 
 h1{
-	font-size: 2.0em;
+	font-size: 1.8em;
 	text-align: left;
 	
 }
@@ -80,13 +97,20 @@ span.info{
 }
 
 p{
-    font-size: 1.3em;    
+    font-size: 1.2em;    
 	margin-bottom: 0.5em;
+    line-height: 1.5;
+}
+
+img{
+    text-align:center;
 }
 
 li{
     list-style-type:none;
+    text-align:center;
 }
+
 </style>
 
 <script lang='javascript'> 
@@ -129,11 +153,55 @@ li{
 </html>";
             #endregion
 
-            return htmlTemplate.Replace("$title$", detail.Title)
+            var doc = new HtmlDocument();
+            doc.LoadHtml("<div>" +  detail.Content + "</div>");
+            Debug.WriteLine("----Originial-----");
+            Debug.WriteLine(detail.Content);
+
+            var pNodes = doc.DocumentNode.SelectNodes("div/p");
+
+            if (pNodes != null)
+            {
+                foreach (var node in pNodes)
+                {
+                    //var innerText = node.InnerText.Trim().ToLower();
+                    //if (innerText == "&nbsp;" || innerText == "")
+                    //{
+                    //    node.Remove();
+                    //    continue;
+                    //}
+                    var style = node.GetAttributeValue("style", "N/A");
+                   
+                    if (style != "N/A")
+                    {
+                        if (!style.ToLower().Contains("center") && !style.ToLower().Contains("text-indent"))
+                        {
+                            node.SetAttributeValue("style", "");
+                        }
+
+                        if (style.ToLower().Contains("center"))
+                        {
+                            node.SetAttributeValue("style", "text-align:center");
+                        }
+                        if (style.ToLower().Contains("text-indent"))
+                        {
+                            node.SetAttributeValue("style", "text-indent:2em");
+                        }
+                    }
+                }
+            }
+
+            detail.Content = doc.DocumentNode.OuterHtml;
+
+            var html = htmlTemplate.Replace("$title$", detail.Title)
                 .Replace("$postTime$", detail.Posttime)
                 .Replace("$site$", detail.Site)
+                //.Replace("$content$", detail.Content);
                 .Replace("$content$", detail.Content.Replace("<div", "<p").Replace("</div", "</p"));
+
+            return HelperRepository.Unicode2Html(html);
         }
+
 
         /// <summary>
         /// 根据新闻ID获取新闻内容
@@ -196,6 +264,27 @@ li{
         /// </summary>
         public async Task CacheNews()
         {
+            _newsToCacheCount = 1;
+            _newsCachedCount = 0;
+
+            //Read news list to cache
+            var listTmp = await GetPagedNewsList(NewsType.Latest);
+            _newsToCacheCount += listTmp.Count;
+            ReadNewsListToCacheProgreessChanged();
+            
+            ReadNewsListToCacheCompleted();
+
+            await SaveNewsListContent(listTmp);
+
+            NewsContentCacheCompleted();
+        }
+
+        /// <summary>
+        /// 缓存所有类别的资讯内容//TODO:暂时不缓存所有的资讯内容
+        /// </summary>
+        /// <returns></returns>
+        public async Task CacheAllTypesNews()
+        {
             _newsToCacheCount = 6;
             _newsCachedCount = 0;
 
@@ -208,7 +297,7 @@ li{
                 _newsToCacheCount += listTmp.Count;
                 ReadNewsListToCacheProgreessChanged();
             }
-            
+
             ReadNewsListToCacheCompleted();
 
             //Save news each by each
@@ -217,7 +306,7 @@ li{
                 await SaveNewsListContent(list);
             }
 
-            NewsContentCacheCompleted();
+            await SaveNewsListContent(_newsTypeAndListDict[NewsType.Latest]);
         }
 
         private async Task SaveNewsListContent(IEnumerable<NewsListInfo> listInfos)
@@ -245,12 +334,27 @@ li{
             }
         }
 
+        //TODO:暂时仅缓存最新资讯内容，其他类型不缓存
+        public async Task<int> SaveNewsCacheList(NewsCacheListInfo cacheListInfo)
+        {
+            const string latestJsonFile = "Latest.json";
+
+            await _localFileRepository.SaveNewsListCacheAsync(latestJsonFile, cacheListInfo.FileNameAndListDcit[latestJsonFile]);
+            _newsCachedCount++;
+
+            NewsContentCacheProgreessChanged();
+            NewsContentCacheCompleted();
+
+            cacheListInfo.IsDataLoaded = true;
+            return 1;
+        }
+
         /// <summary>
-        /// 缓存列表，仅仅是列表，没有内容
+        /// 缓存列表，仅仅是列表，没有内容 TODO:暂时仅缓存最新资讯内容，其他类型不缓存
         /// </summary>
         /// <param name="cacheListInfo"></param>
         /// <returns></returns>
-        public async Task<int> SaveNewsCacheList(NewsCacheListInfo cacheListInfo)
+        public async Task<int> SaveNewsAllCacheList(NewsCacheListInfo cacheListInfo)
         {
             var count = 0;
 

@@ -97,6 +97,22 @@ namespace LolWikiApp.Repository
             return newsCacheFolder;
         }
 
+        public async Task<string> SaveStringToTempHtmlFile(string val)
+        {
+            const string htmlFileName = "tmp.html";
+            var folder = await GetNewsCacheFolderAsync();
+            
+            var file = await folder.CreateFileAsync(htmlFileName, CreationCollisionOption.ReplaceExisting);
+            var data = Encoding.UTF8.GetBytes(val);
+
+            using (var fs = await file.OpenStreamForWriteAsync())
+            {
+                await fs.WriteAsync(data, 0, data.Length);
+            }
+
+            return Path.Combine("NewsCache", htmlFileName);
+        }
+
         public async Task<bool> CheckNewsIsCachedOrNot(string id)
         {
             var cacheFolder = await GetNewsCacheFolderAsync(id);
@@ -256,7 +272,7 @@ namespace LolWikiApp.Repository
 
                 if (!File.Exists(htmlPath))
                 {
-                    doc.Save(htmlPath);
+                    doc.Save(htmlPath, Encoding.UTF8);
                 }
             }
             catch (Exception ex)
@@ -264,7 +280,6 @@ namespace LolWikiApp.Repository
                 Debug.WriteLine(ex.Message);
                 throw;
             }
-
 
             return htmlPath;
         }

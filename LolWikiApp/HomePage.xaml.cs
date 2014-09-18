@@ -43,6 +43,13 @@ namespace LolWikiApp
             _currentNewsType = NewsType.Latest;
             _newsCategoryPopup = new FullScreenPopup();
             _newsCategoryPopup.PopUpHided += (s, e) => SetAppbarForNewsList();
+
+#if DEBUG
+            MainPivot.Title = "英雄联盟助手-DEBUG";
+#else
+            MainPivot.Title = "英雄联盟助手";
+#endif
+
         }
 
         private void HomePageMain()
@@ -83,12 +90,22 @@ namespace LolWikiApp
             }
             else
             {
-                if (_isQuitConfirmOpened) return;
+                if (_isQuitConfirmOpened)
+                {
+                    //_isQuitConfirmOpened = false;
+                    return;
+                }
 
                 var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("再按一次退出英雄联盟助手!");
                 _isQuitConfirmOpened = true;
                 confirmQuiToastPromt.Show();
                 e.Cancel = true;
+                confirmQuiToastPromt.Opened += (s, e3) =>
+                {
+                    //_isQuitConfirmOpened = false;
+                    //_isQuitConfirmOpened = true;
+                };
+
                 confirmQuiToastPromt.Completed += (s, e2) =>
                 {
                     _isQuitConfirmOpened = false;
@@ -307,6 +324,7 @@ namespace LolWikiApp
                             _newsCategoryPopup.Hide();
                         }
 
+                        this.NewsLongListSelector.SelectedItem = null; //reset selected item
                         NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative));
                     }
                 }
@@ -322,7 +340,7 @@ namespace LolWikiApp
 
         private void CancelNewsListGetMoreButton_OnClick(object sender, RoutedEventArgs e)
         {
-            NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
+            //NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
         }
 
         private void NewsListRetryGetMoreLoadButton_OnClick(object sender, RoutedEventArgs e)
@@ -339,7 +357,7 @@ namespace LolWikiApp
         {
             NewsListInfo lastNews = null;
 
-            NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
+            //NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
 
             try
             {
@@ -352,7 +370,8 @@ namespace LolWikiApp
             }
             catch (Exception exception404)
             {
-                NewsListGetMoreRetryNetPanel.Visibility = Visibility.Visible;
+                //NewsListGetMoreRetryNetPanel.Visibility = Visibility.Visible;
+                ToastPromts.GetToastWithImgAndTitle("网络不太稳定，加载获取失败.").Show();
                 return;
             }
             finally
@@ -478,7 +497,7 @@ namespace LolWikiApp
         #region 战绩
         private void SetBindAppBar()
         {
-            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
             var pinButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("/Assets/AppBar/pin-1.png", UriKind.Relative),
@@ -497,7 +516,7 @@ namespace LolWikiApp
 
         private void SetRetryAppBar()
         {
-            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
             var retryButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
@@ -516,7 +535,7 @@ namespace LolWikiApp
 
         private void SetMoreUnBindAndSearchAppBar()
         {
-            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
             var moreButton = new ApplicationBarIconButton();
             var unpinButton = new ApplicationBarIconButton();
             var searchButton = new ApplicationBarIconButton();

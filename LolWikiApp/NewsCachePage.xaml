@@ -115,7 +115,7 @@
                     <!--ContentPanel - place additional content here-->
 
                     <StackPanel Grid.Row="0">
-                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}" Text="默认将离线缓存各个资讯类别的前20条内容，离线后，可以在无网络环境下查看资讯内容。" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}" Text="将离线缓存最新资讯的前20条内容，离线后，可以在无网络环境下查看资讯内容。" TextWrapping="Wrap"></TextBlock>
                     </StackPanel>
 
                     <ScrollViewer Grid.Row="1">

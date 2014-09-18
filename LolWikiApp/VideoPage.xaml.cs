@@ -59,6 +59,7 @@ namespace LolWikiApp
                 var videoListInfo = LatestVideoLongListSelector.SelectedItem as VideoListInfo;
                 if (videoListInfo != null)
                 {
+                    LatestVideoLongListSelector.SelectedItem = null;//reset selected item
                     App.ViewModel.VideoRepository.PrepareVideoActionPopup(ActionPopup, videoListInfo, NavigationService);
                     ActionPopup.Show();
                 }
@@ -181,6 +182,7 @@ namespace LolWikiApp
                 var info = selector.SelectedItem as VideoTypeListInfo;
                 if (info != null)
                 {
+                    selector.SelectedItem = null; //reset selected item
                     var index = MainPivot.SelectedIndex;
                     var url = string.Format("/VideoTypeListPage.xaml?name={0}&id={1}&img={2}&type={3}", info.Name, info.Id, info.Img, index);
                     NavigationService.Navigate(new Uri(url, UriKind.Relative));

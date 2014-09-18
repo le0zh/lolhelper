@@ -398,6 +398,15 @@
     <Content Include="Data\apiCurrentMatch.json" />
     <Content Include="Data\images\Gnar\Gnar.png" />
     <Content Include="Data\logo.png" />
+    <Content Include="icon.png" />
+    <Content Include="icon1.png" />
+    <Content Include="test.png" />
+    <Content Include="test2-title1.png" />
+    <Content Include="test2-title2.png" />
+    <Content Include="test2.png" />
+    <Content Include="title-medidum.png" />
+    <Content Include="title-medium.png" />
+    <Content Include="title-small.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />

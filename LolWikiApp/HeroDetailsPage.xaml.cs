@@ -284,6 +284,7 @@ namespace LolWikiApp
             if (EquipmentLongListSelector.SelectedItem != null)
             {
                 App.ViewModel.EquipmentRecommendSelected = EquipmentLongListSelector.SelectedItem as EquipmentRecommend;
+                EquipmentLongListSelector.SelectedItem = null; //reset selected item
                 NavigationService.Navigate(new Uri("/EquipmentRecommendDetailPage.xaml", UriKind.Relative));
             }
         }
@@ -336,14 +337,15 @@ namespace LolWikiApp
                                      .Replace("$h$", bitmap.DecodePixelHeight.ToString());
 
             var wb = new WebBrowser {Height = 800, Width = 480};
-            wb.NavigateToString(htmlContent);
+
+            var tmpFilePath = await App.NewsViewModel.NewsRepository.SaveHtmlToTempIsoFile(htmlContent);
+            wb.Navigate(new Uri(tmpFilePath, UriKind.Relative));
 
             wb.Background = Application.Current.GetTheme() == Theme.Dark ? new SolidColorBrush(Colors.Black)
                                                                          : new SolidColorBrush(Colors.White);
             popUp.Child = wb;
 
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Opacity = 0.8;
+            ApplicationBar = new ApplicationBar {Opacity = 1};
             var downloadButton = new ApplicationBarIconButton();
             var closeButton = new ApplicationBarIconButton();
 
@@ -377,8 +379,7 @@ namespace LolWikiApp
                 popUp.IsOpen = true;
             };
         }
-
-
+        
         private void HeroRanListBox_OnTap(object sender, GestureEventArgs e)
         {
             if (HeroRanListBox.SelectedItem != null)
@@ -386,6 +387,7 @@ namespace LolWikiApp
                 HeroRankWrapper heroRankWrapper = HeroRanListBox.SelectedItem as HeroRankWrapper;
                 if (heroRankWrapper != null)
                 {
+                    HeroRanListBox.SelectedItem = null; //reset selected item.
                     string url = string.Format("/PlayerDetailPage.xaml?sn={0}&pn={1}", heroRankWrapper.ServerName, heroRankWrapper.PlayerName);
                     NavigationService.Navigate(new Uri(url, UriKind.Relative));
                 }

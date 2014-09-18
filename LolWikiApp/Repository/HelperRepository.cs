@@ -31,7 +31,23 @@ namespace LolWikiApp.Repository
 
         //    return path;
         //}
-      
+        public static string Unicode2Html(string val)
+        {
+            var str = new StringBuilder();
+            foreach (var c in val)
+            {
+                if (Convert.ToInt32(c) > 127)
+                {
+                    str.Append("&#" + Convert.ToInt32(c) + ";");
+                }
+                else
+                {
+                    str.Append(c);
+                }
+            }
+            return str.ToString();
+
+        }
 
         public static void CopyContentToIsolatedStorage(string file)
         {

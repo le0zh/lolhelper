@@ -82,8 +82,8 @@ namespace LolWikiApp
                 }
                 else
                 {
-                    //var message = "资讯内容缓存中 " + string.Format("{0:F2}%    {1}/{2}", e.Value / CachingProgressBar.Maximum * 100, e.Value, App.NewsViewModel.TotalToCacheCount);
-                    var message = "资讯内容缓存中 " + string.Format("{0:F2}%", e.Value / CachingProgressBar.Maximum * 100);
+                    var message = "资讯内容缓存中 " + string.Format("{0:F2}%    {1}/{2}", e.Value / CachingProgressBar.Maximum * 100, e.Value, App.NewsViewModel.TotalToCacheCount);
+                    //var message = "资讯内容缓存中 " + string.Format("{0:F2}%", e.Value / CachingProgressBar.Maximum * 100);
                     InfoTextBlock2.Text = message;
                     Debug.WriteLine("[caching]: " + message);
                 }
@@ -109,19 +109,15 @@ namespace LolWikiApp
             try
             {
                 await App.NewsViewModel.NewsRepository.CacheNews();
+                //内容缓存完成后，缓存列表信息
+                await App.NewsViewModel.NewsRepository.SaveNewsCacheList(App.NewsViewModel.NewsCacheListInfo);
             }
             catch (Exception ex404)
             {
                 ResetCacheProgress();
                 ToastPromts.GetToastWithImgAndTitle("网络貌似有问题，稍后重试").Show();
                 App.NewsViewModel.IsNewsCaching = false;
-                
-                return;
             }
-
-            //内容缓存完成后，缓存列表信息
-
-            await App.NewsViewModel.NewsRepository.SaveNewsCacheList(App.NewsViewModel.NewsCacheListInfo);
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
