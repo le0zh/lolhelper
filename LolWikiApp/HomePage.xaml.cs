@@ -687,7 +687,8 @@ namespace LolWikiApp
 
         private void VideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/VideoPage.xaml", UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/VideoPage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/LetvVideoPage.xaml", UriKind.Relative));
         }
         #endregion
     }

@@ -123,6 +123,9 @@
     <Compile Include="Controls\HttpRequest404Control.xaml.cs">
       <DependentUpon>HttpRequest404Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LetvVideoPage.xaml.cs">
+      <DependentUpon>LetvVideoPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="HeroDetailsPage.xaml.cs">
       <DependentUpon>HeroDetailsPage.xaml</DependentUpon>
@@ -211,6 +214,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\HttpRequest404Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LetvVideoPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -400,10 +407,6 @@
     <Content Include="Data\logo.png" />
     <Content Include="icon.png" />
     <Content Include="icon1.png" />
-    <Content Include="test.png" />
-    <Content Include="test2-title1.png" />
-    <Content Include="test2-title2.png" />
-    <Content Include="test2.png" />
     <Content Include="title-medidum.png" />
     <Content Include="title-medium.png" />
     <Content Include="title-small.png" />
@@ -560,10 +563,6 @@
     <Content Include="Data\images\Zilean\Zilean.png" />
     <Content Include="Data\images\Zyra\Zyra.png" />
     <Content Include="Data\template.txt" />
-    <Content Include="logo_173.png" />
-    <Content Include="logo_200.png" />
-    <Content Include="logo_62.png" />
-    <Content Include="logo_99.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">

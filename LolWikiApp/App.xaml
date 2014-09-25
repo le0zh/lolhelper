@@ -163,6 +163,39 @@
            
         </DataTemplate>
 
+        <!--LETV视频列表数据模板，通用列表, 在用-->
+        <DataTemplate x:Key="LetvVideoListDataTemplate">
+            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Canvas Grid.Column="0" Width="150" Height="95">
+                        <Image Source="{Binding Cover_Url}" Width="150" Height="95" Stretch="UniformToFill"></Image>
+                        <StackPanel Width="150" Canvas.Top="68" Background="{StaticResource PhoneSemitransparentBrush}">
+                            <TextBlock HorizontalAlignment="Right" Text="{Binding Video_Length}" VerticalAlignment="Center" Foreground="White" Margin="0 0 4 0"></TextBlock>
+                        </StackPanel>
+                    </Canvas>
+
+                    <!--<Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="150" MinHeight="95" Stretch="UniformToFill" HorizontalAlignment="Left" Source="{Binding Img}"></Image>-->
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
+                        <TextBlock Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                        <TextBlock Foreground="Gray"
+								   FontSize="15" TextWrapping="Wrap" VerticalAlignment="Bottom">
+                            <Run Text="时长："></Run>
+                            <Run Text="{Binding Video_Length}"></Run>
+                        </TextBlock>
+                        <TextBlock Foreground="Black"  FontSize="15"  VerticalAlignment="Bottom">
+                            <Run Text="更新时间: "></Run>
+                            <Run Text="{Binding Upload_Time}"></Run>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
         <!--视频列表数据模板，通用列表, 在用-->
         <DataTemplate x:Key="VideoListDataTemplate">
             <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6">
