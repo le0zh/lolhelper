@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:LolWikiApp"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    SupportedOrientations="Portrait"  Orientation="Landscape"
+    SupportedOrientations="Portrait"
     shell:SystemTray.IsVisible="True"
     shell:SystemTray.Opacity="0"
     shell:SystemTray.BackgroundColor="White"
@@ -22,7 +22,7 @@
     
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <phone:Pivot Title="{Binding PageTitle}" x:Name="MainPivot" Background="White" Foreground="black"
+        <phone:Pivot Title="视频中心" x:Name="MainPivot" Background="White" Foreground="black"
                      TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
 
             <phone:Pivot.HeaderTemplate>
@@ -56,8 +56,8 @@
                                           Tap="VideoLongListSelector_OnTap"
                                           GettingMoreTriggered="VideoLongListSelector_OnGettingMoreTriggered"
                                           IsRefreshEnabled ="False"
-                                              IsGetMoreEnabled="True"
-                                          ItemTemplate="{StaticResource VideoListDataTemplate}"/>
+                                          IsGetMoreEnabled="True"
+                                          ItemTemplate="{StaticResource LetvVideoListDataTemplate}"/>
                 </Grid>
             </phone:PivotItem>
 

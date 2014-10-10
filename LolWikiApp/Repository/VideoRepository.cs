@@ -209,10 +209,12 @@ namespace LolWikiApp.Repository
 
         #region letv style
         //LeTV:
-        private const string LetvTalkerVieoRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p=1&OSType=iOS7.1.1&src=letv&tag=missjs";
+        private const string LetvTypedVieoRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p={0}&OSType=iOS7.1.1&src=letv&tag={1}";//{0}:page;{1}:tag
+
         private const string LetvVideoRequestUrl = "http://api.letvcloud.com/gpc.php?cf=html5&sign=signxxxxx&ver=2.0&vu={0}&uu=20c3de8a2e&format=jsonp&callback="; //{0}:vu:videoid        
         private const string LetvLatestVideoListRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p={0}&OSType=iOS7.1.1&src=letv&tag=newest";///{0}p:pagenumber
         private const string LetvVideoTypeRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?sn=%E7%BD%91%E9%80%9A%E5%9B%9B&action=c&pn=%E6%B5%AA%E6%BD%AE%E4%B9%8B%E5%B7%85&OSType=iOS7.1.1&v=25";
+
 
         public async Task<List<LetvVideoTypeListInfo>> GetLetvVideoTypeList()
         {
@@ -226,9 +228,9 @@ namespace LolWikiApp.Repository
             return orderedList.ToList();
         }
 
-        public async Task<List<LetvVideoListInfo>> GetLetvLateastVideoList(int page= 1)
+        public async Task<List<LetvVideoListInfo>> GetLetvLateastVideoList(int page = 1)
         {
-            string url = string.Format(LetvLatestVideoListRequestUrl,page);
+            var url = string.Format(LetvLatestVideoListRequestUrl, page);
             var json = await GetJsonStringViaHttpAsync(url);
 
             var videoList = JsonConvert.DeserializeObject<List<LetvVideoListInfo>>(json);
@@ -238,9 +240,9 @@ namespace LolWikiApp.Repository
             return orderedList.ToList();
         }
 
-        public async Task<List<LetvVideoListInfo>> GetLetvVideoListTest()
+        public async Task<List<LetvVideoListInfo>> GetTypedLetvVideoListyAsync(string tag, int page = 1)
         {
-            const string url = LetvTalkerVieoRequestUrl;
+            var url = string.Format(LetvTypedVieoRequestUrl, page, tag);
             var json = await GetJsonStringViaHttpAsync(url);
 
             var videoList = JsonConvert.DeserializeObject<List<LetvVideoListInfo>>(json);
@@ -364,7 +366,7 @@ namespace LolWikiApp.Repository
                 Margin = new Thickness(0, 8, 0, 20)
             };
 
-            var xamlBtnSd = GetVideoPlayButton("标清",videoList[0],actionPopup);
+            var xamlBtnSd = GetVideoPlayButton("标清", videoList[0], actionPopup);
             var xamlBtnHd = GetVideoPlayButton("高清", videoList[1], actionPopup);
             var xamlBtnSuperHd = GetVideoPlayButton("超清", videoList[2], actionPopup);
             var xamlBtnOriginal = GetVideoPlayButton("原画", videoList[3], actionPopup);

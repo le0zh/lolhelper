@@ -17,6 +17,7 @@
     shell:SystemTray.ForegroundColor="Black"
     Style="{StaticResource TransitionPageStyle}"
     toolkit:TiltEffect.IsTiltEnabled="True"
+    BackKeyPress="LetvVideoPage_OnBackKeyPress"
     mc:Ignorable="d">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -79,7 +80,7 @@
                     <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
                                     x:Name="JieshuoRetryNetPanel" Message="加载视频列表失败。"/>
 
-                    <ScrollViewer Grid.Row="2">
+                    <ScrollViewer Grid.Row="2" Margin="0 0 -5 0">
                         <toolkit:WrapPanel x:Name="JieshuoWrapPanel"></toolkit:WrapPanel>
                     </ScrollViewer>
                
@@ -88,13 +89,74 @@
 
             <!--PivotItem item 2-->
             <phone:PivotItem Header="搞笑">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="FunnyLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
+
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="FunnyRetryNetPanel" Message="加载视频列表失败。"/>
+
+                    <ScrollViewer Grid.Row="2" Margin="0 0 -5 0">
+                        <toolkit:WrapPanel x:Name="FunnyWrapPanel"></toolkit:WrapPanel>
+                    </ScrollViewer>
+                </Grid>
             </phone:PivotItem>
 
             <!--PivotItem item 3-->
             <phone:PivotItem Header="综合">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="ZhongheLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
+
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="ZhongheRetryNetPanel" Message="加载视频列表失败。"/>
+
+                    <ScrollViewer Grid.Row="2" Margin="0 0 -5 0">
+                        <toolkit:WrapPanel x:Name="ZhongheWrapPanel"></toolkit:WrapPanel>
+                    </ScrollViewer>
+                </Grid>
             </phone:PivotItem>
 
             <!--PivotItem item 4-->
+            <phone:PivotItem Header="比赛">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="MatchLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
+
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="MatchRetryNetPanel" Message="加载视频列表失败。"/>
+
+                    <ScrollViewer Grid.Row="2" Margin="0 0 -5 0">
+                        <toolkit:WrapPanel x:Name="MatchWrapPanel"></toolkit:WrapPanel>
+                    </ScrollViewer>
+                </Grid>
+            </phone:PivotItem>
+
+            <!--PivotItem item 5-->
             <phone:PivotItem Header="本地">
             </phone:PivotItem>
 
