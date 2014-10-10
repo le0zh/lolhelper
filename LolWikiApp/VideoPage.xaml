@@ -12,7 +12,7 @@
     xmlns:local="clr-namespace:LolWikiApp"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    SupportedOrientations="Portrait"  Orientation="Landscape"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
     shell:SystemTray.Opacity="0"
     shell:SystemTray.BackgroundColor="White"

@@ -211,6 +211,32 @@ namespace LolWikiApp.Repository
         //LeTV:
         private const string LetvTalkerVieoRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p=1&OSType=iOS7.1.1&src=letv&tag=missjs";
         private const string LetvVideoRequestUrl = "http://api.letvcloud.com/gpc.php?cf=html5&sign=signxxxxx&ver=2.0&vu={0}&uu=20c3de8a2e&format=jsonp&callback="; //{0}:vu:videoid        
+        private const string LetvLatestVideoListRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p={0}&OSType=iOS7.1.1&src=letv&tag=newest";///{0}p:pagenumber
+        private const string LetvVideoTypeRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?sn=%E7%BD%91%E9%80%9A%E5%9B%9B&action=c&pn=%E6%B5%AA%E6%BD%AE%E4%B9%8B%E5%B7%85&OSType=iOS7.1.1&v=25";
+
+        public async Task<List<LetvVideoTypeListInfo>> GetLetvVideoTypeList()
+        {
+            const string url = LetvVideoTypeRequestUrl;
+            var json = await GetJsonStringViaHttpAsync(url);
+
+            var videoList = JsonConvert.DeserializeObject<List<LetvVideoTypeListInfo>>(json);
+            var orderedList = from v in videoList
+                              select v;
+
+            return orderedList.ToList();
+        }
+
+        public async Task<List<LetvVideoListInfo>> GetLetvLateastVideoList(int page= 1)
+        {
+            string url = string.Format(LetvLatestVideoListRequestUrl,page);
+            var json = await GetJsonStringViaHttpAsync(url);
+
+            var videoList = JsonConvert.DeserializeObject<List<LetvVideoListInfo>>(json);
+            var orderedList = from v in videoList
+                              select v;
+
+            return orderedList.ToList();
+        }
 
         public async Task<List<LetvVideoListInfo>> GetLetvVideoListTest()
         {

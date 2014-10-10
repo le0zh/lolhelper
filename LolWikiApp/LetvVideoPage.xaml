@@ -22,7 +22,7 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
         <phone:Pivot Title="视频中心" x:Name="MainPivot" Background="White" Foreground="black"
-                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
+                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}" SelectionChanged="MainPivot_OnSelectionChanged">
 
             <phone:Pivot.HeaderTemplate>
                 <DataTemplate>
@@ -32,14 +32,13 @@
                 </DataTemplate>
             </phone:Pivot.HeaderTemplate>
 
-            <!--PivotItem item 1-->
+            <!--PivotItem item 0-->
             <phone:PivotItem Header="最新">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
-                        <!--<RowDefinition Height="80"></RowDefinition>-->
                     </Grid.RowDefinitions>
 
                     <StackPanel x:Name="LateastLoadingBar" Grid.Row="0" Orientation="Vertical">
@@ -50,19 +49,55 @@
                     <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
                                     x:Name="LateastRetryNetPanel" Message="加载视频列表失败。"/>
 
+
                     <local:RefreshableListBox x:Name="LatestVideoLongListSelector" 
                                           Grid.Row ="2"
                                           Margin="0 0 -12 2"
-                                          IsGetMoreEnabled="False"
+                                          IsGetMoreEnabled="True"
                                           IsRefreshEnabled ="False"
-                                          ItemTemplate="{StaticResource LetvVideoListDataTemplate}" Tap="LatestVideoLongListSelector_OnTap"/>
+                                          Tap="VideoListLongListSelector_OnTap"
+                                          GettingMoreTriggered="LatestVideoLongListSelector_OnGettingMoreTriggered"
+                                          ItemTemplate="{StaticResource LetvVideoListDataTemplate}" />
 
-                    <!--<xapadStatistics:AdItem Grid.Row="3"
-                                ADKey="64294ac6f3f1b5b2"
-                                AppID="10000655"
-                                Size="SizeW480H80" Width="480" Height="80" Background="Yellow"/>-->
                 </Grid>
             </phone:PivotItem>
+
+            <!--PivotItem item 1-->
+            <phone:PivotItem Header="解说">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="JieshuoLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
+
+                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="JieshuoRetryNetPanel" Message="加载视频列表失败。"/>
+
+                    <ScrollViewer Grid.Row="2">
+                        <toolkit:WrapPanel x:Name="JieshuoWrapPanel"></toolkit:WrapPanel>
+                    </ScrollViewer>
+               
+                </Grid>
+            </phone:PivotItem>
+
+            <!--PivotItem item 2-->
+            <phone:PivotItem Header="搞笑">
+            </phone:PivotItem>
+
+            <!--PivotItem item 3-->
+            <phone:PivotItem Header="综合">
+            </phone:PivotItem>
+
+            <!--PivotItem item 4-->
+            <phone:PivotItem Header="本地">
+            </phone:PivotItem>
+
         </phone:Pivot>
     </Grid>
 

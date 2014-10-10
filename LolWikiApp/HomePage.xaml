@@ -143,8 +143,8 @@
 
             <!--PivotItem item 2-->
             <phone:PivotItem Header="周免英雄">
-                <ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel>
+                <!--<ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">-->
+                    <StackPanel  Margin="0 0 -32 0" >
                         <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical">
                             <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,12,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                             <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
@@ -157,13 +157,13 @@
 
                     </StackPanel>
 
-                </ScrollViewer>
+                <!--</ScrollViewer>-->
             </phone:PivotItem>
 
             <!--Panorama item 3-->
             <phone:PivotItem Header="我的">
-                <ScrollViewer Margin="0">
-                    <StackPanel Orientation="Vertical">
+                <!--<ScrollViewer Margin="0">-->
+                <StackPanel Margin="0" Orientation="Vertical">
                         <StackPanel x:Name="MyDataLoadingBar" Visibility="Collapsed" Orientation="Vertical">
                             <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,12,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                             <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
@@ -327,11 +327,11 @@
                         </Grid>
 
                     </StackPanel>
-                </ScrollViewer>
+                <!--</ScrollViewer>-->
             </phone:PivotItem>
 
             <phone:PivotItem Header="工具" >
-                <ScrollViewer>
+                <!--<ScrollViewer>-->
                     <StackPanel Margin="-12 0 0 0">
                         
                         <Button Margin="0 12 0 0" x:Name="VideoButton" Click="VideoButton_OnClick" Padding="0" Width="450" HorizontalAlignment="Left" BorderThickness="0">
@@ -392,8 +392,7 @@
                             </Grid>
                         </Button>
                     </StackPanel>
-                </ScrollViewer>
-
+                <!--</ScrollViewer>-->
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>

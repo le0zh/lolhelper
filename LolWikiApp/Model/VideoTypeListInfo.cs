@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LolWikiApp
 {
+    #region m3u8 style
     public enum VideoType
     {
         Series = 1,
@@ -34,5 +35,29 @@ namespace LolWikiApp
                 return dt;
             }
         }
+    }
+    #endregion
+
+    public class LetvVideoTypeListInfo
+    {
+        //"group": "gaoxiao",
+        //"name": "搞笑视频",
+        //"subCategory": [
+        public string Group { get; set; }
+        public string Name { get; set; }
+        public List<LetvVideoSubcategory> SubCategory { get; set; }
+    }
+
+    public class LetvVideoSubcategory
+    {
+        //"tag": "missjs",
+        //"name": "Miss解说",
+        //"icon": "http://box.dwstatic.com/vicon/missjs.jpg",
+        //"dailyUpdate": "0"
+
+        public string Tag { get; set; }
+        public string Name { get; set; }
+        public string Icon { get; set; }
+        public int DailyUpdate { get; set; }
     }
 }
