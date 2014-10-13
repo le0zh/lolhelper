@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -296,6 +297,34 @@ namespace LolWikiApp.Repository
             player.Show();
         }
 
+        private Button GetVdieoCacheButton(string text, string src, FullScreenPopup actionPopup)
+        {
+            const string template = @"<Button xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Width='100' Margin='0' BorderThickness='0' HorizontalAlignment='Center'>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height='30'></RowDefinition>
+                                    <RowDefinition Height='*'></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Path Grid.Row='0' Width='32.24' Height='30'  Stretch='Fill' Fill='#FFFFFF' Data='F1 M 48,39L 56,39L 56,49L 63.25,49L 52,60.25L 40.75,49L 48,49L 48,39 Z M 20,20L 50.25,20L 56,25.75L 56,38L 52,38L 52,27.25L 48.75,24L 48,24L 48,37L 28,37L 28,24L 24,24L 24,52L 42.25,52L 46.25,56L 20,56L 20,20 Z M 39,24L 39,34L 44,34L 44,24L 39,24 Z '/>
+                                <TextBlock Grid.Row='1' Text='&TEXT&' Foreground='WhiteSmoke' HorizontalAlignment='Center'></TextBlock>
+                            </Grid>
+                        </Button>";
+
+            var btn = XamlReader.Load(template.Replace("&TEXT&", text)) as Button;
+            if (btn != null)
+            {
+                btn.Tap += (s, e) =>
+                {
+                    actionPopup.Hide();
+
+                    var localFileRepository = new LocalFileRepository();
+                    localFileRepository.DownloadAsync(src, "test.mp4", new CancellationToken());
+                };
+            }
+
+            return btn;
+        }
+
         private Button GetVideoPlayButton(string text, string src, FullScreenPopup actionPopup)
         {
             const string template = @"<Button xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Width='100' Margin='0' BorderThickness='0' HorizontalAlignment='Center'>
@@ -304,7 +333,7 @@ namespace LolWikiApp.Repository
                                     <RowDefinition Height='30'></RowDefinition>
                                     <RowDefinition Height='*'></RowDefinition>
                                 </Grid.RowDefinitions>
-                               <Path Grid.Row='0' Width='38' Height='26'  Stretch='Fill' Fill='#FFFFFF' Data='F1 M 21,25L 55,25C 56.1045,25 57,25.8955 57,27L 57,49C 57,50.1046 56.1045,51 55,51L 21,51C 19.8954,51 19,50.1046 19,49L 19,27C 19,25.8955 19.8954,25 21,25 Z M 26.7692,29C 25.2398,29 24,30.5111 24,32.375L 24,43.625C 24,45.489 25.2398,47 26.7692,47L 42.2307,47C 43.7601,47 45,45.489 45,43.625L 45,41L 51,46L 52,46L 52,30L 51,30L 45,35L 45,32.375C 45,30.5111 43.7601,29 42.2307,29L 26.7692,29 Z '/>
+                               <Path Grid.Row='0' Width='36' Height='26'  Stretch='Fill' Fill='#FFFFFF' Data='F1 M 21,25L 55,25C 56.1045,25 57,25.8955 57,27L 57,49C 57,50.1046 56.1045,51 55,51L 21,51C 19.8954,51 19,50.1046 19,49L 19,27C 19,25.8955 19.8954,25 21,25 Z M 26.7692,29C 25.2398,29 24,30.5111 24,32.375L 24,43.625C 24,45.489 25.2398,47 26.7692,47L 42.2307,47C 43.7601,47 45,45.489 45,43.625L 45,41L 51,46L 52,46L 52,30L 51,30L 45,35L 45,32.375C 45,30.5111 43.7601,29 42.2307,29L 26.7692,29 Z '/>
                                 <TextBlock Grid.Row='1' Text='&TEXT&' Foreground='WhiteSmoke' HorizontalAlignment='Center'></TextBlock>
                             </Grid>
                         </Button>";
@@ -361,20 +390,21 @@ namespace LolWikiApp.Repository
             var actionPanel = new StackPanel()
             {
                 Orientation = System.Windows.Controls.Orientation.Horizontal,
-
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 8, 0, 20)
+                Margin = new Thickness(0, 10, 0, 20)
             };
 
-            var xamlBtnSd = GetVideoPlayButton("标清", videoList[0], actionPopup);
+            //var xamlBtnSd = GetVideoPlayButton("标清", videoList[0], actionPopup);
             var xamlBtnHd = GetVideoPlayButton("高清", videoList[1], actionPopup);
             var xamlBtnSuperHd = GetVideoPlayButton("超清", videoList[2], actionPopup);
             var xamlBtnOriginal = GetVideoPlayButton("原画", videoList[3], actionPopup);
+            //var xamlBtnCache = GetVdieoCacheButton("下载", videoList[2], actionPopup);
 
-            actionPanel.Children.Add(xamlBtnSd);
+            //actionPanel.Children.Add(xamlBtnSd);
             actionPanel.Children.Add(xamlBtnHd);
             actionPanel.Children.Add(xamlBtnSuperHd);
             actionPanel.Children.Add(xamlBtnOriginal);
+            //actionPanel.Children.Add(xamlBtnCache);
 
             grid.Children.Add(actionPanel);
 

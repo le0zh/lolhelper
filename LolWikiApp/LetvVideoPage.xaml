@@ -156,9 +156,9 @@
                 </Grid>
             </phone:PivotItem>
 
-            <!--PivotItem item 5-->
+            <!--PivotItem item 5--><!--
             <phone:PivotItem Header="本地">
-            </phone:PivotItem>
+            </phone:PivotItem>-->
 
         </phone:Pivot>
     </Grid>

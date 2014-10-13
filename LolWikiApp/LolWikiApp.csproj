@@ -126,6 +126,7 @@
     <Compile Include="LetvVideoPage.xaml.cs">
       <DependentUpon>LetvVideoPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Library\Downloader.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="HeroDetailsPage.xaml.cs">
       <DependentUpon>HeroDetailsPage.xaml</DependentUpon>
@@ -403,6 +404,7 @@
     <Content Include="Data\heros\Zilean.json" />
     <Content Include="Data\heros\Zyra.json" />
     <Content Include="Data\apiCurrentMatch.json" />
+    <Content Include="Data\images\Azir\Azir.png" />
     <Content Include="Data\images\Gnar\Gnar.png" />
     <Content Include="Data\logo.png" />
     <Content Include="icon.png" />
@@ -416,6 +418,7 @@
     <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Select.png" />
     <Content Include="Data\heros\Gnar.json" />
+    <Content Include="Data\heros\Azir.json" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">

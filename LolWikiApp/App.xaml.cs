@@ -120,21 +120,22 @@ namespace LolWikiApp
             HelperRepository.CopyContentToIsolatedStorage("Data/html/global_light.css");
             HelperRepository.CopyContentToIsolatedStorage("Data/html/reset.css");
 
-            var channel = HttpNotificationChannel.Find("MyLolHelperPushChannel");
-            if (channel == null)
-            {
-                channel = new HttpNotificationChannel("MyLolHelperPushChannel");
-                channel.Open();
-                channel.BindToShellToast();
-            }
-            channel.ChannelUriUpdated += async (o, args) =>
-            {
-                var hub = new NotificationHub("lolhelper", "Endpoint=sb://le0zhhub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ljIlC7gsVKyj8Z/HzNj3CHYeFjIdgVNZ20S23i1fDdw=");
-                //TODO:CHECK THIS
-                //for test:
-                //var hub = new NotificationHub("hubtest", "Endpoint=sb://le0zhhub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=jOb95tZ003QgDpkX3KIdgUA1SlAZOWj9XF9WmBXqkd0=");
-                await hub.RegisterNativeAsync(args.ChannelUri.ToString());
-            }; 
+            //todo: disable notification for now.
+            //var channel = HttpNotificationChannel.Find("MyLolHelperPushChannel");
+            //if (channel == null)
+            //{
+            //    channel = new HttpNotificationChannel("MyLolHelperPushChannel");
+            //    channel.Open();
+            //    channel.BindToShellToast();
+            //}
+            //channel.ChannelUriUpdated += async (o, args) =>
+            //{
+            //    var hub = new NotificationHub("lolhelper", "Endpoint=sb://le0zhhub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ljIlC7gsVKyj8Z/HzNj3CHYeFjIdgVNZ20S23i1fDdw=");
+            //    //TODO:CHECK THIS
+            //    //for test:
+            //    //var hub = new NotificationHub("hubtest", "Endpoint=sb://le0zhhub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=jOb95tZ003QgDpkX3KIdgUA1SlAZOWj9XF9WmBXqkd0=");
+            //    await hub.RegisterNativeAsync(args.ChannelUri.ToString());
+            //}; 
         }
 
         // Code to execute when the application is activated (brought to foreground)

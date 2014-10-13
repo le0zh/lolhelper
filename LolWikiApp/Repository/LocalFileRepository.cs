@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Windows.Foundation.Metadata;
@@ -101,7 +103,7 @@ namespace LolWikiApp.Repository
         {
             const string htmlFileName = "tmp.html";
             var folder = await GetNewsCacheFolderAsync();
-            
+
             var file = await folder.CreateFileAsync(htmlFileName, CreationCollisionOption.ReplaceExisting);
             var data = Encoding.UTF8.GetBytes(val);
 
@@ -333,5 +335,100 @@ namespace LolWikiApp.Repository
 
             }
         }
+
+        public async void DownloadAsync(string url, string fileName, CancellationToken cancellationToken)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+
+            var newsCacheRootFolder = await localFolder.CreateFolderAsync(VideoCacheFolerName, CreationCollisionOption.OpenIfExists);
+
+            var localFile = await newsCacheRootFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+            var lStartPos = 0L;
+            using (var fs = await localFile.OpenStreamForWriteAsync())
+            {
+                lStartPos = fs.Length;
+
+                //if (lStartPos > 0)
+                //{
+                //    fs.Seek(lStartPos, SeekOrigin.Current);
+                //}
+            }
+
+            try
+            {
+                var myrq = (HttpWebRequest)WebRequest.CreateHttp(url);
+                myrq.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; .NET CLR 1.0.3705)";
+
+                if (lStartPos > 0)
+                {
+                    myrq.Headers["bytes"] = lStartPos.ToString();
+                    Debug.WriteLine("lStartPos: " + lStartPos);
+                }
+
+                myrq.BeginGetResponse(async (result) =>
+                {
+                    var response = myrq.EndGetResponse(result);
+
+                    Debug.WriteLine(response.Headers["Accept-Ranges"]);
+
+                    var totalBytes = response.ContentLength + lStartPos;
+                    Debug.WriteLine("totalBytes: " + totalBytes);
+
+                    using (var responseStream = response.GetResponseStream())
+                    {
+                        var totalDownloadedByte = lStartPos;
+                        var by = new byte[1024];
+                        if (responseStream != null)
+                        {
+                            Debug.WriteLine("responseStream != null");
+                            var startTime = DateTime.Now;
+                            var osize = responseStream.Read(by, 0, (int)by.Length);
+                            var tmpsize = 0;
+                            Debug.WriteLine("osize: " + osize);
+                            while (osize > 0)
+                            {
+                                if (cancellationToken.IsCancellationRequested)
+                                {
+                                    //Cancell operation is requested.
+                                    Debug.WriteLine("cancelled" + DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                                    return;
+                                }
+
+                                totalDownloadedByte = osize + totalDownloadedByte;
+                                var endTime = DateTime.Now;
+                                Debug.WriteLine("fs.write");
+                                //fs.Write(by, 0, osize);
+
+                                //var downloadedByte = totalDownloadedByte;
+                                //tmpsize += osize;
+                                //var time = startTime;
+                                //var tmpsize1 = tmpsize;
+
+                                //var totalSeconds = (endTime - time).TotalSeconds;
+                                //if (totalSeconds > 0.5)
+                                //{
+                                //    var seepText = string.Format("{0:F}", tmpsize1 / totalSeconds / 1024);
+                                //    Debug.WriteLine(seepText + " kb/s");
+                                //    tmpsize = 0;
+                                //    startTime = DateTime.Now;
+                                //}
+                                //Debug.WriteLine((int)downloadedByte);
+
+                                osize = responseStream.Read(by, 0, (int)by.Length);
+                            }
+                        }
+                        //fs.Close();
+                        if (responseStream != null) responseStream.Close();
+                    }
+                }, null);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
     }
+
 }

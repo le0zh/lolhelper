@@ -11,7 +11,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="Portrait" Orientation="Landscape"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
     shell:SystemTray.Opacity="0"
@@ -42,7 +42,7 @@
                     <StackPanel Grid.Row="1" Margin="0" >
 
                         <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-				                <Run Text="软件版本： v1.5"/>
+				                <Run Text="软件版本： v1.6.7"/>
                         </TextBlock>
 
                         <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
@@ -52,7 +52,7 @@
 
                         <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				            <Run Text="数据更新日期："/>
-				            <Run Text="2014-08-29"/>
+				            <Run Text="2014-10-11"/>
                         </TextBlock>
                       
                     </StackPanel>
