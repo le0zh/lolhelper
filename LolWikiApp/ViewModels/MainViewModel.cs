@@ -35,7 +35,6 @@ namespace LolWikiApp.ViewModels
         public string SelectedDetailGameInfoUrl { get; set; }
 
         public EquipmentRecommend EquipmentRecommendSelected { get; set; }
-
         
 
         public MainViewModel()
@@ -113,35 +112,35 @@ namespace LolWikiApp.ViewModels
         }
         #endregion
 
-        private string dataVersion;
+        private string _dataVersion;
         /// <summary>
         /// Version for current Data source
         /// </summary>
         public string DataVersion
         {
-            get { return String.IsNullOrEmpty(dataVersion) ? "N/A" : dataVersion; }
+            get { return String.IsNullOrEmpty(_dataVersion) ? "N/A" : _dataVersion; }
             private set
             {
-                if (dataVersion != value)
+                if (_dataVersion != value)
                 {
-                    dataVersion = value;
+                    _dataVersion = value;
                     NotifyPropertyChanged("DataVersion");
                 }
             }
         }
 
-        private string dataLastUpdated;
+        private string _dataLastUpdated;
         /// <summary>
         /// Display information for last updated time
         /// </summary>
         public string DataLastUpdated
         {
-            get { return String.IsNullOrEmpty(dataLastUpdated) ? "N/A" : dataLastUpdated; ; }
+            get { return String.IsNullOrEmpty(_dataLastUpdated) ? "N/A" : _dataLastUpdated; ; }
             private set
             {
-                if (dataLastUpdated != value)
+                if (_dataLastUpdated != value)
                 {
-                    dataLastUpdated = value;
+                    _dataLastUpdated = value;
                     NotifyPropertyChanged("DataLastUpdated");
                 }
             }
@@ -204,7 +203,7 @@ namespace LolWikiApp.ViewModels
             }
 
             DataVersion = _heroRepository.DataVersion;
-            dataLastUpdated = _heroRepository.DataLastUpdated;
+            _dataLastUpdated = _heroRepository.DataLastUpdated;
 
             this.IsDataLoaded = true;
         }

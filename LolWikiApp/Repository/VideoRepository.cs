@@ -318,7 +318,7 @@ namespace LolWikiApp.Repository
                     actionPopup.Hide();
 
                     var localFileRepository = new LocalFileRepository();
-                    localFileRepository.DownloadAsync(src, "test.mp4", new CancellationToken());
+                    //localFileRepository.DownloadAsync(src, "test.mp4", new CancellationToken());
                 };
             }
 
@@ -398,13 +398,13 @@ namespace LolWikiApp.Repository
             var xamlBtnHd = GetVideoPlayButton("高清", videoList[1], actionPopup);
             var xamlBtnSuperHd = GetVideoPlayButton("超清", videoList[2], actionPopup);
             var xamlBtnOriginal = GetVideoPlayButton("原画", videoList[3], actionPopup);
-            //var xamlBtnCache = GetVdieoCacheButton("下载", videoList[2], actionPopup);
+            var xamlBtnCache = GetVdieoCacheButton("下载", videoList[2], actionPopup);
 
             //actionPanel.Children.Add(xamlBtnSd);
             actionPanel.Children.Add(xamlBtnHd);
             actionPanel.Children.Add(xamlBtnSuperHd);
             actionPanel.Children.Add(xamlBtnOriginal);
-            //actionPanel.Children.Add(xamlBtnCache);
+            actionPanel.Children.Add(xamlBtnCache);
 
             grid.Children.Add(actionPanel);
 

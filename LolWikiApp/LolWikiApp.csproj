@@ -126,7 +126,7 @@
     <Compile Include="LetvVideoPage.xaml.cs">
       <DependentUpon>LetvVideoPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Library\Downloader.cs" />
+    <Compile Include="Library\VideoDownloader.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="HeroDetailsPage.xaml.cs">
       <DependentUpon>HeroDetailsPage.xaml</DependentUpon>
