@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Resources;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -11,7 +12,7 @@ using Microsoft.Phone.Shell;
 using LolWikiApp.Resources;
 using LolWikiApp.ViewModels;
 using Microsoft.Phone.Notification;
-using Microsoft.WindowsAzure.Messaging; 
+using Microsoft.WindowsAzure.Messaging;
 
 namespace LolWikiApp
 {
@@ -19,7 +20,7 @@ namespace LolWikiApp
     {
         private static MainViewModel _viewModel = null;
         private static NewsViewModel _newsViewModel = null;
-        
+
         /// <summary>
         /// A static ViewModel used by the views to bind against.
         /// </summary>
@@ -32,7 +33,7 @@ namespace LolWikiApp
                 if (_viewModel == null)
                     _viewModel = new MainViewModel();
 
-                if(_viewModel.IsDataLoaded == false)
+                if (_viewModel.IsDataLoaded == false)
                     _viewModel.LoadHeroBaiscInfoDataAsync();
 
                 return _viewModel;
@@ -142,7 +143,7 @@ namespace LolWikiApp
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
- 
+
         }
 
         // Code to execute when the application is deactivated (sent to background)
@@ -150,12 +151,16 @@ namespace LolWikiApp
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
             // Ensure that required application state is persisted here.
+            var task = Task.Run(() => ViewModel.VideoDownloadService.SaveInfoToIso());
+            task.Wait();
         }
 
         // Code to execute when the application is closing (eg, user hit Back)
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
+            var task = Task.Run(()=> ViewModel.VideoDownloadService.SaveInfoToIso());
+            task.Wait();
         }
 
         // Code to execute if a navigation fails

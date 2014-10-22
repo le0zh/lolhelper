@@ -23,6 +23,47 @@ using Newtonsoft.Json;
 
 namespace LolWikiApp.Repository
 {
+    public class ObjectPersistentHelper<T> where T : new()
+    {
+        public async Task<bool> Save(T obj, string isoFolderName, string isoFileName)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var content = JsonConvert.SerializeObject(obj);
+            var persistentFolder = await localFolder.CreateFolderAsync(isoFolderName, CreationCollisionOption.OpenIfExists);
+
+            using (var file = await persistentFolder.OpenStreamForWriteAsync(isoFileName, CreationCollisionOption.ReplaceExisting))
+            using (var sr = new StreamWriter(file))
+            {
+                await sr.WriteAsync(content);
+            }
+            return true;
+        }
+
+        public async Task<T> Read(string isoFolderName, string isoFileName)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var persistentFolder = await localFolder.CreateFolderAsync(isoFolderName, CreationCollisionOption.OpenIfExists);
+            var obj = default(T);
+            try
+            {
+                var file = await persistentFolder.GetFileAsync(isoFileName);
+                using (var stream = await file.OpenReadAsync())
+                using (var sr = new StreamReader(stream.AsStream()))
+                {
+                    var content = await sr.ReadToEndAsync();
+                    obj = JsonConvert.DeserializeObject<T>(content);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            return obj;
+        }
+    }
+
+
     public class LocalFileRepository
     {
         private object _lockobj = new object();

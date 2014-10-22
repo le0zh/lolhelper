@@ -22,6 +22,9 @@ namespace LolWikiApp.ViewModels
         private readonly LocalFileRepository _localFileRepository;
         private readonly Dictionary<string, HeroDetail> _heroDetailsCache;
 
+     
+        public VideoDownloadService VideoDownloadService { get; private set; }
+
         public Player BindedPlayer { get; set; }
         public Player SelectedPlayer { get; set; }
 
@@ -39,7 +42,7 @@ namespace LolWikiApp.ViewModels
 
         public MainViewModel()
         {
-            this.HeroBasicInfoCollection = new ObservableCollection<Hero>();
+            HeroBasicInfoCollection = new ObservableCollection<Hero>();
 
             _heroDetailsCache = new Dictionary<string, HeroDetail>();
             _heroRepository = new HeroRepository();
@@ -49,6 +52,7 @@ namespace LolWikiApp.ViewModels
             BindedPlayer = GetPlayerInfoFromSettings();
 
             VideoRepository = new VideoRepository();
+            VideoDownloadService =new VideoDownloadService();
         }
 
         #region 读取图片html模板

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Microsoft.Phone.BackgroundTransfer;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
@@ -19,10 +22,9 @@ namespace LolWikiApp
     {
         protected readonly FullScreenPopup ActionPopup;
         private List<LetvVideoTypeListInfo> _letvVideoTypeList;
-        private int currentLateastPage = 1;
+        private int _currentLateastPage = 1;
 
         private ObservableCollection<LetvVideoListInfo> _letvLatestVideoListInfos;
-
 
         public LetvVideoPage()
         {
@@ -65,11 +67,11 @@ namespace LolWikiApp
 
             try
             {
-                if (currentLateastPage == 1)
+                if (_currentLateastPage == 1)
                 {
                     _letvLatestVideoListInfos.Clear();
                 }
-                var lateastVideoList = await App.ViewModel.VideoRepository.GetLetvLateastVideoList(currentLateastPage);
+                var lateastVideoList = await App.ViewModel.VideoRepository.GetLetvLateastVideoList(_currentLateastPage);
                 foreach (var info in lateastVideoList)
                 {
                     _letvLatestVideoListInfos.Add(info);
@@ -265,7 +267,7 @@ namespace LolWikiApp
                 if (videoListInfo != null)
                 {
                     longListSelector.SelectedItem = null;//reset selected item
-                    App.ViewModel.VideoRepository.PrepareLetvVideoActionPopup(ActionPopup, videoListInfo, NavigationService);
+                    App.ViewModel.VideoRepository.PrepareLetvVideoActionPopup(ActionPopup, videoListInfo);
                     ActionPopup.Show();
                 }
             }
@@ -317,8 +319,126 @@ namespace LolWikiApp
                     break;
                 case 5:
                     //本地
+                    LoadLocalVideoCache();
                     break;
             }
+        }
+
+        private void LoadLocalVideoCache()
+        {
+            InitialTansferStatusCheck();
+            TransferListBox.ItemsSource = App.ViewModel.VideoDownloadService.Requests;
+        }
+
+        private async void InitialTansferStatusCheck()
+        {
+            //UpdateRequestsList();
+            CachedVideoLoadingBar.Visibility = Visibility.Visible;
+            await App.ViewModel.VideoDownloadService.ReadInfoFromIso();
+            CachedVideoLoadingBar.Visibility = Visibility.Collapsed;
+
+            foreach (var transfer in App.ViewModel.VideoDownloadService.Requests)
+            {
+                transfer.StatusChangedHandler += transfer_TransferStatusChanged;
+                transfer.TransferProgressChangedHandler += transfer_TransferProgressChanged;
+                //ProcessTransfer(transfer);
+            }
+        }
+
+        void transfer_TransferStatusChanged(object sender, EventArgs e)
+        {
+            var request = sender as VideoDownloadRequest;
+            if (request != null)
+            {
+                if (request.TransferStatus == VideoDownloadTransferStatus.Completed)
+                {
+                    App.ViewModel.VideoDownloadService.RemoveRequest(request);
+                }
+            }
+        }
+
+        void transfer_TransferProgressChanged(object sender, TransferProgressChangedEventArgs e)
+        {
+            //UpdateUi();
+        }
+
+        private void UpdateUi()
+        {
+            // Update the TransferListBox with the list of transfer requests. 
+            TransferListBox.ItemsSource = App.ViewModel.VideoDownloadService.Requests;
+
+            // If there are 1 or more transfers, hide the "no transfers" 
+            // TextBlock. IF there are zero transfers, show the TextBlock. 
+            if (TransferListBox.Items.Count > 0)
+            {
+                TransferListBox.Visibility = Visibility.Visible;
+                EmptyTextBlock.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                TransferListBox.Visibility = Visibility.Collapsed;
+                EmptyTextBlock.Visibility = Visibility.Visible;
+            }
+        }
+
+        //private void ProcessTransfer(BackgroundTransferRequest transfer)
+        //{
+        //    switch (transfer.TransferStatus)
+        //    {
+        //        case TransferStatus.Completed:
+
+        //            // If the status code of a completed transfer is 200 or 206, the 
+        //            // transfer was successful 
+        //            if (transfer.StatusCode == 200 || transfer.StatusCode == 206)
+        //            {
+        //                // Remove the transfer request in order to make room in the  
+        //                // queue for more transfers. Transfers are not automatically 
+        //                // removed by the system. 
+        //                RemoveTransferRequest(transfer.RequestId);
+
+        //                // In this example, the downloaded file is moved into the root 
+        //                // Isolated Storage directory 
+        //                using (var isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+        //                {
+        //                    string filename = Path.Combine("VideoCache", transfer.Tag);
+        //                    if (isoStore.FileExists(filename))
+        //                    {
+        //                        isoStore.DeleteFile(filename);
+        //                    }
+        //                    isoStore.MoveFile(transfer.DownloadLocation.OriginalString, filename);
+        //                }
+
+        //            }
+        //            else
+        //            {
+        //                // This is where you can handle whatever error is indicated by the 
+        //                // StatusCode and then remove the transfer from the queue.  
+        //                RemoveTransferRequest(transfer.RequestId);
+
+        //                if (transfer.TransferError != null)
+        //                {
+        //                    // Handle TransferError, if there is one. 
+        //                }
+        //            }
+        //            break;
+
+        //        case TransferStatus.WaitingForExternalPower:
+        //            break;
+
+        //        case TransferStatus.WaitingForExternalPowerDueToBatterySaverMode:
+        //            break;
+
+        //        case TransferStatus.WaitingForNonVoiceBlockingNetwork:
+        //            break;
+
+        //        case TransferStatus.WaitingForWiFi:
+        //            break;
+        //    }
+        //}
+
+        private void RemoveTransferRequest(string transferId)
+        {
+
         }
 
         private async void LatestVideoLongListSelector_OnGettingMoreTriggered(object sender, EventArgs e)
@@ -327,10 +447,10 @@ namespace LolWikiApp
 
             try
             {
-                currentLateastPage += 1;
+                _currentLateastPage += 1;
                 lastVideoListInfo = _letvLatestVideoListInfos.Last();
 
-                var lateastVideoList = await App.ViewModel.VideoRepository.GetLetvLateastVideoList(currentLateastPage);
+                var lateastVideoList = await App.ViewModel.VideoRepository.GetLetvLateastVideoList(_currentLateastPage);
                 foreach (var info in lateastVideoList)
                 {
                     _letvLatestVideoListInfos.Add(info);
@@ -358,6 +478,46 @@ namespace LolWikiApp
             {
                 ActionPopup.Hide();
                 e.Cancel = true;
+            }
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            //App.ViewModel.VideoDownloadService.SaveInfoToIso();
+
+            base.OnNavigatingFrom(e);
+        }
+
+        //private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        //{
+        //    // The ID for each transfer request is bound to the 
+        //    // Tag property of each Remove button. 
+        //    var transferId = ((Button)sender).Tag as string;
+
+        //    // Delete the transfer request 
+        //    RemoveTransferRequest(transferId);
+
+        //    // Refresh the list of file transfers 
+        //    UpdateUi(); 
+        //}
+        private void TransferListBox_OnTap(object sender, GestureEventArgs e)
+        {
+            
+        }
+
+        private void ContextMenu_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void GestureListener_OnTap(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
+        {
+            Debug.WriteLine("GestureListener_OnTap");
+            var border = sender as Border;
+            var contextMenu = ContextMenuService.GetContextMenu(border);
+            if (contextMenu.Parent == null)
+            {
+                contextMenu.IsOpen = true;
             }
         }
     }

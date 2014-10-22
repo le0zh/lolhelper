@@ -56,7 +56,7 @@
                             </TextBlock>
                         </StackPanel>
                     </Grid>
-              </Border>
+                </Border>
             </DataTemplate>
         </phone:Pivot.TitleTemplate>
 
@@ -67,7 +67,7 @@
                 </StackPanel>
             </DataTemplate>
         </phone:Pivot.HeaderTemplate>
-        
+
         <phone:PivotItem Header="技能">
             <ScrollViewer Margin="12 0 0 4" VerticalScrollBarVisibility="Auto">
                 <phone:LongListSelector ItemsSource="{Binding Abilities}" IsEnabled="False">
@@ -130,7 +130,7 @@
                 </phone:LongListSelector>
             </ScrollViewer>
         </phone:PivotItem>
-        
+
         <phone:PivotItem Header="出装">
             <Grid>
                 <Grid.RowDefinitions>
@@ -146,7 +146,7 @@
                             <LineBreak></LineBreak>
                             <Run Text="加载出装列表失败。"></Run>
                 </TextBlock>
-                
+
                 <local:RefreshableListBox Grid.Row="2"
                                     Visibility="Collapsed"
                                     Tap="EquipmentLongListSelector_OnTap"
@@ -173,7 +173,36 @@
                 </local:RefreshableListBox>
             </Grid>
         </phone:PivotItem>
-        
+
+        <phone:PivotItem Header="视频">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <StackPanel x:Name="HeroVideoLoadingBar" Grid.Row="0" Orientation="Vertical">
+                    <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
+
+                <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                                    x:Name="HeroVideoRetryNetPanel" Message="加载视频列表失败。"/>
+
+
+                <local:RefreshableListBox x:Name="HeroVideoLongListSelector" 
+                                          Grid.Row ="2"
+                                          Margin="0 0 -12 2"
+                                          IsGetMoreEnabled="True"
+                                          IsRefreshEnabled ="False"
+                                          Tap="VideoListLongListSelector_OnTap"
+                                          GettingMoreTriggered="HeroVideoLongListSelector_OnGettingMoreTriggered"
+                                          ItemTemplate="{StaticResource LetvVideoListDataTemplate}" />
+
+            </Grid>
+        </phone:PivotItem>
+
         <phone:PivotItem Header="数据">
             <ScrollViewer Margin="12 0 0 4" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
@@ -309,10 +338,10 @@
             </ScrollViewer>
 
         </phone:PivotItem>
-        
+
         <phone:PivotItem Header="排行">
             <StackPanel Margin="12 0 0 4">
-               
+
                 <ProgressBar x:Name="TopPlayerLoadingBar" Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
 
                 <TextBlock Margin="0 24 0 24"  x:Name="rank404TextBlock" Visibility="Collapsed" FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneSubtleBrush}">
@@ -333,10 +362,10 @@
                         <TextBlock Grid.Column="2" FontWeight="Bold" Text="胜率/场次/段位"></TextBlock>
                     </Grid>
                 </Border>
-                
+
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <phone:LongListSelector x:Name="HeroRanListBox" Visibility="Collapsed" Tap="HeroRanListBox_OnTap">
-                        <phone:LongListSelector.ItemTemplate>                            
+                        <phone:LongListSelector.ItemTemplate>
                             <DataTemplate>
                                 <Border Margin="0 0 12 0" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}">
                                     <Grid Margin="0 12 0 12">
@@ -354,16 +383,16 @@
                         </phone:LongListSelector.ItemTemplate>
                     </phone:LongListSelector>
                 </ScrollViewer>
-               
+
             </StackPanel>
         </phone:PivotItem>
-        
+
         <phone:PivotItem Header="背景">
             <ScrollViewer Margin="0 0 0 4" VerticalScrollBarVisibility="Auto">
                 <TextBlock Text="{Binding DisplayDescription}" TextWrapping="Wrap" LineHeight="10" Style="{StaticResource PhoneTextNormalStyle}"></TextBlock>
             </ScrollViewer>
         </phone:PivotItem>
-        
+
         <phone:PivotItem Header="皮肤">
             <Grid>
                 <Grid.RowDefinitions>
@@ -379,7 +408,7 @@
                             <LineBreak></LineBreak>
                             <Run Text="加载皮肤列表失败。"></Run>
                 </TextBlock>
-                
+
                 <phone:LongListSelector Grid.Row="2" Visibility="Collapsed" x:Name="SkinLongListSelector" IsEnabled="True">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>

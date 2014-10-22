@@ -74,7 +74,7 @@ namespace LolWikiApp
                 if (!string.IsNullOrEmpty(Video_Length))
                 {
                     var length = int.Parse(Video_Length);
-                    Debug.WriteLine("length:{0}",length);
+                    //Debug.WriteLine("length:{0}",length);
                     display = TimeSpan.FromSeconds(length).ToString("g");
                 }
                 return display;
@@ -91,4 +91,13 @@ namespace LolWikiApp
         public int TotalPage { get; set; }
     }
     #endregion
+
+    public class CachedVideoInfo
+    {
+        public string Title { get; set; }
+        public string ImageUrl { get; set; }
+        public string Length { get; set; }
+        public string Src { get; set; }
+        public int Percent { get; set; }
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -264,8 +265,8 @@ namespace LolWikiApp.Repository
             if (string.IsNullOrEmpty(vu))
                 return videoList;
 
-            string url = string.Format(LetvVideoRequestUrl, vu);
-            string json = await GetJsonStringViaHttpAsync(url);
+            var url = string.Format(LetvVideoRequestUrl, vu);
+            var json = await GetJsonStringViaHttpAsync(url);
 
             if (json.StartsWith("(") && json.EndsWith(")"))
             {
@@ -273,6 +274,12 @@ namespace LolWikiApp.Repository
             }
 
             var jObject = JObject.Parse(json);
+
+            if (jObject == null)
+            {
+                Debug.WriteLine("json object is null");
+                return videoList;
+            }
 
             var myLetvSourceConverter = new LetvSourceConverter();
 
@@ -297,7 +304,7 @@ namespace LolWikiApp.Repository
             player.Show();
         }
 
-        private Button GetVdieoCacheButton(string text, string src, FullScreenPopup actionPopup)
+        private Button GetVdieoCacheButton(string text, string src, FullScreenPopup actionPopup, LetvVideoListInfo videoListInfo)
         {
             const string template = @"<Button xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Width='100' Margin='0' BorderThickness='0' HorizontalAlignment='Center'>
                             <Grid>
@@ -317,8 +324,13 @@ namespace LolWikiApp.Repository
                 {
                     actionPopup.Hide();
 
-                    var localFileRepository = new LocalFileRepository();
+                    //var localFileRepository = new LocalFileRepository();
                     //localFileRepository.DownloadAsync(src, "test.mp4", new CancellationToken());
+                    //var videoDownloader = new VideoDownloaderViaBts();
+                    //videoDownloader.Download(fileName + ".mp4", src);
+                    var request = new VideoDownloadRequest(videoListInfo, src);
+                    App.ViewModel.VideoDownloadService.AddRequest(request);
+                    ToastPromts.GetToastWithImgAndTitle("缓存添加成功!").Show();
                 };
             }
 
@@ -351,7 +363,7 @@ namespace LolWikiApp.Repository
             return btn;
         }
 
-        public async void PrepareLetvVideoActionPopup(FullScreenPopup actionPopup, LetvVideoListInfo videoListInfo, NavigationService ns)
+        public async void PrepareLetvVideoActionPopup(FullScreenPopup actionPopup, LetvVideoListInfo videoListInfo)
         {
             var mainStackPanel = new StackPanel
             {
@@ -361,7 +373,19 @@ namespace LolWikiApp.Repository
             };
 
             //TODO: TIME LONG
-            var videoList = await GetNewsVideoUrlAsync(videoListInfo.Letv_Video_Unique);
+            List<string> videoList = null;
+
+            try
+            {
+                videoList = await GetNewsVideoUrlAsync(videoListInfo.Letv_Video_Unique);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            if (videoList == null)
+                return;
 
             mainStackPanel.Tap += (s, e) => e.Handled = true;
 
@@ -398,7 +422,7 @@ namespace LolWikiApp.Repository
             var xamlBtnHd = GetVideoPlayButton("高清", videoList[1], actionPopup);
             var xamlBtnSuperHd = GetVideoPlayButton("超清", videoList[2], actionPopup);
             var xamlBtnOriginal = GetVideoPlayButton("原画", videoList[3], actionPopup);
-            var xamlBtnCache = GetVdieoCacheButton("下载", videoList[2], actionPopup);
+            var xamlBtnCache = GetVdieoCacheButton("下载", videoList[2], actionPopup, videoListInfo);
 
             //actionPanel.Children.Add(xamlBtnSd);
             actionPanel.Children.Add(xamlBtnHd);

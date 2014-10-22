@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:LolWikiApp"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    SupportedOrientations="Portrait"  Orientation="Landscape"
+    SupportedOrientations="Portrait"  
     shell:SystemTray.IsVisible="True"
     shell:SystemTray.Opacity="0"
     shell:SystemTray.BackgroundColor="White"
@@ -83,7 +83,7 @@
                     <ScrollViewer Grid.Row="2" Margin="0 0 -5 0">
                         <toolkit:WrapPanel x:Name="JieshuoWrapPanel"></toolkit:WrapPanel>
                     </ScrollViewer>
-               
+
                 </Grid>
             </phone:PivotItem>
 
@@ -156,9 +156,87 @@
                 </Grid>
             </phone:PivotItem>
 
-            <!--PivotItem item 5--><!--
+            <!--PivotItem item 5-->
             <phone:PivotItem Header="本地">
-            </phone:PivotItem>-->
+                <!--ContentPanel - place additional content here-->
+                <Grid x:Name="ContentPanel">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Visibility="Collapsed" x:Name="CachedVideoLoadingBar" Grid.Row="0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                        <TextBlock Text="you have no transfers registered" Name="EmptyTextBlock" Visibility="Collapsed"/>
+                    </StackPanel>
+
+                    <ListBox Grid.Row="1" Name="TransferListBox" SelectionMode="Single" Tap="TransferListBox_OnTap">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6">
+                                    <toolkit:GestureService.GestureListener>
+                                        <toolkit:GestureListener Tap="GestureListener_OnTap" />
+                                    </toolkit:GestureService.GestureListener>
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu  Loaded="ContextMenu_OnLoaded" IsZoomEnabled="false" >
+                                            <toolkit:ContextMenu>
+                                                <toolkit:MenuItem Header="item1" />
+                                                <toolkit:MenuItem Header="item2" />
+                                                <toolkit:MenuItem Header="item3" />
+                                            </toolkit:ContextMenu>
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Canvas Grid.Column="0" Width="120">
+                                            <Image Source="{Binding DisplayUrl}" Width="120" Height="95" Stretch="UniformToFill"></Image>
+                                            <StackPanel Width="120" Canvas.Top="68" Background="{StaticResource PhoneSemitransparentBrush}">
+                                                <TextBlock HorizontalAlignment="Right" Text="{Binding DisplayLength}" VerticalAlignment="Center" Foreground="White" Margin="0 0 4 0"></TextBlock>
+                                            </StackPanel>
+                                        </Canvas>
+
+
+                                        <Grid MinHeight="95" Grid.Column="1" Margin="8 0 0 0" >
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"></RowDefinition>
+                                                <RowDefinition Height="16"></RowDefinition>
+                                                <RowDefinition Height="24"></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Text="{Binding FileName}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black" />
+
+                                            <Grid Grid.Row="1">
+                                                <ProgressBar IsIndeterminate="False" HorizontalAlignment="Left" Margin="-10 4 0 4" x:Name="CachingProgressBar" Style="{StaticResource MyProgressBarStyle}" Height="8" Value="{Binding PercentDisplay}"></ProgressBar>
+                                            </Grid>
+
+                                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}">
+                                                        <Run Text="正在下载: " ></Run>
+                                                        <Run Text="{Binding SpeedDisplay}"></Run>
+                                                </TextBlock>
+                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" HorizontalAlignment="Right">
+                                                        <Run Text="{Binding PercentDisplay}"></Run>
+                                                        <Run Text="% "></Run>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <StackPanel Grid.Column="2">
+                                            <Button Content="X"></Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </phone:PivotItem>
 
         </phone:Pivot>
     </Grid>

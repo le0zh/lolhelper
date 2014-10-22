@@ -27,12 +27,14 @@ namespace LolWikiApp
 {
     public partial class DetailsPage : PhoneApplicationPage
     {
-        private HeroDetail hero;
+        private HeroDetail _hero;
         private readonly ObservableCollection<EquipmentRecommend> equipmentRecommends;
         private readonly ObservableCollection<HeroSkin> heroSkins;
         private readonly ObservableCollection<HeroRankWrapper> heroRankList;
-        private readonly Popup popUp;
-        private bool isPivotFirstLoaded;
+        private readonly Popup _imagePopUp;
+        private readonly FullScreenPopup _actionPopup;
+        private bool _isPivotFirstLoaded;
+        private int _currentLateastPage = 1;
 
         // Constructor
         public DetailsPage()
@@ -44,19 +46,22 @@ namespace LolWikiApp
             equipmentRecommends = new ObservableCollection<EquipmentRecommend>();
             heroSkins = new ObservableCollection<HeroSkin>();
             heroRankList = new ObservableCollection<HeroRankWrapper>();
-            popUp = new Popup();
+            _imagePopUp = new Popup();
+            _actionPopup = new FullScreenPopup();
+
+            _letvHeroVideoListInfos = new ObservableCollection<LetvVideoListInfo>();
         }
 
         private async void DetailPageMain()
         {
-            if (hero == null)
+            if (_hero == null)
             {
                 string selectedId = "";
                 if (NavigationContext.QueryString.TryGetValue("selectedId", out selectedId))
                 {
-                    hero = await App.ViewModel.GetHeroDetailByKeyAsync(selectedId);
-                    hero.SetLevel(1);
-                    DataContext = hero;
+                    _hero = await App.ViewModel.GetHeroDetailByKeyAsync(selectedId);
+                    _hero.SetLevel(1);
+                    DataContext = _hero;
 
                     EquipmentLongListSelector.ItemsSource = equipmentRecommends;
                     SkinLongListSelector.ItemsSource = heroSkins;
@@ -71,14 +76,17 @@ namespace LolWikiApp
                 case 1: //出装
                     LoadEquipList();
                     break;
-                case 2: //数据
+                case 2: //视频
+                    BindHeroVideoList();
                     break;
-                case 3: //排行
+                case 3: //数据
+                    break;
+                case 4: //排行
                     LoadRankList();
                     break;
-                case 4: //背景
+                case 5: //背景
                     break;
-                case 5: //皮肤
+                case 6: //皮肤
                     LoadSkinList();
                     break;
             }
@@ -86,7 +94,7 @@ namespace LolWikiApp
 
         private void ShowRetryPanelAppBar(Action retryAction)
         {
-            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
             var refreshButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
@@ -112,7 +120,7 @@ namespace LolWikiApp
                 EquipmentLoadingBar.Visibility = Visibility.Visible;
                 Equipment404TextBlock.Visibility = Visibility.Collapsed;
 
-                List<EquipmentRecommend> list = await App.ViewModel.LoadEquipmentRecommendList(hero.Name);
+                List<EquipmentRecommend> list = await App.ViewModel.LoadEquipmentRecommendList(_hero.Name);
                 foreach (EquipmentRecommend recommend in list)
                 {
                     equipmentRecommends.Add(recommend);
@@ -145,7 +153,7 @@ namespace LolWikiApp
                 SkinLoadingBar.Visibility = Visibility.Visible;
                 Skin404TextBlock.Visibility = Visibility.Collapsed;
 
-                List<HeroSkin> list = await App.ViewModel.LoadHeroSkinListAsync(hero.Name);
+                List<HeroSkin> list = await App.ViewModel.LoadHeroSkinListAsync(_hero.Name);
                 foreach (HeroSkin skin in list)
                 {
                     heroSkins.Add(skin);
@@ -179,9 +187,9 @@ namespace LolWikiApp
 
                 HttpClient client = new HttpClient();
                 string content =
-                    await client.GetStringAsync(new Uri("http://lolbox.duowan.com/phone/heroTop10Players_ios.php?hero=" + hero.Name));
+                    await client.GetStringAsync(new Uri("http://lolbox.duowan.com/phone/heroTop10Players_ios.php?hero=" + _hero.Name));
 
-                foreach (HeroRankWrapper wrapper in loadHeroRankData(content))
+                foreach (HeroRankWrapper wrapper in LoadHeroRankData(content))
                 {
                     heroRankList.Add(wrapper);
                 }
@@ -201,9 +209,9 @@ namespace LolWikiApp
 
         private void HeroDetailMainPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isPivotFirstLoaded == false && HeroDetailMainPivot.SelectedIndex == 0)
+            if (_isPivotFirstLoaded == false && HeroDetailMainPivot.SelectedIndex == 0)
             {
-                isPivotFirstLoaded = true;
+                _isPivotFirstLoaded = true;
             }
             else
             {
@@ -217,7 +225,7 @@ namespace LolWikiApp
             DetailPageMain();
         }
 
-        private List<HeroRankWrapper> loadHeroRankData(string content)
+        private static List<HeroRankWrapper> LoadHeroRankData(string content)
         {
             List<HeroRankWrapper> list = new List<HeroRankWrapper>();
 
@@ -247,34 +255,15 @@ namespace LolWikiApp
             return list;
         }
 
-        #region  Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        // Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        //{
-        //    // Set the page's ApplicationBar to a new instance of ApplicationBar.
-        //    ApplicationBar = new ApplicationBar();
-
-        //    // Create a new button and set the text value to the localized string from AppResources.
-        //    ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
-        //    appBarButton.Text = AppResources.AppBarButtonText;
-        //    ApplicationBar.Buttons.Add(appBarButton);
-
-        //    // Create a new menu item with the localized string from AppResources.
-        //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
-        //    ApplicationBar.MenuItems.Add(appBarMenuItem);
-        //}
-        #endregion
-
         private void HeroLevelSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (this.HeroLevelTextBlock != null)
             {
                 int level = Convert.ToInt32(e.NewValue);
                 this.HeroLevelTextBlock.Text = level.ToString(CultureInfo.InvariantCulture);
-                if (hero != null)
+                if (_hero != null)
                 {
-                    hero.SetLevel(level);
+                    _hero.SetLevel(level);
                 }
             }
         }
@@ -291,7 +280,7 @@ namespace LolWikiApp
 
         private async void EquipmentLongListSelector_OnRefreshTriggered(object sender, EventArgs e)
         {
-            List<EquipmentRecommend> list = await App.ViewModel.LoadEquipmentRecommendList(hero.Name);
+            List<EquipmentRecommend> list = await App.ViewModel.LoadEquipmentRecommendList(_hero.Name);
             equipmentRecommends.Clear();
             foreach (EquipmentRecommend recommend in list)
             {
@@ -302,19 +291,24 @@ namespace LolWikiApp
 
         private void HideImagePopUp()
         {
-            if (popUp.IsOpen)
+            if (_imagePopUp.IsOpen)
             {
-                popUp.IsOpen = false;
+                _imagePopUp.IsOpen = false;
                 ApplicationBar = null;
             }
         }
 
         private void DetailsPage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
-            if (popUp.IsOpen)
+            if (_imagePopUp.IsOpen)
             {
                 HideImagePopUp();
+                e.Cancel = true;
+            }
 
+            if (_actionPopup.IsOpen)
+            {
+                _actionPopup.Hide();
                 e.Cancel = true;
             }
 
@@ -336,16 +330,16 @@ namespace LolWikiApp
                                      .Replace("$w$", bitmap.PixelWidth.ToString())
                                      .Replace("$h$", bitmap.DecodePixelHeight.ToString());
 
-            var wb = new WebBrowser {Height = 800, Width = 480};
+            var wb = new WebBrowser { Height = 800, Width = 480 };
 
             var tmpFilePath = await App.NewsViewModel.NewsRepository.SaveHtmlToTempIsoFile(htmlContent);
             wb.Navigate(new Uri(tmpFilePath, UriKind.Relative));
 
             wb.Background = Application.Current.GetTheme() == Theme.Dark ? new SolidColorBrush(Colors.Black)
                                                                          : new SolidColorBrush(Colors.White);
-            popUp.Child = wb;
+            _imagePopUp.Child = wb;
 
-            ApplicationBar = new ApplicationBar {Opacity = 1};
+            ApplicationBar = new ApplicationBar { Opacity = 1 };
             var downloadButton = new ApplicationBarIconButton();
             var closeButton = new ApplicationBarIconButton();
 
@@ -376,10 +370,10 @@ namespace LolWikiApp
 
             wb.LoadCompleted += (s3, e3) =>
             {
-                popUp.IsOpen = true;
+                _imagePopUp.IsOpen = true;
             };
         }
-        
+
         private void HeroRanListBox_OnTap(object sender, GestureEventArgs e)
         {
             if (HeroRanListBox.SelectedItem != null)
@@ -391,6 +385,88 @@ namespace LolWikiApp
                     string url = string.Format("/PlayerDetailPage.xaml?sn={0}&pn={1}", heroRankWrapper.ServerName, heroRankWrapper.PlayerName);
                     NavigationService.Navigate(new Uri(url, UriKind.Relative));
                 }
+            }
+        }
+
+        private ObservableCollection<LetvVideoListInfo> _letvHeroVideoListInfos;
+
+        protected async void BindHeroVideoList()
+        {
+            if (HeroVideoLongListSelector.ItemsSource == null)
+            {
+                HeroVideoLongListSelector.ItemsSource = _letvHeroVideoListInfos;
+            }
+
+            HeroVideoLoadingBar.Visibility = Visibility.Visible;
+            HeroVideoLongListSelector.Visibility = Visibility.Collapsed;
+
+            try
+            {
+                if (_currentLateastPage == 1)
+                {
+                    _letvHeroVideoListInfos.Clear();
+                }
+                var heroVideoList = await App.ViewModel.VideoRepository.GetTypedLetvVideoListyAsync(_hero.Name, _currentLateastPage);
+                foreach (var info in heroVideoList)
+                {
+                    _letvHeroVideoListInfos.Add(info);
+                }
+                HeroVideoLongListSelector.Visibility = Visibility.Visible;
+            }
+            catch (Exception)
+            {
+                HeroVideoRetryNetPanel.Visibility = Visibility.Visible;
+            }
+            finally
+            {
+                HeroVideoLoadingBar.Visibility = Visibility.Collapsed;
+            }
+        }
+
+
+        private void VideoListLongListSelector_OnTap(object sender, GestureEventArgs e)
+        {
+            var longListSelector = sender as RefreshableListBox;
+            if (longListSelector != null && longListSelector.SelectedItem != null)
+            {
+                var videoListInfo = longListSelector.SelectedItem as LetvVideoListInfo;
+                if (videoListInfo != null)
+                {
+                    longListSelector.SelectedItem = null;//reset selected item
+                    App.ViewModel.VideoRepository.PrepareLetvVideoActionPopup(_actionPopup, videoListInfo);
+                    _actionPopup.Show();
+                }
+            }
+        }
+
+        private async void HeroVideoLongListSelector_OnGettingMoreTriggered(object sender, EventArgs e)
+        {
+            LetvVideoListInfo lastVideoListInfo = null;
+
+            try
+            {
+                _currentLateastPage += 1;
+                lastVideoListInfo = _letvHeroVideoListInfos.Last();
+
+                var lateastVideoList = await App.ViewModel.VideoRepository.GetTypedLetvVideoListyAsync(_hero.Name, _currentLateastPage);
+                foreach (var info in lateastVideoList)
+                {
+                    _letvHeroVideoListInfos.Add(info);
+                }
+            }
+            catch (Exception)
+            {
+                ToastPromts.GetToastWithImgAndTitle("网络不太稳定，加载获取失败.").Show();
+                return;
+            }
+            finally
+            {
+                HeroVideoLongListSelector.HideGettingMorePanel();
+            }
+
+            if (lastVideoListInfo != null)
+            {
+                HeroVideoLongListSelector.ScrollTo(lastVideoListInfo);
             }
         }
     }
