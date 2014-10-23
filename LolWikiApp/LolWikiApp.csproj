@@ -107,6 +107,7 @@
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\ImageSourceConverter.cs" />
     <Compile Include="Converter\LetvSourceConverter.cs" />
+    <Compile Include="Converter\TransferStatusConverter.cs" />
     <Compile Include="DataTemplateSelector\NewsListItemDataTemplateSelector.cs" />
     <Compile Include="DataTemplateSelector\VideoTypeListItemDataTemplateSelector.cs" />
     <Compile Include="EquipmentRecommendDetailPage.xaml.cs">
@@ -280,6 +281,7 @@
     <Content Include="Assets\Q.png" />
     <Content Include="Assets\R.png" />
     <Content Include="Assets\W.png" />
+    <Content Include="Data\appbar.control.play.png" />
     <Content Include="Data\champion.json" />
     <Content Include="Data\html\common.css" />
     <Content Include="Data\html\global_black.css" />
@@ -405,6 +407,9 @@
     <Content Include="Data\heros\Zilean.json" />
     <Content Include="Data\heros\Zyra.json" />
     <Content Include="Data\apiCurrentMatch.json" />
+    <Content Include="Data\appbar.control.pause.png" />
+    <Content Include="Data\appbar.delete.png" />
+    <Content Include="Data\appbar.download.png" />
     <Content Include="Data\images\Azir\Azir.png" />
     <Content Include="Data\images\Gnar\Gnar.png" />
     <Content Include="Data\logo.png" />

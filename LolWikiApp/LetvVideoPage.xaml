@@ -175,23 +175,10 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="0 6 0 6">
-                                    <toolkit:GestureService.GestureListener>
-                                        <toolkit:GestureListener Tap="GestureListener_OnTap" />
-                                    </toolkit:GestureService.GestureListener>
-                                    <toolkit:ContextMenuService.ContextMenu>
-                                        <toolkit:ContextMenu  Loaded="ContextMenu_OnLoaded" IsZoomEnabled="false" >
-                                            <toolkit:ContextMenu>
-                                                <toolkit:MenuItem Header="item1" />
-                                                <toolkit:MenuItem Header="item2" />
-                                                <toolkit:MenuItem Header="item3" />
-                                            </toolkit:ContextMenu>
-                                        </toolkit:ContextMenu>
-                                    </toolkit:ContextMenuService.ContextMenu>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="120"/>
                                             <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="100"/>
                                         </Grid.ColumnDefinitions>
 
                                         <Canvas Grid.Column="0" Width="120">
@@ -201,8 +188,7 @@
                                             </StackPanel>
                                         </Canvas>
 
-
-                                        <Grid MinHeight="95" Grid.Column="1" Margin="8 0 0 0" >
+                                        <Grid  MinWidth="330" MinHeight="95" Grid.Column="1" Margin="8 0 0 0" >
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="*"></RowDefinition>
                                                 <RowDefinition Height="16"></RowDefinition>
@@ -211,25 +197,23 @@
 
                                             <TextBlock Grid.Row="0" Text="{Binding FileName}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black" />
 
-                                            <Grid Grid.Row="1">
-                                                <ProgressBar IsIndeterminate="False" HorizontalAlignment="Left" Margin="-10 4 0 4" x:Name="CachingProgressBar" Style="{StaticResource MyProgressBarStyle}" Height="8" Value="{Binding PercentDisplay}"></ProgressBar>
-                                            </Grid>
+                                            <ProgressBar MinWidth="344" Grid.Row="1" IsIndeterminate="False" HorizontalAlignment="Left" Margin="-10 4 0 4" x:Name="CachingProgressBar" 
+                                                         Style="{StaticResource MyProgressBarStyle}" 
+                                                         Height="8" 
+                                                         Value="{Binding PercentDisplay}"></ProgressBar>
 
-                                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                            <Grid  Grid.Row="2">
                                                 <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}">
-                                                        <Run Text="正在下载: " ></Run>
+                                                        <Run Text="{Binding TransferStatus, Converter={StaticResource TransferStatusConverter}}" ></Run>
                                                         <Run Text="{Binding SpeedDisplay}"></Run>
                                                 </TextBlock>
                                                 <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" HorizontalAlignment="Right">
                                                         <Run Text="{Binding PercentDisplay}"></Run>
                                                         <Run Text="% "></Run>
                                                 </TextBlock>
-                                            </StackPanel>
+                                            </Grid>
                                         </Grid>
 
-                                        <StackPanel Grid.Column="2">
-                                            <Button Content="X"></Button>
-                                        </StackPanel>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

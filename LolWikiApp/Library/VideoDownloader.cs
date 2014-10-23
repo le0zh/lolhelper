@@ -64,11 +64,12 @@ namespace LolWikiApp
                 Requests.Add(request);
                 CachingVideoInfos.Add(ConvertToCachedVideoInfo(request));
                 //Task.Factory.StartNew(() => request.DownloadAsync(new CancellationToken()));
-                request.DownloadAsync(new CancellationToken());
+                request.Download();
             }
             else
             {
-                foundRequest.DownloadAsync(new CancellationToken());
+                //TODO:CHECK STATUS
+                foundRequest.Download();
             }
         }
 
@@ -76,10 +77,12 @@ namespace LolWikiApp
         {
             Requests.Remove(request);
             CachingVideoInfos.RemoveAll(i => i.Title == request.FileName);
-            if (request.TransferStatus == VideoDownloadTransferStatus.Completed)
-            {
-                CachedVideoInfos.Add(ConvertToCachedVideoInfo(request));
-            }
+            //if (request.TransferStatus == VideoDownloadTransferStatus.Completed)
+            //{
+            //    CachedVideoInfos.Add(ConvertToCachedVideoInfo(request));
+            //}
+
+            _persistentHelper.Delete(VideoCacheFolderName, request.FileName);
         }
 
         public CachedVideoInfo ConvertToCachedVideoInfo(VideoDownloadRequest request)
@@ -161,9 +164,7 @@ namespace LolWikiApp
                 request.TransferStatus = VideoDownloadTransferStatus.Completed;
                 Requests.Add(request);
             }
-
             return true;
-
         }
 
         public async Task<bool> ReadCachingListFromIso()
@@ -180,7 +181,7 @@ namespace LolWikiApp
             foreach (var cachingVideoInfo in CachingVideoInfos)
             {
                 var request = ConvertToVideoDownloadRequestInfo(cachingVideoInfo);
-                request.TransferStatus = VideoDownloadTransferStatus.Transfering;
+                request.TransferStatus = VideoDownloadTransferStatus.Paused;
                 Requests.Add(request);
             }
             return true;
@@ -201,6 +202,8 @@ namespace LolWikiApp
     public class VideoDownloadRequest : INotifyPropertyChanged
     {
         private const string VideoCacheFolerName = "VideoCache";
+
+        private CancellationTokenSource _cts = new CancellationTokenSource();
 
         public string DisplayUrl { get; set; }
 
@@ -271,7 +274,6 @@ namespace LolWikiApp
         }
 
         private VideoDownloadTransferStatus _transferStatus;
-
         public VideoDownloadTransferStatus TransferStatus
         {
             get
@@ -282,8 +284,14 @@ namespace LolWikiApp
             {
                 if (value != _transferStatus)
                 {
-                    NotifyPropertyChanged("TransferStatus");
                     _transferStatus = value;
+
+                    if (_transferStatus == VideoDownloadTransferStatus.Completed)
+                    {
+                        SpeedDisplay = TotalBytes.ToString() +"kb";
+                    }
+
+                    NotifyPropertyChanged("TransferStatus");
                 }
             }
         }
@@ -329,7 +337,12 @@ namespace LolWikiApp
             TransferStatus = VideoDownloadTransferStatus.Paused;
         }
 
-        public async void DownloadAsync(CancellationToken cancellationToken)
+        public void CancelDownload()
+        {
+            _cts.Cancel();
+        }
+
+        public async void Download()
         {
             TransferStatus = VideoDownloadTransferStatus.Transfering;
             OnStatusChanged();
@@ -363,7 +376,7 @@ namespace LolWikiApp
                     var response = myrq.EndGetResponse(result);
                     try
                     {
-                        GetResponseCallback(cancellationToken, response, lStartPos, FileName);
+                        GetResponseCallback(_cts.Token, response, lStartPos, FileName);
                     }
                     catch (Exception ex)
                     {
@@ -413,6 +426,11 @@ namespace LolWikiApp
                         if (cancellationToken.IsCancellationRequested)
                         {
                             //Cancell operation is requested.
+                            TransferStatus = VideoDownloadTransferStatus.Paused;
+                            SpeedDisplay = string.Empty;
+
+                            OnStatusChanged();
+
                             Debug.WriteLine("cancelled" + DateTime.Now.ToString(CultureInfo.InvariantCulture));
                             return;
                         }
@@ -453,6 +471,7 @@ namespace LolWikiApp
                 if (responseStream != null) responseStream.Close();
 
                 TransferStatus = VideoDownloadTransferStatus.Completed;
+                PercentDisplay = 100;
                 OnStatusChanged();
             }
         }

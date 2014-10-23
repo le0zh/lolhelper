@@ -61,6 +61,21 @@ namespace LolWikiApp.Repository
 
             return obj;
         }
+
+        public async void Delete(string isoFolderName, string isoFileName)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var persistentFolder = await localFolder.CreateFolderAsync(isoFolderName, CreationCollisionOption.OpenIfExists);
+            try
+            {
+                var file = await persistentFolder.GetFileAsync(isoFileName);
+                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+            catch (FileNotFoundException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
     }
 
 

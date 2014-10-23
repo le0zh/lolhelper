@@ -384,6 +384,9 @@
         <!--图片源转换类-->
         <local:ImageSourceConverter x:Key="ImageSourceConverter" />
 
+        <!--下载状态转换类-->
+        <local:TransferStatusConverter x:Key="TransferStatusConverter" />
+
         <!--Bool到可视属性的转换-->
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -714,6 +717,14 @@
             </Setter>
         </Style>
 
+        <DataTemplate x:Key="MenuItemHeaderDataTemplate">
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <Image Width="56" Stretch="Fill" Source="{Binding ImageSource}"></Image>
+                <TextBlock Text="{Binding Text}" Margin="4 0 0 0" VerticalAlignment="Center"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+
+        
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

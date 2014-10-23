@@ -7,13 +7,18 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Shapes;
 using Microsoft.Phone.BackgroundTransfer;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace LolWikiApp
@@ -347,14 +352,15 @@ namespace LolWikiApp
 
         void transfer_TransferStatusChanged(object sender, EventArgs e)
         {
-            var request = sender as VideoDownloadRequest;
-            if (request != null)
-            {
-                if (request.TransferStatus == VideoDownloadTransferStatus.Completed)
-                {
-                    App.ViewModel.VideoDownloadService.RemoveRequest(request);
-                }
-            }
+            //var request = sender as VideoDownloadRequest;
+            //if (request != null)
+            //{
+            //    if (request.TransferStatus == VideoDownloadTransferStatus.Completed)
+            //    {
+            //        App.ViewModel.VideoDownloadService.RemoveRequest(request);
+            //    }
+            //}
+
         }
 
         void transfer_TransferProgressChanged(object sender, TransferProgressChangedEventArgs e)
@@ -502,12 +508,80 @@ namespace LolWikiApp
         //}
         private void TransferListBox_OnTap(object sender, GestureEventArgs e)
         {
-            
+            if (TransferListBox.SelectedIndex == -1)
+                return;
+
+            var selectedListBoxItem = TransferListBox.ItemContainerGenerator.ContainerFromIndex(TransferListBox.SelectedIndex) as ListBoxItem;
+            var request = TransferListBox.Items[TransferListBox.SelectedIndex] as VideoDownloadRequest;
+
+            if (request == null)
+                return;
+
+            var cm = new ContextMenu
+            {
+                IsZoomEnabled = false,
+                IsFadeEnabled = false,
+                Background = new SolidColorBrush(Colors.Black),
+                Foreground = new SolidColorBrush(Colors.White),
+                BorderBrush = new SolidColorBrush(Colors.Black),
+                Margin = new Thickness(0, -6, 0, 0)
+            };
+
+            switch (request.TransferStatus)
+            {
+                case VideoDownloadTransferStatus.Completed:
+                    var playItem = GetMenuItem("播放", "Data/appbar.control.play.png");
+                    playItem.Click += (s0, e0) =>
+                    {
+                        var videoUrl = "VideoCache/" + request.FileName;
+                        var player = new MediaPlayerLauncher { Media = new Uri(videoUrl, UriKind.Relative), Controls = MediaPlaybackControls.All };
+                        player.Show();
+                    };
+                    cm.Items.Add(playItem);
+                    break;
+                case VideoDownloadTransferStatus.Transfering:
+                    var pauseItem = GetMenuItem("暂停", "Data/appbar.control.pause.png");
+                    pauseItem.Click += (s2, e2) => request.CancelDownload();
+                    cm.Items.Add(pauseItem);
+                    break;
+                case VideoDownloadTransferStatus.Paused:
+                    var downloadItem = GetMenuItem("下载", "Data/appbar.download.png");
+                    downloadItem.Click += (s1, e1) => request.Download();
+                    cm.Items.Add(downloadItem);
+                    break;
+            }
+
+            var deleteItem = GetMenuItem("删除", "Data/appbar.delete.png");
+            deleteItem.Click += (s3, e3) => App.ViewModel.VideoDownloadService.RemoveRequest(request);
+            cm.Items.Add(deleteItem);
+
+            cm.Closed += (s, e2) =>
+            {
+                TransferListBox.SelectedIndex = -1;
+            };
+
+            ContextMenuService.SetContextMenu(selectedListBoxItem, cm);
+            cm.IsOpen = true;
+        }
+
+        private MenuItem GetMenuItem(string text, string iconUrl)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = new
+                {
+                    ImageSource = new BitmapImage(new Uri(iconUrl, UriKind.Relative)),
+                    Text = text
+                },
+                HeaderTemplate = Application.Current.Resources["MenuItemHeaderDataTemplate"] as DataTemplate
+            };
+
+            return menuItem;
         }
 
         private void ContextMenu_OnLoaded(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void GestureListener_OnTap(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
