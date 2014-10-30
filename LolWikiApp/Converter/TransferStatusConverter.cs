@@ -19,7 +19,7 @@ namespace LolWikiApp
             switch (status)
             {
                 case VideoDownloadTransferStatus.Completed:
-                    statusDisplay = "大小: ";
+                    statusDisplay = "下载完成";
                     break;
                 case VideoDownloadTransferStatus.Transfering:
                     statusDisplay = "正在下载: ";

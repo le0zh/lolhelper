@@ -99,5 +99,7 @@ namespace LolWikiApp
         public string Length { get; set; }
         public string Src { get; set; }
         public int Percent { get; set; }
+
+        public long Size { get; set; }
     }
 }

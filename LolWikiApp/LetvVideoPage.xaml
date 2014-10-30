@@ -188,7 +188,7 @@
                                             </StackPanel>
                                         </Canvas>
 
-                                        <Grid  MinWidth="330" MinHeight="95" Grid.Column="1" Margin="8 0 0 0" >
+                                        <Grid  MinWidth="325" MinHeight="95" Grid.Column="1" Margin="8 0 0 0" >
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="*"></RowDefinition>
                                                 <RowDefinition Height="16"></RowDefinition>
@@ -200,16 +200,33 @@
                                             <ProgressBar MinWidth="344" Grid.Row="1" IsIndeterminate="False" HorizontalAlignment="Left" Margin="-10 4 0 4" x:Name="CachingProgressBar" 
                                                          Style="{StaticResource MyProgressBarStyle}" 
                                                          Height="8" 
-                                                         Value="{Binding PercentDisplay}"></ProgressBar>
+                                                         Value="{Binding PercentDisplay}"
+                                                         Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}"></ProgressBar>
 
-                                            <Grid  Grid.Row="2">
-                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}">
+                                            <Grid Grid.Row="2">
+                                                <!-- 下载中时可见 -->
+                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                                           Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <Run Text="{Binding TransferStatus, Converter={StaticResource TransferStatusConverter}}" ></Run>
                                                         <Run Text="{Binding SpeedDisplay}"></Run>
                                                 </TextBlock>
-                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" HorizontalAlignment="Right">
+                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                                           Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
                                                         <Run Text="{Binding PercentDisplay}"></Run>
                                                         <Run Text="% "></Run>
+                                                </TextBlock>
+
+                                                <!-- 下载完毕时可见 -->
+                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}"
+                                                           Visibility="{Binding IsDone,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <Run Text="大小: " ></Run>
+                                                        <Run Text="{Binding TotalBytes}"></Run>
+                                                     <Run Text= " MB" ></Run>
+                                                </TextBlock>
+                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                                           Visibility="{Binding IsDone,Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+                                                        <Run Text="时长："></Run>
+                                                        <Run Text="{Binding DisplayLength}"></Run>
                                                 </TextBlock>
                                             </Grid>
                                         </Grid>

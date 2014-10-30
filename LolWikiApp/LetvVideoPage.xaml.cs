@@ -339,7 +339,7 @@ namespace LolWikiApp
         {
             //UpdateRequestsList();
             CachedVideoLoadingBar.Visibility = Visibility.Visible;
-            await App.ViewModel.VideoDownloadService.ReadInfoFromIso();
+            await App.ViewModel.VideoDownloadService.ReadCacheInfoFromIso();
             CachedVideoLoadingBar.Visibility = Visibility.Collapsed;
 
             foreach (var transfer in App.ViewModel.VideoDownloadService.Requests)
