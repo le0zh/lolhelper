@@ -445,9 +445,16 @@ namespace LolWikiApp
                 fs.Close();
                 if (responseStream != null) responseStream.Close();
 
-                TransferStatus = VideoDownloadTransferStatus.Completed;
-                PercentDisplay = 100;
-                OnStatusChanged();
+                if (_downloadedBytes == _totalBytes)
+                {
+                    TransferStatus = VideoDownloadTransferStatus.Completed;
+                    PercentDisplay = 100;
+                    OnStatusChanged();
+                }
+                else
+                {
+                    SpeedDisplay = string.Empty;
+                }
             }
         }
 

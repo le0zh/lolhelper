@@ -143,7 +143,12 @@ namespace LolWikiApp
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
-
+            Debug.WriteLine("Application_Activated");
+            foreach (var request in ViewModel.VideoDownloadService.Requests)
+            {
+                Debug.WriteLine(request.TransferStatus);
+                Debug.WriteLine(request.IsDownloading);
+            }
         }
 
         // Code to execute when the application is deactivated (sent to background)
@@ -156,6 +161,8 @@ namespace LolWikiApp
 
             var task = Task.Run(() => ViewModel.VideoDownloadService.PauseAll());
             task.Wait();
+
+            Debug.WriteLine("Application_Deactivated");
 
             foreach (var request in ViewModel.VideoDownloadService.Requests)
             {

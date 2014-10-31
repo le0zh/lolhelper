@@ -43,6 +43,11 @@ namespace LolWikiApp
         {
             LatestVideoLongListSelector.ItemsSource = _letvLatestVideoListInfos;
 
+            if (MainPivot.SelectedIndex == 5)
+            {
+                LoadLocalVideoCache();
+            }
+
             base.OnNavigatedFrom(e);
         }
 
@@ -277,7 +282,7 @@ namespace LolWikiApp
                 }
             }
         }
-
+        
         private void MainPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (MainPivot.SelectedIndex)
@@ -332,6 +337,12 @@ namespace LolWikiApp
         private void LoadLocalVideoCache()
         {
             InitialTansferStatusCheck();
+            if (TransferListBox.Items.Count > 0)
+            {
+                TransferListBox.ItemsSource = null;
+                TransferListBox.Items.Clear();
+            }
+            
             TransferListBox.ItemsSource = App.ViewModel.VideoDownloadService.Requests;
         }
 
