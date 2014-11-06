@@ -12,28 +12,23 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait"  
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="0"
-    shell:SystemTray.BackgroundColor="White"
-    shell:SystemTray.ForegroundColor="Black"
-    Style="{StaticResource TransitionPageStyle}"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True"
     BackKeyPress="LetvVideoPage_OnBackKeyPress"
     mc:Ignorable="d">
 
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="加载中..." />
+    </shell:SystemTray.ProgressIndicator>
+
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
-        <phone:Pivot Title="视频中心" x:Name="MainPivot" Background="White" Foreground="black"
-                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}" SelectionChanged="MainPivot_OnSelectionChanged">
+        <phone:Pivot Title="视频中心" x:Name="MainPivot" Foreground="White"
+                     Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}"
+                     SelectionChanged="MainPivot_OnSelectionChanged">
 
-            <phone:Pivot.HeaderTemplate>
-                <DataTemplate>
-                    <StackPanel  Margin="-12 0 0 -20">
-                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
-
-            <!--PivotItem item 0-->
+                <!--PivotItem item 0-->
             <phone:PivotItem Header="最新">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -43,17 +38,17 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel x:Name="LateastLoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <ProgressBar Foreground="Red" Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="12,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+                    <local:HttpRequest404Control Grid.Row="1" Margin="12 24 0 0" Visibility="Collapsed"
                                     x:Name="LateastRetryNetPanel" Message="加载视频列表失败。"/>
 
 
                     <local:RefreshableListBox x:Name="LatestVideoLongListSelector" 
                                           Grid.Row ="2"
-                                          Margin="0 0 -12 2"
+                                          Margin="0"
                                           IsGetMoreEnabled="True"
                                           IsRefreshEnabled ="False"
                                           Tap="VideoListLongListSelector_OnTap"

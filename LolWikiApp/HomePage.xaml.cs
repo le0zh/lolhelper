@@ -34,7 +34,7 @@ namespace LolWikiApp
         private readonly FullScreenPopup _newsCategoryPopup;
 
         private bool _isQuitConfirmOpened = false;
-
+        
         public HomePage()
         {
             InitializeComponent();
@@ -43,13 +43,6 @@ namespace LolWikiApp
             _currentNewsType = NewsType.Latest;
             _newsCategoryPopup = new FullScreenPopup();
             _newsCategoryPopup.PopUpHided += (s, e) => SetAppbarForNewsList();
-
-#if DEBUG
-            MainPivot.Title = "英雄联盟助手-DEBUG";
-#else
-            MainPivot.Title = "英雄联盟助手";
-#endif
-
         }
 
         private void HomePageMain()
@@ -62,13 +55,22 @@ namespace LolWikiApp
                     NewsDataBindAsync();
                     LoadCachedNews();
                     break;
-                case 1: //周免
+                case 1: //搞笑
+                    break;
+
+                case 2: //连载
+                    break;
+
+                case 3: //美图
+                    break;
+                    
+                case 4: //周免
                     BindFreeHeroInfoAsync();
                     break;
-                case 2: //我的
+                case 5: //我的
                     BindRecords();
                     break;
-                case 3: //工具
+                case 6: //更多
                     break;
             }
         }
@@ -143,7 +145,7 @@ namespace LolWikiApp
 
         private void SetAppbarForNewsList()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 1 };
+            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
 
             var refreshButton = new ApplicationBarIconButton();
             var categoryButton = new ApplicationBarIconButton();
@@ -277,6 +279,7 @@ namespace LolWikiApp
 
             this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
             this.NewsLoadingBar.Visibility = Visibility.Visible;
+            SystemTray.ProgressIndicator.IsVisible = true;
             try
             {
                 Debug.WriteLine(_currentNewsType);
@@ -304,6 +307,7 @@ namespace LolWikiApp
             {
                 _currentPage = 1;
                 this.NewsLoadingBar.Visibility = Visibility.Collapsed;
+                SystemTray.ProgressIndicator.IsVisible = false;
             }
 
             this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
@@ -406,7 +410,7 @@ namespace LolWikiApp
         #region 每周免费英雄
         private void BindFreeHeroInfoAsync()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
+            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
             var refreshButton = new ApplicationBarIconButton();
             var moreButton = new ApplicationBarIconButton();
 
@@ -460,6 +464,23 @@ namespace LolWikiApp
             //SystemTray.ProgressIndicator.IsVisible = false;
         }
 
+        private int GetHeroKeyById(string id)
+        {
+            if (!App.ViewModel.IsDataLoaded)
+            {
+                App.ViewModel.LoadHeroBaiscInfoDataAsync();
+            }
+
+            var hero = App.ViewModel.HeroBasicInfoCollection.First(h => h.Id == id);
+            var key = 0;
+            if (hero != null)
+            {
+                key = hero.Key;
+            }
+
+            return key;
+        }
+
         private void AddFreeHeroItem(Hero hero)
         {
             if (hero == null)
@@ -470,13 +491,14 @@ namespace LolWikiApp
                 Orientation = System.Windows.Controls.Orientation.Vertical,
                 Margin = new Thickness(0, 8, 32, 8)
             };
-            //stackPanel.Height = 76;
-            //stackPanel.Width = 76;
+            //120
+            Debug.WriteLine(hero.Title + ", " + hero.Name);
+            //var key = GetHeroKeyById(hero.Id);
+            //var imgSource = string.Format("http://cdn.tgp.qq.com/pallas/images/minicard/{0}.jpg", key);
 
             var img = new Image
             {
                 Source = new BitmapImage(new Uri(hero.ImageUrl, UriKind.Relative)),
-                Height = 90,
                 Width = 90,
                 Stretch = Stretch.UniformToFill
             };
@@ -486,9 +508,20 @@ namespace LolWikiApp
 
             var tmpTitle = hero.Title.Length > 4 ? hero.Title.Substring(0, 4) + ".." : hero.Title;
             textBlock.Text = tmpTitle;
+            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock.FontSize = (double)Application.Current.Resources["PhoneFontSizeSmall"];
+            textBlock.Foreground = new SolidColorBrush(Colors.Black);
+
+            var textBlock2 = new TextBlock();
+            var tmpName = hero.Name.Length > 4 ? hero.Name.Substring(0, 4) + ".." : hero.Name;
+            textBlock2.Text = tmpName;
+            textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock2.FontSize = (double)Application.Current.Resources["PhoneFontSizeSmall"];
+            textBlock2.Foreground = new SolidColorBrush(Colors.Gray);
 
             stackPanel.Children.Add(img);
             stackPanel.Children.Add(textBlock);
+            stackPanel.Children.Add(textBlock2);
 
             HeroWrapPanel.Children.Add(stackPanel);
         }
@@ -691,5 +724,19 @@ namespace LolWikiApp
             NavigationService.Navigate(new Uri("/LetvVideoPage.xaml", UriKind.Relative));
         }
         #endregion
+
+        private void NewsLongListSelector_OnListScrollingUp(object sender, EventArgs e)
+        {
+            Debug.WriteLine("visible:false");
+            PivotTitlContainer.Visibility = Visibility.Collapsed;
+            //visible:false
+        }
+
+        private void NewsLongListSelector_OnListScrollingDown(object sender, EventArgs e)
+        {
+            Debug.WriteLine("visible:true");
+            PivotTitlContainer.Visibility = Visibility.Visible;
+            //visible:true
+        }
     }
 }

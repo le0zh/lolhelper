@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 
 namespace LolWikiApp
 {
@@ -49,14 +50,15 @@ namespace LolWikiApp
         {
             //PrepareAppForFullScreen();
             SetOrientation();
+            SystemTray.BackgroundColor = Color.FromArgb(255, 14, 13, 16);
             _hostPopup.IsOpen = true;
         }
 
         public void Hide()
         {
             _hostPopup.IsOpen = false;
+            SystemTray.BackgroundColor = Color.FromArgb(255, 41, 40, 46);
             PopUpHided(this, EventArgs.Empty);
-            //RestoreSettings();
         }
 
         public bool IsOpen

@@ -13,8 +13,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Windows.ApplicationModel.Core;
 using LolWikiApp.Repository;
 using LolWikiApp.ViewModels;
 using Microsoft.Phone.Controls;
@@ -64,7 +66,7 @@ namespace LolWikiApp
                     if (DataContext == null)
                     {
                         _newsDetail = await App.NewsViewModel.GetNewsDetailAsync(artId);
-                       
+
                         var tmpFilePath = await App.NewsViewModel.NewsRepository.SaveHtmlToTempIsoFile(_newsDetail);
                         ContentWebBrowser.Navigate(new Uri(tmpFilePath, UriKind.Relative));
 
@@ -163,11 +165,11 @@ namespace LolWikiApp
             }
             else
             {
-               
+
                 bitmap = new BitmapImage();
                 App.NewsViewModel.FileRepository.SetBitmapSource(input, bitmap, _artId);
             }
-           
+
             PanZoom.Source = bitmap;
 
             BigImageWindow.VerticalAlignment = VerticalAlignment.Center;

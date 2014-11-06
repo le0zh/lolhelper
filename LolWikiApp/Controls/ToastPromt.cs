@@ -14,16 +14,17 @@ namespace LolWikiApp
         public static ToastPrompt GetToastWithImgAndTitle(string message)
         {
             //var frameWidth = Application.Current.Host.Content.ActualWidth;
-          
+
             return new ToastPrompt
             {
                 TextOrientation = System.Windows.Controls.Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Stretch = Stretch.UniformToFill,
                 Message = message,
-                //Width = frameWidth,
-                Margin = new Thickness(0)
-                //ImageSource = new BitmapImage(new Uri("../../logo_62.png", UriKind.RelativeOrAbsolute))
+                Background = new SolidColorBrush(Color.FromArgb(255, 41, 40, 46)),
+                AnimationType = Clarity.Phone.Extensions.DialogService.AnimationTypes.SlideHorizontal,
+                Margin = new Thickness(-8, 0, 0, 0),
+                IsAppBarVisible = true
             };
         }
     }

@@ -12,7 +12,6 @@ using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace LolWikiApp
 {
-
     [TemplatePart(Name = InnerSelectorName, Type = typeof(LongListSelector))]
     public class RefreshableListBox : Control
     {
@@ -247,7 +246,7 @@ namespace LolWikiApp
                 _innerSelector.MouseLeave += _innerSelector_MouseLeave;
 
                 _viewportControl = _innerSelector.GetFirstLogicalChildByType<ViewportControl>(true);
-                
+
                 if (IsRefreshEnabled)
                 {
                     _prepareRefreshDataTemplate = _innerSelector.Resources["PrepareRefreshDataTemplate"] as DataTemplate;
@@ -446,10 +445,31 @@ namespace LolWikiApp
             this.OnSelectionChanged(e);
         }
 
-        private const double Tolerance = 0.1;
+        private const double Tolerance = 1;
+        private const double ScrollTolerance = 10;
+        private double _oldViewPortTop = 0;
 
         void _innerSelector_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            Debug.WriteLine("_innerSelector_MouseMove");
+            //Debug.WriteLine("top:{0},x:{1},y:{2}", _viewportControl.Viewport.Top, _viewportControl.Viewport.X, _viewportControl.Viewport.Y);
+            //Debug.WriteLine(string.Format("viewportControl.Viewport.Top:{0},_oldViewPortTop:{1}", _viewportControl.Viewport.Top, _oldViewPortTop));
+            if (_viewportControl.Viewport.Top > _oldViewPortTop)
+            {
+                //Scroll up
+                Debug.WriteLine("up");
+                //OnListScrollingUp();
+            }
+
+            if (_viewportControl.Viewport.Top < _oldViewPortTop)
+            {
+                //Scroll down
+                Debug.WriteLine("down");
+                //OnListScrollingDown();
+            }
+
+            _oldViewPortTop = _viewportControl.Viewport.Top;
+
             if (IsRefreshEnabled)
             {
                 //在此处判断是否第一次到达顶部
@@ -461,10 +481,8 @@ namespace LolWikiApp
                         this._isTopOnce = true;
                         _innerSelector.ListHeaderTemplate = this._prepareRefreshDataTemplate;
                     }
-
                 }
             }
-           
 
             if (IsGetMoreEnabled)
             {
@@ -487,6 +505,20 @@ namespace LolWikiApp
 
         void _innerSelector_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            //Debug.WriteLine("_innerSelector_MouseLeave");
+            //Debug.WriteLine(string.Format("viewportControl.Viewport.Top:{0},_oldViewPortTop:{1}", _viewportControl.Viewport.Top, _oldViewPortTop));
+            //if (Math.Abs(_viewportControl.Viewport.Top - _oldViewPortTop) > ScrollTolerance)
+            //{
+            //    //Scroll up
+            //    OnListScrollingUp();
+            //}
+
+            //if (Math.Abs(_viewportControl.Viewport.Top - _oldViewPortTop) < ScrollTolerance)
+            //{
+            //    //Scroll down
+            //    OnListScrollingDown();
+            //}
+
             if (IsRefreshEnabled)
             {
                 //再此到顶
@@ -544,6 +576,31 @@ namespace LolWikiApp
         {
             var handler = this.GettingMoreTriggered;
             if (IsGetMoreEnabled && handler != null)
+            {
+                handler(this, new EventArgs());
+            }
+        }
+
+        public event EventHandler ListScrollingUp;
+        private void OnListScrollingUp()
+        {
+            Debug.WriteLine("box:up");
+            _oldViewPortTop = _viewportControl.Viewport.Top;
+            var handler = this.ListScrollingUp;
+            if (handler != null)
+            {
+                handler(this, new EventArgs());
+            }
+        }
+
+
+        public event EventHandler ListScrollingDown;
+        private void OnListScrollingDown()
+        {
+            Debug.WriteLine("box:down");
+            _oldViewPortTop = _viewportControl.Viewport.Top;
+            var handler = this.ListScrollingDown;
+            if (handler != null)
             {
                 handler(this, new EventArgs());
             }

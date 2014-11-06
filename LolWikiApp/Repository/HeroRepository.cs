@@ -108,8 +108,7 @@ namespace LolWikiApp.Repository
                 }
             }
             #endregion
-
-
+            
             string json = await GetJsonStringViaHttpAsync(freeHeroListRequestUrl);
             Debug.WriteLine("free hero HTTP requested.");
 
