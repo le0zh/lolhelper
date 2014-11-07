@@ -458,14 +458,14 @@ namespace LolWikiApp
             {
                 //Scroll up
                 Debug.WriteLine("up");
-                //OnListScrollingUp();
+                OnListScrollingUp();
             }
 
             if (_viewportControl.Viewport.Top < _oldViewPortTop)
             {
                 //Scroll down
                 Debug.WriteLine("down");
-                //OnListScrollingDown();
+                OnListScrollingDown();
             }
 
             _oldViewPortTop = _viewportControl.Viewport.Top;

@@ -58,12 +58,17 @@ namespace LolWikiApp
         {
             // Global handler for uncaught exceptions.
             UnhandledException += Application_UnhandledException;
-
+            
             // Standard XAML initialization
             InitializeComponent();
 
             // Phone-specific initialization
             InitializePhoneApplication();
+
+            UmengSDK.UmengAnalytics.Init("54128299fd98c59d9800a356");
+#if DEBUG
+            UmengSDK.UmengAnalytics.IsDebug = true;//是否输出调试信息
+#endif
 
             // Language display initialization
             InitializeLanguage();

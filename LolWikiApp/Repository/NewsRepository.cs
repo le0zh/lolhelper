@@ -25,10 +25,50 @@ namespace LolWikiApp.Repository
 
         public EventHandler<ProgressChangedArgs> NewsContentCacheProgressChangedEventHandler;
         public EventHandler<ProgressChangedArgs> NewsContentCacheCompletedEventHandler;
-
-
-        private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}   "; //{0}: artId, {1}: random
+        
+        private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}"; //{0}: artId, {1}: random
         private readonly LocalFileRepository _localFileRepository = new LocalFileRepository();
+
+
+        #region Tecent News
+        private const string TcNewsFunnyListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c18_list_{0}.shtml"; //{0}: page
+        private const string TcNewsStoryListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c16_list_{0}.shtml "; //{0}: page
+        private const string TcNewsMmListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c17_list_{0}.shtml"; //{0}: page
+
+        public async Task<List<TcNewsListInfo>> GetTcPagedNewsList(int page = 1)
+        {
+            var url = string.Format(TcNewsFunnyListtRequestUrl, page);
+
+            var json = await GetJsonStringViaHttpAsync(url);
+            var jObject = JObject.Parse(json);
+            var newsList = JsonConvert.DeserializeObject<List<TcNewsListInfo>>(jObject["list"].ToString());
+
+            return newsList.ToList();
+        }
+
+        public async Task<List<TcNewsListInfo>> GetTcPagedMmNewsList(int page = 1)
+        {
+            var url = string.Format(TcNewsMmListtRequestUrl, page);
+
+            var json = await GetJsonStringViaHttpAsync(url);
+            var jObject = JObject.Parse(json);
+            var newsList = JsonConvert.DeserializeObject<List<TcNewsListInfo>>(jObject["list"].ToString());
+
+            return newsList.ToList();
+        }
+
+        public async Task<List<TcNewsListInfo>> GetTcPagedStoryNewsList(int page = 1)
+        {
+            var url = string.Format(TcNewsStoryListtRequestUrl, page);
+
+            var json = await GetJsonStringViaHttpAsync(url);
+            var jObject = JObject.Parse(json);
+            var newsList = JsonConvert.DeserializeObject<List<TcNewsListInfo>>(jObject["list"].ToString());
+
+            return newsList.ToList();
+        }
+        #endregion
+
 
         public async Task<string> SaveHtmlToTempIsoFile(string html)
         {
@@ -59,96 +99,72 @@ namespace LolWikiApp.Repository
             const string htmlTemplate = @"
 <!Doctype html>
 <html xmlns='http://www.w3.org/1999/xhtml'>
-<meta charset='UTF-8'>
-<title>$title$</title>
-<meta http-equiv='X-UA-Compatible' content='IE=edge' />
-<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'>
-<style>
-/* Reset */
-html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,code,del,dfn,em,img,q,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;margin:0;padding:0;}
-table{border-collapse:separate;border-spacing:0;margin-bottom:1.4em;}
-caption,th,td{text-align:left;font-weight:400;}
-blockquote:before,blockquote:after,q:before,q:after{content:'';}
-blockquote,q{quotes:;}
-a img{border:none;}
+<meta charset='utf-8'>
+<!-- Behavioral Meta Data -->
+<meta name='apple-mobile-web-app-capable' content='yes'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0' />
+<!-- Styles -->
 
-/* Layout */
+<style type='text/css'>
+    html, body, div, span,applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dd, dl, dt, li, ol, ul, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin:0;padding:0;}
+    html,body{background:#fff;}
+    body{font:normal normal normal 12px/1.5em Arial, Helvetica,STHeiti,Droid Sans Fallback;text-align: center;height:100%;word-break : break-all;}
+    div {text-align:left;}
+    h1,h2,h3,h4,h5,h6{font-size:100%;}
+    a{text-decoration: none;color:#007bca;}
+    a:hover{text-decoration: none;}
+    a:active,a:focus{outline:none;}
+    q:before, q:after {   content: '';   }    
+    abbr, acronym {  border: 0; }
+    ::-moz-selection {color:#FFFFFF;background-color:#209EEB;}
+    li{list-style-type:none;}
+    img{border: none;}
+    fieldset{border-style: none }
+    label,button{cursor: pointer;}
+    select,input,textarea{font-size:12px;line-height:1.2em;}
+    .clearfix:before,.clearfix:after{clear:both;content:'.';display:block;height:0;visibility:hidden;line-height:0;}
+    .clearfix{*zoom:1;}
+    .fix{word-break:keep-all;overflow:hidden;text-overflow:ellipsis;}
+    .clear{font-size:0;line-height:0;height:0;clear:both;overflow: hidden;display: block;}
+    .none{display:none;}
 
-@-webkit-viewport{width:device-width}
-@-moz-viewport{width:device-width}
-@-ms-viewport{width:device-width}
-@-o-viewport{width:device-width}
-@viewport{width:device-width}
-img,video{ max-width: 100%; }
-.container{width:95%;margin-left:auto;margin-right:auto;font:1.2em 'Segoe WP';}
-body{
-	font-size: 100%;
-	line-height: 1.5;	
-}
+    html,body{background:#f2f2f2;}
+    .article_box{color:#3f4140;}
+    .article_box h1{padding:12px 12px 5px;font-size:18px;line-height:24px;background:#29282e;color:#fff}
+    .article_author{padding:0px 12px;color:#3f4140;background:#656565;}
+    .article_box p{line-height:24px;}
+    .article_meta{border-bottom:1px solid #b6b6b6;padding:0 12px 8px;height:18px;line-height:18px;color:#656565;background:#29282e;}
+    .article_content{padding:5px 12px;border-top:1px solid #fff;font-size:16px;}
+    .article_content img{margin:3px 0;max-width:100%;}
+    .article_content iframe,
+    .article_content embed{max-width:95%!important;margin:0 auto;}
+    .video { position: relative; float:left ;}
 
-h1{
-	font-size: 1.8em;
-	text-align: left;
-	
-}
-
-span.info{
-    color: #555555;
-}
-
-p{
-    font-size: 1.2em;    
-	margin-bottom: 0.5em;
-    line-height: 1.5;
-}
-
-img{
-    text-align:center;
-}
-
-li{
-    list-style-type:none;
-    text-align:center;
-}
-
+    .video a {
+        position: absolute;
+        display: block;
+        background: url(http://ossweb-img.qq.com/images/qqtalk/act/lol_app_bg/playIcon.png)  no-repeat center center;
+        height: 60px;
+        width: 60px;
+        top: 44%;
+        left: 44%;
+    }
 </style>
-
-<script lang='javascript'> 
-
-    var isNotify = false;
-    function initialize() { 
-        if(document.body.clientHeight){
-            window.external.notify('clientHeight=' + document.body.clientHeight.toString());
-            isNotify = true;
-        }
-        if(document.body.scrollHeight){
-            window.external.notify('scrollHeight=' + document.body.scrollHeight.toString()); 
-        }
-      window.onscroll = onScroll; 
-    }
-     
-    function onScroll(e) {
-        if (isNotify == false) {
-            window.external.notify('clientHeight=' + document.body.clientHeight.toString());
-            isNotify = true;
-        }
-        var top = (document.documentElement && document.documentElement.scrollTop) ||  document.body.scrollTop;
-        window.external.notify('scrollTop=' + top.toString()); 
-    }
-
-    window.onload = initialize;
-</script>
 </head>
 
 <body>
+ <div class='article_box'>
+	<h1>$title$</h1>
+	<div class='article_author'>$site$</div>
+	<div class='article_meta'>时间：$postTime$</div>
+	<div class='article_content'>
+		$content$
 
- <div class='container'>
-        <h1>$title$</h1>
-        <span class='info'>发表时间：$postTime$   来源： $site$</span>     
-        <hr />   
-        $content$
- </div>
- 
+        <p><br/></p>
+        <p style='text-align: right;'><span style='color: rgb(0, 176, 240); font-family: 微软雅黑, &#39;Microsoft YaHei&#39;; font-size: 14px;'>英雄联盟助手WP版反馈QQ群 49573963</span</span></p>
+	</div>
+</div>
+
 </body>
 </html>";
             #endregion

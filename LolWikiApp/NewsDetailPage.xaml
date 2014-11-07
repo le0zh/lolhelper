@@ -10,24 +10,21 @@
     xmlns:slideView="clr-namespace:Telerik.Windows.Controls.SlideView;assembly=Telerik.Windows.Controls.Primitives"             
     xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"             
     xmlns:telerikCore="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Core"  
+
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    SupportedOrientations="Portrait"
+    SupportedOrientations="PortraitOrLandscape"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="False"
     BackKeyPress="NewsDetailPage_OnBackKeyPress"
-    Style="{StaticResource TransitionPageStyle}"
     toolkit:TiltEffect.IsTiltEnabled="True">
 
-    <phone:PhoneApplicationPage.Resources>
-
-    </phone:PhoneApplicationPage.Resources>
-
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="White" Margin="0">
+    <Grid x:Name="LayoutRoot" Background="White" Margin="0 0 0 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
@@ -48,8 +45,9 @@
                               Background="White"
                               Margin="0"
                               Padding="0"
-                             IsScriptEnabled="True"   ></phone:WebBrowser>
-            <ScrollBar x:Name="DisplayScrollBar"
+                             IsScriptEnabled="True"></phone:WebBrowser>
+            <!--<ScrollBar x:Name="DisplayScrollBar"
+                       
                     Orientation="Vertical"
                     Visibility="Collapsed"
                     Margin="0 0 3 0"
@@ -60,10 +58,12 @@
                     Maximum="100"
                     Opacity="1"
                     Value="10" >
-                    
-               
-                </ScrollBar>
+            </ScrollBar>-->
         </Grid>
+
+        <Border x:Name="AdBorder" Visibility="Collapsed" Height="82" Grid.Row="2" BorderBrush="#29282e" BorderThickness="0 1 0 0 " Margin="0 1 0 0">
+
+        </Border>
 
         <telerikPrimitives:RadWindow Grid.Row="1" IsFullScreen="False"   
                                      
@@ -83,20 +83,37 @@
             <!--<Grid Height="800" Width="480" Background="{StaticResource PhoneSemitransparentBrush}">-->
             <Grid Height="800" Width="480" Background="{StaticResource PhoneChromeBrush}">
                 <ScrollViewer>
-                    <slideView:PanAndZoomImage ZoomMode="FitToPhysicalSize"
+                    <toolkit:FlipView x:Name="HorizontalFlipView"
+                                      SelectionChanged="HorizontalFlipView_OnSelectionChanged"
+                                      UseTouchAnimationsForAllNavigation="True">
+                        <toolkit:FlipView.ItemTemplate>
+                            <DataTemplate>
+                                <slideView:PanAndZoomImage ZoomMode="FitToPhysicalSize"
                                            x:Name="PanZoom"
+                                           Source ="{Binding}"
                                            MaximumZoom="3"/>
+                            </DataTemplate>
+                        </toolkit:FlipView.ItemTemplate>
+                    </toolkit:FlipView>
                 </ScrollViewer>
+                <Image x:Name="CurrentImage" Visibility="Collapsed"></Image>
+                <TextBlock x:Name="ImageTextBlock" Text="" Foreground="White" HorizontalAlignment="Center" ></TextBlock>
 
             </Grid>
         </telerikPrimitives:RadWindow>
 
-        <telerikPrimitives:RadBusyIndicator Grid.Row="1" Background="White" 
+        <telerikPrimitives:RadBusyIndicator Grid.Row="1" Background="White"
                                             x:Name="LoadingIndicator"
                                             IsRunning="False"
                                             Content="资讯内容加载中"
                                             AnimationStyle="AnimationStyle3"/>
 
+        <Popup x:Name="AdPopup"
+               Grid.RowSpan="3"
+               Width="480"
+               Height="80"
+               VerticalAlignment="Bottom"
+               IsOpen="True" />
     </Grid>
 
 </phone:PhoneApplicationPage>

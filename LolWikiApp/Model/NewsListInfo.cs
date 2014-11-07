@@ -72,4 +72,45 @@ namespace LolWikiApp
         Match, //赛事新闻
         Guide //攻略
     }
+
+    public class TcNewsListInfo
+    {
+        public string article_id { get; set; }
+
+        public string article_url { get; set; }
+
+        public string channel_desc { get; set; }
+
+        public string chanel_id { get; set; }
+
+        public string image_url_big { get; set; }
+
+        public string image_url_small { get; set; }
+
+        public string insert_date { get; set; }
+
+        public string publication_date { get; set; }
+
+        public string score { get; set; }
+
+        public string summary { get; set; }
+
+        public string title { get; set; }
+
+        public string SummaryDisplay
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(summary))
+                    return "暂无简介";
+
+                if (summary.Length > 27)
+                {
+                    return summary.Substring(0, 27) + "...";
+                }
+
+                return summary;
+            }
+        }
+    }
 }

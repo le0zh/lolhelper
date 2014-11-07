@@ -24,6 +24,7 @@ using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using System.Xml.XPath;
 using Microsoft.Xna.Framework.Media;
+using XAPADStatistics;
 
 namespace LolWikiApp
 {
@@ -33,12 +34,19 @@ namespace LolWikiApp
         private string _articleId;
         private readonly Popup _popUp;
         private string _artId;
+        private string _artUrl;//for tecent news
+        private string _fullUrl;
+        private bool _isNeedReplaceLastSpan = true;
+
+        private AdItem _adItem = null;
 
         public NewsDetailPage()
         {
             InitializeComponent();
 
             _popUp = new Popup();
+            _adItem = new AdItem { ADKey = "64294ac6f3f1b5b2", AppID = "10000655", Size = SizeMode.SizeW480H80 };
+            AdPopup.Child = _adItem;
 
             ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
             ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
@@ -47,7 +55,6 @@ namespace LolWikiApp
         private async void LoadNewsDetailAsync(string artId)
         {
             RetryNetPanel.Visibility = Visibility.Collapsed;
-
             //NewsLoadingBar.Visibility = Visibility.Visible;
             LoadingIndicator.IsRunning = true;
 
@@ -91,8 +98,6 @@ namespace LolWikiApp
                 //NewsLoadingBar.Visibility = Visibility.Collapsed;
                 LoadingIndicator.IsRunning = false;
             }
-
-
             RetryNetPanel.Visibility = Visibility.Collapsed;
         }
 
@@ -102,6 +107,20 @@ namespace LolWikiApp
             {
                 _articleId = _artId;
                 LoadNewsDetailAsync(_artId);
+            }
+
+            if (NavigationContext.QueryString.TryGetValue("newsUrl", out _artUrl))
+            {
+                var fullUrl = "http://qt.qq.com/static/pages/news/phone/" + _artUrl;
+                LoadingIndicator.IsRunning = true;
+                ContentWebBrowser.Navigate(new Uri(fullUrl, UriKind.Absolute));
+            }
+            
+            if (NavigationContext.QueryString.TryGetValue("fullUrl", out _fullUrl))
+            {
+                _isNeedReplaceLastSpan = false;
+                LoadingIndicator.IsRunning = true;
+                ContentWebBrowser.Navigate(new Uri(_fullUrl, UriKind.Absolute));
             }
 
             base.OnNavigatedTo(e);
@@ -114,28 +133,59 @@ namespace LolWikiApp
 
         void ContentWebBrowser_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            ContentWebBrowser.Visibility = Visibility.Visible;
-            DisplayScrollBar.Visibility = Visibility.Visible;
+            //DisplayScrollBar.Visibility = Visibility.Visible;
 
             try
             {
+                
                 ContentWebBrowser.InvokeScript("eval",
                     @"
+    var srcArray = new Array();
+
     window.onLinkPressed = function() {
         var elem = event.srcElement;
         if ( elem != null ) {
             elem.hideFocus=true;
-            window.external.notify(elem.getAttribute('link'));
+            window.external.notify(elem.getAttribute('link')+','+srcArray.join(','));
         }
         return false;
     }
+
+   window.ChangeStyle = function(){
+        var h1Element = document.getElementsByTagName('h1')[0];
+        var authorElement =  document.getElementsByClassName('article_author')[0];
+        var metaElement =  document.getElementsByClassName('article_meta')[0];
+        
+        if(h1Element){
+            h1Element.setAttribute('style','background:#29282e;color:#fff');
+        }
+        if(authorElement){
+             authorElement.setAttribute('style','background:#29282e;color:#656565;');
+        }        
+        if(metaElement){
+             metaElement.setAttribute('style','background:#29282e;');
+        }
+   }
+
+   window.ChangeLastSpan = function(){
+        var spans = document.getElementsByTagName('span');
+        if(spans){
+            var lastSpan = spans[spans.length - 1];
+            lastSpan.innerHTML = '英雄联盟助手WP版反馈QQ群 49573963';
+        }
+   }
+
+   
+
+   var srcArray = new Array();
 
     window.BindLinks = function() {
         var elems = document.getElementsByTagName('img');
         for (var i = 0; i < elems.length; i++) {
             var elem = elems[i];
             var link = elem.getAttribute('src');
-            elem.setAttribute('link', link);
+            srcArray[i] = link;
+            elem.setAttribute('link', i);
             if(link.indexOf('.gif')>0){
                 elem.parentNode.removeChild(elem);
             }else{
@@ -144,6 +194,14 @@ namespace LolWikiApp
         }
     }");
                 ContentWebBrowser.InvokeScript("BindLinks");
+                ContentWebBrowser.InvokeScript("ChangeStyle");
+                if (_isNeedReplaceLastSpan)
+                {
+                    ContentWebBrowser.InvokeScript("ChangeLastSpan");
+                }
+                ContentWebBrowser.Visibility = Visibility.Visible;
+                LoadingIndicator.IsRunning = false;
+                ShowAdPopup();
             }
             catch (Exception)
             {
@@ -152,30 +210,28 @@ namespace LolWikiApp
             Debug.WriteLine("新闻页面加载完成");
         }
 
-        private int _scrollHeight = 0;
+        //private int _scrollHeight = 0;
 
+        private int _totalImage;
 
-        private void ShowImagePopUp(string input)
+        private void HorizontalFlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            BitmapImage bitmap;
-            Debug.WriteLine("------->" + input);
-            if (Regex.IsMatch(input, @"http://[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)"))
-            {
-                bitmap = new BitmapImage(new Uri(input, UriKind.Absolute));
-            }
-            else
-            {
+            ImageTextBlock.Text = string.Format("{0}/{1}", HorizontalFlipView.SelectedIndex+1, _totalImage);
+        }
+        
+        //TODO: MULTI-IMAGE-VIEW
+        private void ShowImagePopUp(int currentIndex, List<string> srcList)
+        {
+            HideAdPopup();
+            _totalImage = srcList.Count;
 
-                bitmap = new BitmapImage();
-                App.NewsViewModel.FileRepository.SetBitmapSource(input, bitmap, _artId);
-            }
-
-            PanZoom.Source = bitmap;
+            HorizontalFlipView.ItemsSource = srcList;
+            HorizontalFlipView.SelectedIndex = currentIndex;
 
             BigImageWindow.VerticalAlignment = VerticalAlignment.Center;
             BigImageWindow.IsOpen = true;
 
-            ApplicationBar = new ApplicationBar { Opacity = 1 };
+            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
 
             var downloadButton = new ApplicationBarIconButton();
             var closeButton = new ApplicationBarIconButton();
@@ -188,6 +244,19 @@ namespace LolWikiApp
 
             downloadButton.Click += (s2, e2) =>
             {
+                BitmapImage bitmap;
+                var input = srcList[currentIndex];
+                Debug.WriteLine("------->" + input);
+                if (Regex.IsMatch(input, @"http://[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)"))
+                {
+                    bitmap = new BitmapImage(new Uri(input, UriKind.Absolute));
+                }
+                else
+                {
+                    bitmap = new BitmapImage();
+                    App.NewsViewModel.FileRepository.SetBitmapSource(input, bitmap, _artId);
+                }
+                CurrentImage.Source = bitmap;
                 var isSuccess = HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), bitmap);
 
                 if (isSuccess)
@@ -206,43 +275,54 @@ namespace LolWikiApp
             ApplicationBar.Buttons.Add(downloadButton);
             ApplicationBar.Buttons.Add(closeButton);
         }
-
-
+        
         void ContentWebBrowser_ScriptNotify(object sender, NotifyEventArgs e)
         {
-            if (Regex.IsMatch(e.Value, @"[^\[^>]*?(gif|jpg|png|jpeg|bmp|bmp)"))
-            {
-                ShowImagePopUp(e.Value);
-                return;
-            }
+            var parts = e.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            // split 
-            var parts = e.Value.Split('=');
-            if (parts.Length != 2)
+            try
             {
-                return;
+                var currentIndex = Convert.ToInt32(parts[0]);
+                ShowImagePopUp(currentIndex,parts.Skip(1).Take(parts.Count-1).ToList());
             }
+            catch (Exception)
+            {
+                Debug.WriteLine("ContentWebBrowser_ScriptNotify error");
+            }
+            
+            //// split 
+            //var parts = e.Value.Split('=');
+            //if (parts.Length != 2)
+            //{
+            //    return;
+            //}
 
-            // parse
-            var number = 0;
-            if (!int.TryParse(parts[1], out number))
-            {
-                return;
-            }
+            //// parse
+            //var number = 0;
+            //if (!int.TryParse(parts[1], out number))
+            //{
+            //    return;
+            //}
 
-            // decide what to do
-            if (parts[0] == "scrollHeight")
-            {
-                _scrollHeight = number;
+            //// decide what to do
+            //if (parts[0] == "scrollHeight")
+            //{
+            //    _scrollHeight = number;
 
-                // IE、Opera 认为 scrollHeight 是网页内容实际高度
-                DisplayScrollBar.Maximum = _scrollHeight - 789;
-            }
-            else if (parts[0] == "scrollTop")
-            {
-                // 确定ScrollBar位置.
-                DisplayScrollBar.Value = number;
-            }
+            //    // IE、Opera 认为 scrollHeight 是网页内容实际高度
+            //    DisplayScrollBar.Maximum = _scrollHeight - 789;
+            //}
+            //else if (parts[0] == "scrollTop")
+            //{
+            //    // 确定ScrollBar位置.
+            //    DisplayScrollBar.Value = number;
+            //}
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            HideAdPopup();
+            base.OnNavigatedFrom(e);
         }
 
         private void NewsDetailPage_OnBackKeyPress(object sender, CancelEventArgs e)
@@ -250,10 +330,13 @@ namespace LolWikiApp
             if (BigImageWindow.IsOpen)
             {
                 HideImagePopUp();
-
                 e.Cancel = true;
             }
-
+            else
+            {
+                HideAdPopup();
+            }
+            
             base.OnBackKeyPress(e);
         }
 
@@ -264,6 +347,30 @@ namespace LolWikiApp
                 BigImageWindow.IsOpen = false;
                 ApplicationBar = null;
             }
+
+            ShowAdPopup();
         }
+
+        private void ShowAdPopup()
+        {
+            AdBorder.Visibility = Visibility.Visible;
+            _adItem.start();
+            _adItem.ShowAd();
+            _adItem.ADClosed+= (s, e) =>
+            {
+                AdBorder.Visibility = Visibility.Collapsed;
+            };
+            AdPopup.IsOpen = true;
+        }
+
+        private void HideAdPopup()
+        {
+            AdBorder.Visibility = Visibility.Collapsed;
+            _adItem.stop();
+            _adItem.HideAd();
+            AdPopup.IsOpen = false;
+        }
+
+      
     }
 }

@@ -33,7 +33,7 @@
             <TextBlock Text="英雄联盟助手" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
                            VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
         </Border>
-        
+
         <phone:Pivot SelectionChanged="MainPivot_OnSelectionChanged" 
                      x:Name="MainPivot" 
                      Grid.Row="1"
@@ -66,32 +66,37 @@
                                     Margin="0"
                                     GettingMoreTriggered="NewsLongListSelector_OnGettingMoreTriggered"
                                     RefreshTriggered="NewsLongListSelector_OnRefreshTriggered"
-                                              ListScrollingUp="NewsLongListSelector_OnListScrollingUp"
-                                              ListScrollingDown="NewsLongListSelector_OnListScrollingDown"
-                                    MinWidth="452">
+                                    ListScrollingUp="LongListSelector_OnListScrollingUp"
+                                    ListScrollingDown="LongListSelector_OnListScrollingDown"
+                                    MinWidth="468">
                         <local:RefreshableListBox.ItemTemplate>
                             <DataTemplate>
                                 <local:NewsListItemDataTemplateSelector Content="{Binding}">
                                     <local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
-                                                <Grid MinWidth="468">
+                                                <Grid MinWidth="468" Height="130">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*"></RowDefinition>
+                                                        <RowDefinition Height="Auto"></RowDefinition>
+                                                        <RowDefinition Height="Auto"></RowDefinition>
+                                                    </Grid.RowDefinitions>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="110"></ColumnDefinition>
+                                                        <ColumnDefinition Width="128"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Width="110" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
-                                                    <StackPanel  Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical" Margin="8 0 0 0">
-                                                        <TextBlock Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black"></TextBlock>
-                                                        <TextBlock Text="{Binding DescDisplay}"
-								                                   Foreground="Gray"
-								                                   FontSize="15" TextWrapping="Wrap"></TextBlock>
-                                                        <TextBlock Foreground="Black"  FontSize="15">
-                                                                    <Run Text="发表时间: "></Run>
-                                                                    <Run Text="{Binding PostTime}"></Run>
-                                                        </TextBlock>
-                                                    </StackPanel>
+                                                    <Image Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
+                                                               Margin="0 0 8 0"
+                                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
+
+                                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding DescDisplay}"
+								                                           Foreground="Gray"
+								                                           FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
+                                                    <TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
+                                                                    
+                                                                            <Run Text="{Binding PostTime}"></Run></TextBlock>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -119,31 +124,199 @@
                         </local:RefreshableListBox.ItemTemplate>
 
                     </local:RefreshableListBox>
-
-                    <!--Row3-->
-                    <!--<StackPanel Grid.Row="3" Margin="12 12 0 12" Visibility="Collapsed" x:Name="NewsListGetMoreRetryNetPanel">
-                        <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="Gray" Text="网络不太稳定，加载获取失败。"></TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Width="150" Margin="-12 12 0 0" Click="NewsListRetryGetMoreLoadButton_OnClick"  Content="重试" x:Name="NewsListRetryGetMoreLoadButton" HorizontalAlignment="Left"></Button>
-                            <Button Width="150" Margin="12 12 0 0" x:Name="CancelNewsListGetMoreButton"
-                                    Click="CancelNewsListGetMoreButton_OnClick"
-                                    Content="取消" HorizontalAlignment="Left"></Button>
-                        </StackPanel>
-                    </StackPanel>-->
-
                 </Grid>
             </phone:PivotItem>
 
             <!--PivotItem item 2-->
             <phone:PivotItem Header="搞笑">
+                <Grid Margin="0 0 0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="TcFunnyNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,0,0,0">
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
+
+                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                                    x:Name="TcFunyNewsRetryNetPanel" Message="加载资讯列表失败。"/>
+
+                    <!--Row2-->
+                    <local:RefreshableListBox Grid.Row="2"
+                                    Tap="TcFunnyNewsLongListSelector_OnTap"
+                                    Visibility="Collapsed"
+                                    x:Name="TcFunnyNewsLongListSelector" 
+                                    IsGetMoreEnabled="True"
+                                    IsRefreshEnabled="False"
+                                    GettingMoreTriggered="TcFunnyNewsLongListSelector_OnGettingMoreTriggered"
+                                    Margin="0"
+                                    ListScrollingUp="LongListSelector_OnListScrollingUp"
+                                    ListScrollingDown="LongListSelector_OnListScrollingDown"
+                                    MinWidth="468">
+                        <local:RefreshableListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
+                                    <Grid MinWidth="468">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="128"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
+                                               Margin="0 0 8 0"
+                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
+
+                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
+								                                   Foreground="Gray"
+								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
+                                        <TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
+                                                                    
+                                                                    <Run Text="{Binding publication_date}"></Run></TextBlock>
+
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </local:RefreshableListBox.ItemTemplate>
+
+                    </local:RefreshableListBox>
+                </Grid>
             </phone:PivotItem>
 
             <!--PivotItem item 3-->
             <phone:PivotItem Header="连载">
+                <Grid Margin="0 0 0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="TcSotryNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,0,0,0">
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
+
+                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                                    x:Name="TcSotryNewsRetryNetPanel" Message="加载资讯列表失败。"/>
+
+                    <!--Row2-->
+                    <local:RefreshableListBox Grid.Row="2"
+                                    Tap="TcStoryNewsLongListSelector_OnTap"
+                                    Visibility="Collapsed"
+                                    x:Name="TcStoryNewsLongListSelector" 
+                                    IsGetMoreEnabled="True"
+                                    IsRefreshEnabled="False"
+                                    GettingMoreTriggered="TcStoryNewsLongListSelector_OnGettingMoreTriggered"
+                                    ListScrollingUp="LongListSelector_OnListScrollingUp"
+                                    ListScrollingDown="LongListSelector_OnListScrollingDown"                                              
+                                    Margin="0"
+                                    MinWidth="452">
+                        <local:RefreshableListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
+                                    <Grid MinWidth="468">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="128"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
+                                               Margin="0 0 8 0"
+                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
+
+                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
+								                                   Foreground="Gray"
+								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
+                                        <TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
+                                                                    
+                                                                    <Run Text="{Binding publication_date}"></Run></TextBlock>
+
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </local:RefreshableListBox.ItemTemplate>
+
+                    </local:RefreshableListBox>
+                </Grid>
             </phone:PivotItem>
 
             <!--PivotItem item 4-->
-            <phone:PivotItem Header="美图">
+            <phone:PivotItem Header="美女">
+                <Grid Margin="0 0 0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="TcMmNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,0,0,0">
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
+
+                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                                    x:Name="TcMmNewsRetryNetPanel" Message="加载资讯列表失败。"/>
+
+                    <!--Row2-->
+                    <local:RefreshableListBox Grid.Row="2"
+                                    Tap="TcMmNewsLongListSelector_OnTap"
+                                    Visibility="Collapsed"
+                                    x:Name="TcMmNewsLongListSelector" 
+                                    IsGetMoreEnabled="True"
+                                    IsRefreshEnabled="False"
+                                    GettingMoreTriggered="TcMmNewsLongListSelector_OnGettingMoreTriggered"
+                                    ListScrollingUp="LongListSelector_OnListScrollingUp"
+                                    ListScrollingDown="LongListSelector_OnListScrollingDown"                                              
+                                    Margin="0"
+                                    MinWidth="452">
+                        <local:RefreshableListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
+                                    <Grid MinWidth="468">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="128"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
+                                               Margin="0 0 8 0"
+                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
+
+                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
+								                                   Foreground="Gray"
+								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
+                                        <TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
+                                                                    
+                                                                    <Run Text="{Binding publication_date}"></Run></TextBlock>
+
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </local:RefreshableListBox.ItemTemplate>
+
+                    </local:RefreshableListBox>
+                </Grid>
             </phone:PivotItem>
 
             <!--PivotItem item 5-->
@@ -389,7 +562,12 @@
 
 
                     <Border BorderBrush="LightGray" BorderThickness="0 0 1 1" Grid.Row="1" Grid.Column="1">
-
+                        <Button x:Name="HuangliButton" Click="HuangliButton_OnClick" Padding="20" HorizontalAlignment="Center" BorderThickness="0">
+                            <StackPanel>
+                                <Path Width="40.0056" Height="39.0058"  Stretch="Fill" Fill="Gray" Data="F1 M 18.0025,57.0081L 18.0025,23.0032L 23.0032,23.0032L 23.0032,20.0028C 23.0033,18.898 23.8988,18.0025 25.0035,18.0025L 29.004,18.0025C 30.1087,18.0025 31.0042,18.898 31.0043,20.0026L 31.0043,23.0032L 45.0063,23.0032L 45.0062,20.0026C 45.0062,18.8978 45.9018,18.0023 47.0065,18.0023L 51.0071,18.0023C 52.1118,18.0023 53.0074,18.8978 53.0074,20.0026L 53.0074,23.0032L 58.0081,23.0032L 58.0081,57.0081L 18.0025,57.0081 Z M 21.0029,54.0077L 55.0076,54.0077L 55.0076,31.0044L 21.0029,31.0044L 21.0029,54.0077 Z M 23.0032,47.0066L 29.004,47.0066L 29.004,52.0073L 23.0032,52.0073L 23.0032,47.0066 Z M 31.0043,47.0066L 37.0051,47.0066L 37.0051,52.0073L 31.0043,52.0073L 31.0043,47.0066 Z M 39.0054,47.0066L 45.0062,47.0066L 45.0062,52.0073L 39.0054,52.0073L 39.0054,47.0066 Z M 47.0065,47.0066L 53.0074,47.0066L 53.0074,52.0073L 47.0065,52.0073L 47.0065,47.0066 Z M 23.0032,40.0056L 29.004,40.0056L 29.004,45.0063L 23.0032,45.0063L 23.0032,40.0056 Z M 31.0043,40.0056L 37.0051,40.0056L 37.0051,45.0063L 31.0043,45.0063L 31.0043,40.0056 Z M 39.0054,40.0056L 45.0062,40.0056L 45.0062,45.0063L 39.0054,45.0063L 39.0054,40.0056 Z M 47.0065,40.0056L 53.0074,40.0056L 53.0074,45.0063L 47.0065,45.0063L 47.0065,40.0056 Z M 31.0043,33.0048L 37.0051,33.0048L 37.0051,38.0055L 31.0043,38.0055L 31.0043,33.0048 Z M 39.0054,33.0048L 45.0062,33.0048L 45.0062,38.0055L 39.0054,38.0055L 39.0054,33.0048 Z M 47.0065,33.0048L 53.0074,33.0048L 53.0074,38.0055L 47.0065,38.0055L 47.0065,33.0048 Z M 48.5067,20.0029C 47.6782,20.0029 47.0065,20.6745 47.0065,21.5031L 47.0065,24.5035C 47.0065,25.332 47.6782,26.0037 48.5067,26.0037L 49.5068,26.0037C 50.3354,26.0037 51.0071,25.332 51.0071,24.5035L 51.0071,21.5031C 51.0071,20.6745 50.3354,20.0029 49.5068,20.0029L 48.5067,20.0029 Z M 26.5037,20.0028C 25.6751,20.0028 25.0035,20.6745 25.0035,21.503L 25.0035,24.5035C 25.0035,25.332 25.6751,26.0037 26.5037,26.0037L 27.5038,26.0037C 28.3324,26.0037 29.004,25.332 29.004,24.5035L 29.004,21.503C 29.004,20.6745 28.3324,20.0028 27.5038,20.0028L 26.5037,20.0028 Z M 32.0045,41.0057L 32.0045,44.0061L 36.005,44.0061L 36.005,41.0057L 32.0045,41.0057 Z "/>
+                                <TextBlock Margin="0" Text="老黄历"  FontSize="{StaticResource PhoneFontSizeMedium}" Foreground="Black"></TextBlock>
+                            </StackPanel>
+                        </Button>
                     </Border>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 0 1 1" Grid.Row="1" Grid.Column="2">

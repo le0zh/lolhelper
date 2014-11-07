@@ -29,6 +29,10 @@ namespace LolWikiApp.ViewModels
         private NewsType _oldNewsType;
         public ObservableCollection<NewsListInfo> NewsListInfObservableCollection { get; private set; }
 
+        public ObservableCollection<TcNewsListInfo> TcNewsListInfObservableCollection { get; private set; }
+        public ObservableCollection<TcNewsListInfo> TcStoryListInfObservableCollection { get; private set; }
+        public ObservableCollection<TcNewsListInfo> TcMmListInfObservableCollection { get; private set; }
+
         private List<NewsTypeWrapper> _newsTypeList;
         public List<NewsTypeWrapper> NewsTypeList
         {
@@ -48,12 +52,17 @@ namespace LolWikiApp.ViewModels
         }
 
         public int CurrentPage { get; set; }
+        public int CurrentPageForFunnyNews { get; set; }
 
         public int TotalPage { get; set; }
 
         public NewsViewModel()
         {
             NewsListInfObservableCollection = new ObservableCollection<NewsListInfo>();
+            TcNewsListInfObservableCollection = new ObservableCollection<TcNewsListInfo>();
+            TcStoryListInfObservableCollection = new ObservableCollection<TcNewsListInfo>();
+            TcMmListInfObservableCollection = new ObservableCollection<TcNewsListInfo>();
+
             _oldNewsType = NewsType.Latest;
 
             NewsRepository = new NewsRepository();
@@ -66,6 +75,49 @@ namespace LolWikiApp.ViewModels
             List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
             CurrentPage = page;
             return newsList;
+        }
+
+        //GetTcPagedMmNewsList
+        public async Task LoadTecentMmListInfosByPageAsync(int page = 1, bool refresh = false)
+        {
+            var newsList = await NewsRepository.GetTcPagedMmNewsList(page);
+
+            if (refresh)
+            {
+                TcMmListInfObservableCollection.Clear();
+            }
+            foreach (var n in newsList)
+            {
+                TcMmListInfObservableCollection.Add(n);
+            }
+        }
+
+        public async Task LoadTecentStoryListInfosByPageAsync(int page = 1, bool refresh = false)
+        {
+            var newsList = await NewsRepository.GetTcPagedStoryNewsList(page);
+
+            if (refresh)
+            {
+                TcStoryListInfObservableCollection.Clear();
+            }
+            foreach (var n in newsList)
+            {
+                TcStoryListInfObservableCollection.Add(n);
+            }
+        }
+
+        public async Task LoadTecentNewsListInfosByTypeAndPageAsync(int page = 1, bool refresh = false)
+        {
+            var newsList = await NewsRepository.GetTcPagedNewsList(page);
+
+            if (refresh)
+            {
+                TcNewsListInfObservableCollection.Clear();
+            }
+            foreach (var n in newsList)
+            {
+                TcNewsListInfObservableCollection.Add(n);
+            }
         }
 
         public async Task LoadNewsListInfosByTypeAndPageAsync(NewsType type = NewsType.Latest, int page = 1, bool refresh = false)

@@ -15,6 +15,8 @@
       <Capability Name="ID_CAP_MEDIALIB_PHOTO" />
       <Capability Name="ID_CAP_REMOVABLE_STORAGE" />
       <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
+      <Capability Name="ID_CAP_IDENTITY_DEVICE" />
+      <Capability Name="ID_CAP_IDENTITY_USER" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="HomePage.xaml" />
