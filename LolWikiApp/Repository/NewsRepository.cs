@@ -32,7 +32,7 @@ namespace LolWikiApp.Repository
 
         #region Tecent News
         private const string TcNewsFunnyListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c18_list_{0}.shtml"; //{0}: page
-        private const string TcNewsStoryListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c16_list_{0}.shtml "; //{0}: page
+        private const string TcNewsStoryListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c16_list_{0}.shtml"; //{0}: page
         private const string TcNewsMmListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c17_list_{0}.shtml"; //{0}: page
 
         public async Task<List<TcNewsListInfo>> GetTcPagedNewsList(int page = 1)
@@ -131,7 +131,7 @@ namespace LolWikiApp.Repository
     html,body{background:#f2f2f2;}
     .article_box{color:#3f4140;}
     .article_box h1{padding:12px 12px 5px;font-size:18px;line-height:24px;background:#29282e;color:#fff}
-    .article_author{padding:0px 12px;color:#3f4140;background:#656565;}
+    .article_author{padding:0px 12px;background:#29282e;color:#656565;}
     .article_box p{line-height:24px;}
     .article_meta{border-bottom:1px solid #b6b6b6;padding:0 12px 8px;height:18px;line-height:18px;color:#656565;background:#29282e;}
     .article_content{padding:5px 12px;border-top:1px solid #fff;font-size:16px;}

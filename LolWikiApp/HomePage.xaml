@@ -29,7 +29,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border x:Name="PivotTitlContainer" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
             <TextBlock Text="英雄联盟助手" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
                            VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
         </Border>
@@ -75,9 +75,28 @@
                                     <local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
-                                                <Grid MinWidth="468" Height="130">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="*"></RowDefinition>
+                                                <Grid MinWidth="468">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="128"></ColumnDefinition>
+                                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+
+
+                                                    <Image Grid.Column="0"
+                                                               Margin="0 0 8 0"
+                                                               VerticalAlignment="Top" Width="120" Height="130" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
+
+                                                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                                                        <TextBlock  Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                                        <TextBlock Text="{Binding DescDisplay}"
+								                                           Foreground="Gray"
+                                                                           FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
+                                                        <TextBlock  Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
+                                                                    <Run Text="{Binding PostTime}"></Run></TextBlock>
+                                                    </StackPanel>
+
+                                                    <!--<Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"></RowDefinition>
                                                         <RowDefinition Height="Auto"></RowDefinition>
                                                         <RowDefinition Height="Auto"></RowDefinition>
                                                     </Grid.RowDefinitions>
@@ -88,15 +107,15 @@
 
                                                     <Image Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
                                                                Margin="0 0 8 0"
-                                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
+                                                               VerticalAlignment="Top" Width="120" Height="130" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
 
-                                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                                    <TextBlock Grid.Column="1" Grid.Row="0" 
+                                                               Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
                                                     <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding DescDisplay}"
 								                                           Foreground="Gray"
-								                                           FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
+                                                                           FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
                                                     <TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
-                                                                    
-                                                                            <Run Text="{Binding PostTime}"></Run></TextBlock>
+                                                                    <Run Text="{Binding PostTime}"></Run></TextBlock>-->
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>

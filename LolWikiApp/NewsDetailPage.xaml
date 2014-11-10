@@ -45,7 +45,7 @@
                               Background="White"
                               Margin="0"
                               Padding="0"
-                             IsScriptEnabled="True"></phone:WebBrowser>
+                              IsScriptEnabled="True"></phone:WebBrowser>
             <!--<ScrollBar x:Name="DisplayScrollBar"
                        
                     Orientation="Vertical"
@@ -61,7 +61,7 @@
             </ScrollBar>-->
         </Grid>
 
-        <Border x:Name="AdBorder" Visibility="Collapsed" Height="82" Grid.Row="2" BorderBrush="#29282e" BorderThickness="0 1 0 0 " Margin="0 1 0 0">
+        <Border x:Name="AdBorder" Visibility="Collapsed" Height="80" Grid.Row="2" Margin="0 1 0 0" >
 
         </Border>
 
@@ -82,23 +82,33 @@
             </telerikPrimitives:RadWindow.CloseAnimation>
             <!--<Grid Height="800" Width="480" Background="{StaticResource PhoneSemitransparentBrush}">-->
             <Grid Height="800" Width="480" Background="{StaticResource PhoneChromeBrush}">
-                <ScrollViewer>
+                <!--<ScrollViewer>-->
                     <toolkit:FlipView x:Name="HorizontalFlipView"
                                       SelectionChanged="HorizontalFlipView_OnSelectionChanged"
                                       UseTouchAnimationsForAllNavigation="True">
                         <toolkit:FlipView.ItemTemplate>
                             <DataTemplate>
-                                <slideView:PanAndZoomImage ZoomMode="FitToPhysicalSize"
-                                           x:Name="PanZoom"
-                                           Source ="{Binding}"
-                                           MaximumZoom="3"/>
+                                <ScrollViewer>
+                                    <slideView:PanAndZoomImage ZoomMode="Free"
+            		                    x:Name="PanZoom"
+            		                    Source ="{Binding}"
+            		                    MaximumZoom="2" FontFamily="Portable User Interface" Stretch="Uniform" UseOptimizedManipulationRouting="True" IsAnimated="False"/>
+                                </ScrollViewer>
                             </DataTemplate>
                         </toolkit:FlipView.ItemTemplate>
                     </toolkit:FlipView>
-                </ScrollViewer>
-                <Image x:Name="CurrentImage" Visibility="Collapsed"></Image>
-                <TextBlock x:Name="ImageTextBlock" Text="" Foreground="White" HorizontalAlignment="Center" ></TextBlock>
+                  
+                <!--</ScrollViewer>-->
 
+                <!--<slideView:PanAndZoomImage ZoomMode="None"
+            		x:Name="PanZoom"
+            		Source ="{Binding}"
+                                               
+            		MaximumZoom="2" FontFamily="Portable User Interface" Stretch="None"/>-->
+                <Image x:Name="CurrentImage" Visibility="Collapsed"></Image>
+                <Border Background="{StaticResource PhoneSemitransparentBrush}" Height="30" Padding="5" VerticalAlignment="Top">
+                    <TextBlock x:Name="ImageTextBlock" Text="" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
+                </Border>
             </Grid>
         </telerikPrimitives:RadWindow>
 
@@ -113,7 +123,7 @@
                Width="480"
                Height="80"
                VerticalAlignment="Bottom"
-               IsOpen="True" />
+               IsOpen="False" />
     </Grid>
 
 </phone:PhoneApplicationPage>

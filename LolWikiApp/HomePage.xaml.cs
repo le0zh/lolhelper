@@ -325,7 +325,7 @@ namespace LolWikiApp
 
             _currentPageForStoryNews = nextPage;
         }
-        
+
         private void TcStoryNewsLongListSelector_OnTap(object sender, GestureEventArgs e)
         {
             if (this.TcStoryNewsLongListSelector.SelectedItem != null)
@@ -338,7 +338,7 @@ namespace LolWikiApp
                 }
             }
         }
-        
+
         #endregion
 
 
@@ -1036,24 +1036,42 @@ namespace LolWikiApp
         private void HuangliButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/NewsVideoPage.xaml", UriKind.Relative));
         }
         #endregion
-
+        
+        private AnimatonHelper _adAnimatonHelper = new AnimatonHelper();
+        private bool _isHideing = false;
         private void LongListSelector_OnListScrollingUp(object sender, EventArgs e)
         {
-            Debug.WriteLine("visible:false");
-            PivotTitlContainer.Visibility = Visibility.Collapsed;
-            //visible:false
+            if (_isHideing == false && _isShowing == false)
+            {
+                _isHideing = true;
+                if (PivotTitlContainer.Height > 0)
+                {
+                    Debug.WriteLine("visible:false");
+                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(1));
+                }
+                _isHideing = false;
+            }
         }
 
+        private bool _isShowing = false;
         private void LongListSelector_OnListScrollingDown(object sender, EventArgs e)
         {
-            Debug.WriteLine("visible:true");
-            PivotTitlContainer.Visibility = Visibility.Visible;
-            //visible:true
+            if (_isShowing == false && _isHideing == false)
+            {
+                _isShowing = true;
+                if (PivotTitlContainer.Height > 0)
+                {
+
+                }
+                else
+                {
+                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(1));
+                }
+                _isShowing = false;
+            }
         }
-
-
-
     }
 }

@@ -127,6 +127,7 @@
     <Compile Include="LetvVideoPage.xaml.cs">
       <DependentUpon>LetvVideoPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Library\AnimatonHelper.cs" />
     <Compile Include="Library\VideoDownloader.cs" />
     <Compile Include="Library\VideoDownloaderViaBts.cs" />
     <Compile Include="LocalizedStrings.cs" />
@@ -149,6 +150,9 @@
     </Compile>
     <Compile Include="NewsDetailPage.xaml.cs">
       <DependentUpon>NewsDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NewsVideoPage.xaml.cs">
+      <DependentUpon>NewsVideoPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="PlayerDetailPage.xaml.cs">
       <DependentUpon>PlayerDetailPage.xaml</DependentUpon>
@@ -233,6 +237,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NewsDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewsVideoPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
