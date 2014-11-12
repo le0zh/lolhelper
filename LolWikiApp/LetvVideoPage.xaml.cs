@@ -28,6 +28,7 @@ namespace LolWikiApp
         protected readonly FullScreenPopup ActionPopup;
         private List<LetvVideoTypeListInfo> _letvVideoTypeList;
         private int _currentLateastPage = 1;
+        private bool _isPostBack;
 
         private ObservableCollection<LetvVideoListInfo> _letvLatestVideoListInfos;
 
@@ -41,6 +42,9 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if(_isPostBack) return;
+
+            _isPostBack = true;
             LatestVideoLongListSelector.ItemsSource = _letvLatestVideoListInfos;
 
             if (MainPivot.SelectedIndex == 5)
@@ -236,7 +240,7 @@ namespace LolWikiApp
             {
                 IsFrozen = false,
                 Title = videoSubcategory.Name.Length > 4 ? videoSubcategory.Name.Substring(0, 4) : videoSubcategory.Name,
-                Margin = new Thickness(0, 0, 5, 10),
+                Margin = new Thickness(0, 0, 8, 10),
                 GroupTag = groupTag,
                 Style = (Style)Application.Current.Resources["MyHubTileStyle"],
                 Source = bitmap,
@@ -389,12 +393,10 @@ namespace LolWikiApp
             if (TransferListBox.Items.Count > 0)
             {
                 TransferListBox.Visibility = Visibility.Visible;
-                EmptyTextBlock.Visibility = Visibility.Collapsed;
             }
             else
             {
                 TransferListBox.Visibility = Visibility.Collapsed;
-                EmptyTextBlock.Visibility = Visibility.Visible;
             }
         }
 

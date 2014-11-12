@@ -12,56 +12,55 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="0"
-    shell:SystemTray.BackgroundColor="White"
-    shell:SystemTray.ForegroundColor="Black"
-    Style="{StaticResource TransitionPageStyle}"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True"
     mc:Ignorable="d"
     BackKeyPress="VideoTypeListPage_OnBackKeyPress">
-    
+
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <phone:Pivot Title="视频中心" x:Name="MainPivot" Background="White" Foreground="black"
-                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-            <phone:Pivot.HeaderTemplate>
-                <DataTemplate>
-                    <StackPanel  Margin="-8 0 0 -20" Orientation="Horizontal">
-                        <Image Source="{Binding Img}" Height="60" Width="60"></Image>
-                        <TextBlock Margin="12 0 0 0" Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
+        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+            <TextBlock Text="视频中心" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
+                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        </Border>
 
-            <phone:PivotItem Header="{Binding HeaderInfo}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1"  Margin="12 8 12 8" Orientation="Horizontal">
+            <Image Source="{Binding Img}" Height="60" Width="60"></Image>
+            <TextBlock Margin="12 0 0 0" Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+        </StackPanel>
 
-                    <StackPanel x:Name="LoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="0 24 0 0" Visibility="Collapsed"
+            <StackPanel x:Name="LoadingBar" Grid.Row="0" Orientation="Vertical" Margin="12 8 0 0">
+                <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+            </StackPanel>
+
+            <local:HttpRequest404Control Grid.Row="1" Margin="12 8 0 0" Visibility="Collapsed"
                                     x:Name="RetryNetPanel" Message="加载视频列表失败。"/>
 
-                    <local:RefreshableListBox x:Name="VideoLongListSelector" 
+            <local:RefreshableListBox x:Name="VideoLongListSelector" 
                                           Grid.Row ="2"
-                                          Margin="0 0 -12 2"
+                                          Margin="0"
                                           Tap="VideoLongListSelector_OnTap"
                                           GettingMoreTriggered="VideoLongListSelector_OnGettingMoreTriggered"
                                           IsRefreshEnabled ="False"
                                           IsGetMoreEnabled="True"
                                           ItemTemplate="{StaticResource LetvVideoListDataTemplate}"/>
-                </Grid>
-            </phone:PivotItem>
+        </Grid>
 
-        </phone:Pivot>
-    </Grid>
+      </Grid>
 
 </phone:PhoneApplicationPage>

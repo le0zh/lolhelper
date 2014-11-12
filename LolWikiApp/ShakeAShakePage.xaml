@@ -12,142 +12,135 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="0"
-    shell:SystemTray.BackgroundColor="White"
-    shell:SystemTray.ForegroundColor="Black"
-    Style="{StaticResource TransitionPageStyle}"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
 
     <Grid x:Name="LayoutRoot">
-        <phone:Pivot Title="英雄联盟助手" x:Name="MainPivot" Background="White" Foreground="black"
-                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-            <phone:Pivot.HeaderTemplate>
-                <DataTemplate>
-                    <StackPanel  Margin="-12 0 0 -20">
-                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
+        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+            <TextBlock Text="摇一摇" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
+                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        </Border>
 
-            <!--PivotItem item 1-->
-            <phone:PivotItem Header="摇一摇">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Margin="12 0 12 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                    <!--TitlePanel contains the name of the application and page title-->
-                    <StackPanel Grid.Row="0" Margin="0">
-                        <TextBlock Margin="0" x:Name="PlayerNameTextBlock" Visibility="Collapsed" TextWrapping="Wrap"></TextBlock>
-                        <TextBlock x:Name="TipTextBlock" TextWrapping="Wrap" Text="游戏读条时,摇动手机以获取对阵信息" Margin="0,12,0,0" FontSize="{StaticResource PhoneFontSizeMediumLarge}"  Foreground="{StaticResource PhoneSubtleBrush}" />
+            <!--TitlePanel contains the name of the application and page title-->
+            <StackPanel Grid.Row="0" Margin="0">
+                <TextBlock Margin="0" x:Name="PlayerNameTextBlock" Visibility="Collapsed" TextWrapping="Wrap"></TextBlock>
+                <TextBlock x:Name="TipTextBlock" TextWrapping="Wrap" Text="游戏读条时,摇动手机以获取对阵信息" Margin="0,12,0,0" FontSize="{StaticResource PhoneFontSizeMediumLarge}"  Foreground="{StaticResource PhoneSubtleBrush}" />
 
-                        <StackPanel Margin="0" x:Name="BindPlayerPanel" Visibility="Collapsed">
-                            <TextBlock Text="您还没有关绑定唤师信息。" FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                            <Button Width="150" HorizontalAlignment="Left" Content="绑定" Margin="-12 12 0 0" x:Name="BindPlayerButton" Click="BindPlayerButton_OnClick"></Button>
-                        </StackPanel>
+                <StackPanel Margin="0" x:Name="BindPlayerPanel" Visibility="Collapsed">
+                    <TextBlock Text="您还没有关绑定唤师信息。" FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    <Button Width="150" HorizontalAlignment="Left" Content="绑定" Margin="-12 12 0 0" x:Name="BindPlayerButton" Click="BindPlayerButton_OnClick"></Button>
+                </StackPanel>
 
-                        <StackPanel x:Name="LoadingPanel" Visibility="Collapsed" Margin="0" Orientation="Vertical">
-                            <ProgressBar HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                            <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                        </StackPanel>
+                <StackPanel x:Name="LoadingPanel" Visibility="Collapsed" Margin="0" Orientation="Vertical">
+                    <ProgressBar HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                        <TextBlock Visibility="Collapsed" x:Name="RetrayShakeTextBlock" Text="网络连接失败，请再次摇动手机。" Margin="0,12,0,0" FontSize="{StaticResource PhoneFontSizeMediumLarge}"  Foreground="{StaticResource PhoneSubtleBrush}" />
-                    </StackPanel>
+                <TextBlock Visibility="Collapsed" x:Name="RetrayShakeTextBlock" Text="网络连接失败，请再次摇动手机。" Margin="0,12,0,0" FontSize="{StaticResource PhoneFontSizeMediumLarge}"  Foreground="{StaticResource PhoneSubtleBrush}" />
+            </StackPanel>
 
-                    <StackPanel Visibility="Collapsed" x:Name="NoGamingPanel" Grid.Row="1" Margin="0,12,0,28">
-                        <TextBlock Text="当前无对战信息" Margin="0,12,0,0" FontSize="{StaticResource PhoneFontSizeMediumLarge}"  Foreground="{StaticResource PhoneSubtleBrush}" />
-                    </StackPanel>
+            <StackPanel Visibility="Collapsed" x:Name="NoGamingPanel" Grid.Row="1" Margin="0,12,0,28">
+                <TextBlock Text="当前无对战信息" Margin="0,12,0,0" FontSize="{StaticResource PhoneFontSizeMediumLarge}"  Foreground="{StaticResource PhoneSubtleBrush}" />
+            </StackPanel>
 
-                    <!--ContentPanel - place additional content here-->
-                    <ScrollViewer x:Name="ContentPanel" Visibility="Collapsed" Grid.Row="2" Margin="0 8 0 0">
-                        <StackPanel>
-                            <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
+            <!--ContentPanel - place additional content here-->
+            <ScrollViewer x:Name="ContentPanel" Visibility="Collapsed" Grid.Row="2" Margin="0 8 0 0">
+                <StackPanel>
+                    <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
                     <Run Text="当前战斗："></Run>
                     <Run Text="{Binding QueueTypeCn}"></Run>
-                            </TextBlock>
+                    </TextBlock>
 
-                            <!--紫色方军团（按战斗力排序）-->
-                            <phone:LongListSelector Margin="0 12 0 0" ItemsSource="{Binding Sort100PlayerInfos}" x:Name="PurpleListSelector" Tap="PurpleListSelector_OnTap">
-                                <phone:LongListSelector.ListHeaderTemplate>
-                                    <DataTemplate>
-                                        <Border BorderThickness="0 0 0 1" Margin="0 0 12 12" BorderBrush="{StaticResource PhoneBorderBrush}">
-                                            <TextBlock Margin="0 0 0 8" Text="紫色方军团（按战斗力排序）"></TextBlock>
-                                        </Border>
-                                    </DataTemplate>
-                                </phone:LongListSelector.ListHeaderTemplate>
-                                <phone:LongListSelector.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="0 0 0 12">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="80"></ColumnDefinition>
-                                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                                <ColumnDefinition Width="100"></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
+                    <!--紫色方军团（按战斗力排序）-->
+                    <phone:LongListSelector Margin="0 12 0 0" ItemsSource="{Binding Sort100PlayerInfos}" x:Name="PurpleListSelector" Tap="PurpleListSelector_OnTap">
+                        <phone:LongListSelector.ListHeaderTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0 0 0 1" Margin="0 0 12 12" BorderBrush="{StaticResource PhoneBorderBrush}">
+                                    <TextBlock Margin="0 0 0 8" Text="紫色方军团（按战斗力排序）"></TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </phone:LongListSelector.ListHeaderTemplate>
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0 0 0 12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
 
-                                            <Image Width="80" Grid.Column="0" Source="{Binding HeroImageUrl}"></Image>
+                                    <Image Width="80" Grid.Column="0" Source="{Binding HeroImageUrl}"></Image>
 
-                                            <StackPanel Margin="12 0 0 0" Grid.Column="1">
-                                                <TextBlock Text="{Binding Name}" FontWeight="Bold"></TextBlock>
-                                                <TextBlock Margin="0 12 0 0" Foreground="{StaticResource PhoneSubtleBrush}">
+                                    <StackPanel Margin="12 0 0 0" Grid.Column="1">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"></TextBlock>
+                                        <TextBlock Margin="0 12 0 0" Foreground="{StaticResource PhoneSubtleBrush}">
                                     <Run Text="总场次"></Run>
                                     <Run Text="{Binding Total}"></Run>
                                     <Run Text="胜率"></Run>
                                     <Run Text="{Binding WinRate}"></Run>
                                         <Run Text="%"></Run>
-                                                </TextBlock>
-                                            </StackPanel>
+                                        </TextBlock>
+                                    </StackPanel>
 
-                                            <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding TierDesc}" FontWeight="Bold"></TextBlock>
-                                        </Grid>
-                                    </DataTemplate>
-                                </phone:LongListSelector.ItemTemplate>
-                            </phone:LongListSelector>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding TierDesc}" FontWeight="Bold"></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
 
-                            <!--蓝色方军团（按战斗力排序）-->
-                            <phone:LongListSelector Margin="0 12 0 0" ItemsSource="{Binding Sort200PlayerInfos}" x:Name="BlueGroupListSelector" Tap="BlueGroupListSelector_OnTap">
-                                <phone:LongListSelector.ListHeaderTemplate>
-                                    <DataTemplate>
-                                        <Border BorderThickness="0 0 0 1" Margin="0 0 12 12" BorderBrush="{StaticResource PhoneBorderBrush}">
-                                            <TextBlock Margin="0 0 0 8" Text="蓝色方军团（按战斗力排序）"></TextBlock>
-                                        </Border>
-                                    </DataTemplate>
-                                </phone:LongListSelector.ListHeaderTemplate>
-                                <phone:LongListSelector.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="0 0 0 12">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="90"></ColumnDefinition>
-                                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                                <ColumnDefinition Width="100"></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
+                    <!--蓝色方军团（按战斗力排序）-->
+                    <phone:LongListSelector Margin="0 12 0 0" ItemsSource="{Binding Sort200PlayerInfos}" x:Name="BlueGroupListSelector" Tap="BlueGroupListSelector_OnTap">
+                        <phone:LongListSelector.ListHeaderTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0 0 0 1" Margin="0 0 12 12" BorderBrush="{StaticResource PhoneBorderBrush}">
+                                    <TextBlock Margin="0 0 0 8" Text="蓝色方军团（按战斗力排序）"></TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </phone:LongListSelector.ListHeaderTemplate>
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0 0 0 12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="90"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
 
-                                            <Image Width="80" Grid.Column="0" Source="{Binding HeroImageUrl}"></Image>
+                                    <Image Width="80" Grid.Column="0" Source="{Binding HeroImageUrl}"></Image>
 
-                                            <StackPanel Margin="12 0 0 0" Grid.Column="1">
-                                                <TextBlock Text="{Binding Name}" FontWeight="Bold"></TextBlock>
-                                                <TextBlock Margin="0 12 0 0" Foreground="{StaticResource PhoneSubtleBrush}">
+                                    <StackPanel Margin="12 0 0 0" Grid.Column="1">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"></TextBlock>
+                                        <TextBlock Margin="0 12 0 0" Foreground="{StaticResource PhoneSubtleBrush}">
                                     <Run Text="总场次"></Run>
                                      <Run Text="{Binding Total}"></Run>
                                     <Run Text="胜率"></Run>
                                      <Run Text="{Binding WinRate}"></Run>
-                                                </TextBlock>
-                                            </StackPanel>
+                                        </TextBlock>
+                                    </StackPanel>
 
-                                            <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding TierDesc}" FontWeight="Bold"></TextBlock>
-                                        </Grid>
-                                    </DataTemplate>
-                                </phone:LongListSelector.ItemTemplate>
-                            </phone:LongListSelector>
-                        </StackPanel>
-                    </ScrollViewer>
-                </Grid>
-            </phone:PivotItem>
-        </phone:Pivot>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding TierDesc}" FontWeight="Bold"></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 
 

@@ -20,31 +20,38 @@ namespace LolWikiApp
             InitializeComponent();
         }
 
+        private bool _isNavigated;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            string source;
-            string videoName;
-            if (!NavigationContext.QueryString.TryGetValue("source", out source))
+            if (_isNavigated == false)
             {
-                MessageBox.Show("错误的视频地址。");
-                NavigationService.GoBack();
+                _isNavigated = true;
+
+                string source;
+                string videoName;
+                if (!NavigationContext.QueryString.TryGetValue("source", out source))
+                {
+                    MessageBox.Show("错误的视频地址。");
+                    NavigationService.GoBack();
+                }
+
+                if (NavigationContext.QueryString.TryGetValue("name", out videoName))
+                {
+                    Debug.WriteLine(videoName.Length);
+                    var msg = videoName.Length > 25 ? videoName.Substring(0, 25) + "..." : videoName;
+                    LoadingIndicator.Content = "即将播放: " + msg;
+                }
+                else
+                {
+                    LoadingIndicator.Content = "";
+                }
+
+                Debug.WriteLine("--->VIDEO PLAY PAGE");
+
+                VideoMediaPlayer.Source = new Uri(source, UriKind.RelativeOrAbsolute);
             }
 
-            if (NavigationContext.QueryString.TryGetValue("name", out videoName))
-            {
-                Debug.WriteLine(videoName.Length);
-                var msg = videoName.Length > 25 ? videoName.Substring(0, 25) + "...": videoName;
-                LoadingIndicator.Content = "即将播放: " + msg;
-            }
-            else
-            {
-                LoadingIndicator.Content = "";
-            }
-
-            Debug.WriteLine("--->VIDEO PLAY PAGE");
-
-            VideoMediaPlayer.Source = new Uri(source, UriKind.RelativeOrAbsolute);
-            
             base.OnNavigatedTo(e);
         }
 

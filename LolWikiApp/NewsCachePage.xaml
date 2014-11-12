@@ -12,10 +12,8 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="0"
-    shell:SystemTray.BackgroundColor="White"
-    shell:SystemTray.ForegroundColor="Black"
-    Style="{StaticResource TransitionPageStyle}"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True"
     mc:Ignorable="d">
 
@@ -41,77 +39,72 @@
     </phone:PhoneApplicationPage.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <phone:Pivot Title="英雄联盟助手" x:Name="MainPivot" Background="White" Foreground="black"
-                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-            <phone:Pivot.HeaderTemplate>
-                <DataTemplate>
-                    <StackPanel  Margin="-12 0 0 -20">
-                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+            <TextBlock Text="离线阅读" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
+                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        </Border>
+
+        <Grid Grid.Row="1" Background="White" Margin="12 8 12 2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+
+            <!--ContentPanel - place additional content here-->
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Foreground="{StaticResource PhoneSubtleBrush}" Text="将离线缓存最新资讯的前20条内容，离线后，可以在无网络环境下查看资讯内容。" TextWrapping="Wrap"></TextBlock>
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="1">
+                <StackPanel >
+                    <StackPanel x:Name="ListReadingTipStackPanel" Visibility="Collapsed">
+                        <ProgressBar IsIndeterminate="True"></ProgressBar>
+                        <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="缓存资讯列表中"></TextBlock>
                     </StackPanel>
-                </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
 
-            <!--PivotItem item 1-->
-            <phone:PivotItem Header="离线阅读">
-                <Grid Background="White" Margin="0 0 0 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-
-                    <!--ContentPanel - place additional content here-->
-
-                    <StackPanel Grid.Row="0">
-                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}" Text="将离线缓存最新资讯的前20条内容，离线后，可以在无网络环境下查看资讯内容。" TextWrapping="Wrap"></TextBlock>
+                    <StackPanel x:Name="ContentReadingTipStackPanel" Visibility="Collapsed">
+                        <TextBlock Margin="12" x:Name="InfoTextBlock2" TextWrapping="Wrap" Text="资讯内容缓存中:"></TextBlock>
+                        <ProgressBar IsIndeterminate="False" x:Name="CachingProgressBar" Style="{StaticResource MyProgressBarStyle}" ></ProgressBar>
                     </StackPanel>
 
-                    <ScrollViewer Grid.Row="1">
-                        <StackPanel >
-                            <StackPanel x:Name="ListReadingTipStackPanel" Visibility="Collapsed">
-                                <ProgressBar IsIndeterminate="True"></ProgressBar>
-                                <TextBlock Margin="12" x:Name="InfoTextBlock" TextWrapping="Wrap" Text="缓存资讯列表中"></TextBlock>
-                            </StackPanel>
+                    <Button x:Name="StartButton" Visibility="Collapsed" Content="开始离线" Click="ButtonBase_OnClick"></Button>
 
-                            <StackPanel x:Name="ContentReadingTipStackPanel" Visibility="Collapsed">
-                                <TextBlock Margin="12" x:Name="InfoTextBlock2" TextWrapping="Wrap" Text="资讯内容缓存中:"></TextBlock>
-                                <ProgressBar IsIndeterminate="False" x:Name="CachingProgressBar" Style="{StaticResource MyProgressBarStyle}" ></ProgressBar>
-                            </StackPanel>
-
-                            <Button x:Name="StartButton" Visibility="Collapsed" Content="开始离线" Click="ButtonBase_OnClick"></Button>
-
-                            <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0.6 0 0" Margin="0 12 0 0">
-                                <StackPanel>
-                                    <telerikPrimitives:RadBusyIndicator Margin="0 12 0 12" Background="White"
+                    <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0.6 0 0" Margin="0 12 0 0">
+                        <StackPanel>
+                            <telerikPrimitives:RadBusyIndicator Margin="0 12 0 12" Background="White"
                                            x:Name="CachedSizeLoadingIndicator"
                                             Content="已缓存内容读取中"
                                             IsRunning="True"
                                             AnimationStyle="AnimationStyle9"/>
 
-                                    <StackPanel x:Name="DeleteCacheStackPanel" Opacity="0">
-                                        <StackPanel.Projection>
-                                            <PlaneProjection RotationX="0"></PlaneProjection>
-                                        </StackPanel.Projection>
-                                        <TextBlock x:Name="CachedSizeTextBlock" Margin="12 8 0 12"></TextBlock>
-                                        <Button x:Name="DeleteButton" Content="删除缓存" Click="DeleteButton_OnClick"></Button>
-                                    </StackPanel>
-
-                                </StackPanel>
-
-
-                            </Border>
+                            <StackPanel x:Name="DeleteCacheStackPanel" Opacity="0">
+                                <StackPanel.Projection>
+                                    <PlaneProjection RotationX="0"></PlaneProjection>
+                                </StackPanel.Projection>
+                                <TextBlock x:Name="CachedSizeTextBlock" Margin="12 8 0 12"></TextBlock>
+                                <Button x:Name="DeleteButton" Content="删除缓存" Click="DeleteButton_OnClick"></Button>
+                            </StackPanel>
 
                         </StackPanel>
-                    </ScrollViewer>
 
-                    <StackPanel Grid.Row="2">
-                    </StackPanel>
 
-                </Grid>
-            </phone:PivotItem>
-        </phone:Pivot>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <StackPanel Grid.Row="2">
+            </StackPanel>
+
+        </Grid>
     </Grid>
 
 </phone:PhoneApplicationPage>

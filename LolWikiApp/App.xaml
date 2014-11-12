@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:LolWikiApp"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"   
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    
     xmlns:primitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone">
 
     <!--Application Resources-->
@@ -772,7 +773,7 @@
                                                     <Storyboard>
                                                         <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ContentPresenter"/>
                                                         <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ItemBorder"/>
-                                                        
+
                                                         <!--<DoubleAnimation Duration="0" To="1.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="ItemBorder" />-->
                                                         <!--<DoubleAnimation Duration="0" To="-4" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="ContentPresenter" />-->
                                                         <!--<DoubleAnimation Duration="0" To="1.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="ContentPresenter" />
@@ -864,6 +865,70 @@
                             <ContentControl Grid.Row="0" ContentTemplate="{StaticResource PivotTitleDataTemplate}" Content="{TemplateBinding Title}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 0 0 0"/>
                             <primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="1"  Style="{StaticResource PivotHeadersControlStyle1}" />
                             <ItemsPresenter x:Name="PivotItemPresenter" Margin="0" Grid.Row="2" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <DataTemplate  x:Key="HeroDetailPivotTitleDataTemplate">
+            <Border Background="White" Width="480" Margin="0"  BorderThickness="0"  BorderBrush="{StaticResource PhoneAccentBrush}">
+                <Grid Background="#29282e">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Margin="12 12 0 0" Width="100" Height="100" Source="{Binding ImageUrl, Converter={StaticResource ImageSourceConverter}}" Grid.Column="0"></Image>
+                    <StackPanel   VerticalAlignment="Top" Grid.Column="1" Margin="12 12 0 0" Orientation="Vertical">
+                        <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="WhiteSmoke">
+                            <Run Text="{Binding Title}"></Run>
+                            <Run Text="{Binding DisplayName}"></Run>
+                        </TextBlock>
+
+                        <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="WhiteSmoke">
+                            <Run Text="{Binding Tags}" ></Run>
+                            <LineBreak></LineBreak>
+                            <Run Text="{Binding DisplayPrice}"></Run>
+                            <LineBreak></LineBreak>
+                            <Run Text="攻"></Run>
+                            <Run Text="{Binding RatingAttack}"></Run> 
+                            <Run Text="防"></Run>
+                             <Run Text="{Binding RatingDefense}"></Run> 
+                            <Run Text="法"></Run>
+                             <Run Text="{Binding RatingMagic}"></Run> 
+                            <Run Text="难度"></Run>
+                             <Run Text="{Binding RatingDifficulty}"></Run>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+
+        <Style x:Key="PivotStyle2" TargetType="phone:Pivot">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="phone:Pivot">
+                        <Grid Background="White" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="55"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.RowSpan="2" Background="#29282e">
+                                <!--<Grid.Background>
+                                    <ImageBrush Stretch="Fill" ImageSource="/Data/top_bg.png"/>
+                                </Grid.Background>-->
+                            </Grid>
+                            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource HeroDetailPivotTitleDataTemplate}" Content="{TemplateBinding Title}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 0 0 0"/>
+                            <primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="1"  Style="{StaticResource PivotHeadersControlStyle1}" Foreground="White" FontSize="{StaticResource PhoneFontSizeNormal}" />
+                            <ItemsPresenter x:Name="PivotItemPresenter" Margin="0 4 0 0" Grid.Row="2"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>

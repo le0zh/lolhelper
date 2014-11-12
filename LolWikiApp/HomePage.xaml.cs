@@ -38,9 +38,13 @@ namespace LolWikiApp
         private readonly FullScreenPopup _newsCategoryPopup;
         private bool _isQuitConfirmOpened = false;
 
+        private bool _isPostBack;
+
         public HomePage()
         {
             InitializeComponent();
+            Debug.WriteLine(NavigationCacheMode);
+
             _freeHeros = new List<Hero>();
             _currentPage = 0;
             _currentPageForFunyNews = 1;
@@ -79,8 +83,19 @@ namespace LolWikiApp
             }
         }
 
+        private string _cacheId;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (_isPostBack) return;
+
+            _isPostBack = true;
+
+            if (NavigationContext.QueryString.TryGetValue("cacheId", out _cacheId))
+            {
+
+            }
+
             Debug.WriteLine("HOME PAGE LOAD OnNavigatedTo");
             HomePageMain();
 
@@ -92,6 +107,20 @@ namespace LolWikiApp
 
             base.OnNavigatedTo(e);
         }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            //base.OnNavigatingFrom(e);
+        }
+
+        //protected override void OnNavigate(NavigationEventArgs e)
+        //{
+        //    TcFunnyNewsLongListSelector.ItemsSource = null;
+        //    TcStoryNewsLongListSelector.ItemsSource = null;
+        //    TcMmNewsLongListSelector.ItemsSource = null;
+
+        //    //base.OnNavigatedFrom(e);
+        //}
 
         private void HomePage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
@@ -443,13 +472,39 @@ namespace LolWikiApp
         #endregion
 
         #region 资讯列表
+        private void NewsLongListSelector_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (_cacheId == "NEWS")
+            {
+                var cachedNewsListInfo = App.ViewModel.CachedObject as NewsListInfo;
+                if (cachedNewsListInfo != null)
+                {
+                    NewsLongListSelector.ScrollTo(App.NewsViewModel.NewsListInfObservableCollection.Last());
+                }
+            }
+        }
 
         private void NewsDataBindAsync()
         {
             if (this.NewsLongListSelector.ItemsSource == null)
             {
                 this.NewsLongListSelector.ItemsSource = App.NewsViewModel.NewsListInfObservableCollection;
-                LoadNewsData();
+                if (_cacheId == "NEWS")
+                {
+                    NewsLoadingBar.Visibility = Visibility.Collapsed;
+                    NewsLongListSelector.Visibility = Visibility.Visible;
+                    NewsLongListSelector.ScrollTo(NewsLongListSelector.ItemsSource[10]);
+
+                    //var cachedNewsListInfo = App.ViewModel.CachedObject as NewsListInfo;
+                    //if (cachedNewsListInfo != null)
+                    //{
+                    //    NewsLongListSelector.ScrollTo(App.NewsViewModel.NewsListInfObservableCollection.Last());
+                    //}
+                }
+                else
+                {
+                    LoadNewsData();
+                }
             }
 
             SetAppbarForNewsList();
@@ -641,6 +696,7 @@ namespace LolWikiApp
                         }
 
                         this.NewsLongListSelector.SelectedItem = null; //reset selected item
+                        //App.ViewModel.CachedObject = newsInfo;
                         NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative));
                     }
                 }
@@ -1039,7 +1095,7 @@ namespace LolWikiApp
             //NavigationService.Navigate(new Uri("/NewsVideoPage.xaml", UriKind.Relative));
         }
         #endregion
-        
+
         private AnimatonHelper _adAnimatonHelper = new AnimatonHelper();
         private bool _isHideing = false;
         private void LongListSelector_OnListScrollingUp(object sender, EventArgs e)
@@ -1047,10 +1103,11 @@ namespace LolWikiApp
             if (_isHideing == false && _isShowing == false)
             {
                 _isHideing = true;
+
                 if (PivotTitlContainer.Height > 0)
                 {
                     Debug.WriteLine("visible:false");
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(1));
+                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(0.7));
                 }
                 _isHideing = false;
             }
@@ -1068,10 +1125,17 @@ namespace LolWikiApp
                 }
                 else
                 {
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(1));
+                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(0.7));
                 }
                 _isShowing = false;
             }
         }
+
+        private void FunnyNewsListItemBorder_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("FunnyBorderLoaded: " + DateTime.Now);
+        }
+
+
     }
 }

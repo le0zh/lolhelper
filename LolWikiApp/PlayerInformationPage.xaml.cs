@@ -51,7 +51,7 @@ namespace LolWikiApp
                     _isToBind = true;
             }
 
-            PivotItem1.Header = _isToBind ? "绑定召唤师信息" : "搜索召唤师";
+            TitleTextBlock.Text = _isToBind ? "绑定召唤师信息" : "搜索召唤师";
 
             base.OnNavigatedTo(e);
         }

@@ -292,7 +292,6 @@ namespace LolWikiApp.Repository
             videoList.Add(myLetvSourceConverter.Decode(hdVideo));
             videoList.Add(myLetvSourceConverter.Decode(superHdVideo));
             videoList.Add(myLetvSourceConverter.Decode(originalHdVideo));
-
             return videoList;
         }
 

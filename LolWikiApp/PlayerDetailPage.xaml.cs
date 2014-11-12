@@ -14,6 +14,8 @@ namespace LolWikiApp
 {
     public partial class PlayerDetailPage : PhoneApplicationPage
     {
+        private bool _isPostBack;
+
         public PlayerDetailPage()
         {
             InitializeComponent();
@@ -23,6 +25,10 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if(_isPostBack) return;
+
+            _isPostBack = true;
+
             if(DataContext!=null)
                 return;            
 

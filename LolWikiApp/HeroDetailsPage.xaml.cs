@@ -35,6 +35,7 @@ namespace LolWikiApp
         private readonly FullScreenPopup _actionPopup;
         private bool _isPivotFirstLoaded;
         private int _currentLateastPage = 1;
+        private bool _isPostBack;
 
         // Constructor
         public DetailsPage()
@@ -222,6 +223,9 @@ namespace LolWikiApp
         // When page is navigated to set data context to selected item in list
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (_isPostBack) return;
+
+            _isPostBack = true;
             DetailPageMain();
         }
 

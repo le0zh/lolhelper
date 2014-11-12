@@ -16,6 +16,7 @@ namespace LolWikiApp.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        public object CachedObject { get; set; }
 
         private readonly HeroRepository _heroRepository;
         private readonly PlayerRepository _playerRepository;

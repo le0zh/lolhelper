@@ -11,55 +11,43 @@
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    SupportedOrientations="Portrait"  Orientation="Landscape"
+    SupportedOrientations="Portrait"  
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="0"
-    shell:SystemTray.BackgroundColor="White"
-    shell:SystemTray.ForegroundColor="Black"
-    Style="{StaticResource TransitionPageStyle}"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True">
 
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator x:Name="indicator" Text="读取中..."  IsIndeterminate="True"></shell:ProgressIndicator>
     </shell:SystemTray.ProgressIndicator>
 
-    
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+            <TextBlock Text="召唤师详情" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
+                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        </Border>
+        
         <!--Pivot Control-->
 
-        <phone:Pivot Title="{Binding}"  Background="White" Foreground="black" x:Name="LayoutRoot">
+        <phone:Pivot Grid.Row="1" Title="{Binding}"  Background="White" Foreground="black" x:Name="LayoutRoot">
             <phone:Pivot.TitleTemplate>
                 <DataTemplate>
-                    <Grid MinWidth="430" Margin="-24 -18 -24 8">
+                    <Grid MinWidth="480" Margin="-24 -18 -24 8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="92"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="92"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
+                        <Image Grid.Column="0" Source="{Binding PhotoUrl}" Width="80" Margin="12 0 0 0"></Image>
 
-                        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-                            <Border Background="White" Width="480"   BorderThickness="0 6 0 0"  BorderBrush="{StaticResource PhoneAccentBrush}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="Data/logo.png" Height="40" Margin="12 0 0 0"></Image>
-                                    <TextBlock Text="英雄联盟助手" Margin="12 0 0 0" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-
-                        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="12 0 12 0">
-                            <TextBlock Text="召唤师详情" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-                        </StackPanel>
-
-                        <Image Grid.Row="2" Grid.Column="0" Source="{Binding PhotoUrl}" Width="80" Margin="12 0 0 0"></Image>
-
-                        <StackPanel Grid.Row="2" Grid.Column="1" Margin="12 0 12 0" VerticalAlignment="Center" Orientation="Vertical">
+                        <StackPanel Grid.Column="1" Margin="12 0 12 0" VerticalAlignment="Center" Orientation="Vertical">
                             <TextBlock Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
                             <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}"
                                        Foreground="{StaticResource PhoneSubtleBrush}">
@@ -76,7 +64,7 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <StackPanel Grid.Row="2" Grid.Column="2" 
+                        <StackPanel Grid.Column="2" 
                                     Background="{StaticResource PhoneAccentBrush}" 
                                     Margin="0 0 12 0" Width="80">
                             <TextBlock Foreground="White" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 12 0 0" Text="战斗力" HorizontalAlignment="Center"></TextBlock>

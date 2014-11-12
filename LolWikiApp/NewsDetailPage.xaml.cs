@@ -36,6 +36,7 @@ namespace LolWikiApp
         private string _artId;
         private string _artUrl;//for tecent news
         private string _fullUrl;
+        private bool _isNavigated;
 
         private bool _isNeedToModify = true;
 
@@ -104,31 +105,40 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (NavigationContext.QueryString.TryGetValue("newsId", out _artId))
+            if (_isNavigated)
             {
-                _articleId = _artId;
-                _isNeedToModify = false;
-                LoadNewsDetailAsync(_artId);
-            }
 
-            if (NavigationContext.QueryString.TryGetValue("newsUrl", out _artUrl))
-            {
-                ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
-                ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
-                var fullUrl = "http://qt.qq.com/static/pages/news/phone/" + _artUrl;
-                LoadingIndicator.IsRunning = true;
-                ContentWebBrowser.Navigate(new Uri(fullUrl, UriKind.Absolute));
             }
-
-            if (NavigationContext.QueryString.TryGetValue("fullUrl", out _fullUrl))
+            else
             {
-                _isNeedToModify = false;
-                LoadingIndicator.IsRunning = true;
-                ContentWebBrowser.Navigate(new Uri(_fullUrl, UriKind.Absolute));
+                _isNavigated = true;
+                if (NavigationContext.QueryString.TryGetValue("newsId", out _artId))
+                {
+                    _articleId = _artId;
+                    _isNeedToModify = false;
+                    LoadNewsDetailAsync(_artId);
+                }
+
+                if (NavigationContext.QueryString.TryGetValue("newsUrl", out _artUrl))
+                {
+                    ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
+                    ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
+                    var fullUrl = "http://qt.qq.com/static/pages/news/phone/" + _artUrl;
+                    LoadingIndicator.IsRunning = true;
+                    ContentWebBrowser.Navigate(new Uri(fullUrl, UriKind.Absolute));
+                }
+
+                if (NavigationContext.QueryString.TryGetValue("fullUrl", out _fullUrl))
+                {
+                    _isNeedToModify = false;
+                    LoadingIndicator.IsRunning = true;
+                    ContentWebBrowser.Navigate(new Uri(_fullUrl, UriKind.Absolute));
+                }
             }
 
             base.OnNavigatedTo(e);
         }
+        
 
         private void RetryButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -209,7 +219,7 @@ namespace LolWikiApp
 
                 ContentWebBrowser.Visibility = Visibility.Visible;
                 LoadingIndicator.IsRunning = false;
-                ShowAdPopup();
+                //ShowAdPopup();
             }
             catch (Exception)
             {
@@ -331,7 +341,6 @@ namespace LolWikiApp
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            HideAdPopup();
             base.OnNavigatedFrom(e);
         }
 
@@ -345,6 +354,12 @@ namespace LolWikiApp
             else
             {
                 HideAdPopup();
+                //if (string.IsNullOrEmpty(_fullUrl))
+                //{
+                //    NavigationService.RemoveBackEntry();
+                //    NavigationService.Navigate(new Uri("/HomePage.xaml?cacheId=NEWS", UriKind.Relative));
+                //    e.Cancel = true;
+                //}
             }
 
             base.OnBackKeyPress(e);
@@ -356,7 +371,7 @@ namespace LolWikiApp
             {
                 BigImageWindow.IsOpen = false;
                 ApplicationBar = null;
-                ShowAdPopup();
+                //ShowAdPopup();
             }
         }
 

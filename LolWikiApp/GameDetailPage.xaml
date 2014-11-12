@@ -13,43 +13,36 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="0"
-    shell:SystemTray.BackgroundColor="White"
-    shell:SystemTray.ForegroundColor="Black"
-    Style="{StaticResource TransitionPageStyle}"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"    
     toolkit:TiltEffect.IsTiltEnabled="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
-        <phone:Pivot Title="英雄联盟助手" x:Name="MainPivot" Background="White" Foreground="black"
-                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-            <phone:Pivot.HeaderTemplate>
-                <DataTemplate>
-                    <StackPanel  Margin="-12 0 0 -20">
-                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
+        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+            <TextBlock Text="比赛详情" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
+                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        </Border>
 
-            <!--PivotItem item 1-->
-            <phone:PivotItem Header="比赛详情">
-                <Grid> 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0">
-                        <StackPanel x:Name="LoadingPanel" Margin="0 0 0 0" Orientation="Vertical">
-                            <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                            <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                        </StackPanel>
-                    </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <StackPanel x:Name="LoadingPanel" Margin="12 0 0 0" Orientation="Vertical">
+                    <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
 
-                    <phone:WebBrowser Grid.Row="1" BorderThickness="0" Visibility="Collapsed" IsScriptEnabled="False" Margin="0 4 0 0" LoadCompleted="GameDetailWebBrowser_OnLoadCompleted" x:Name="GameDetailWebBrowser"></phone:WebBrowser>
-                </Grid>
-            </phone:PivotItem>
-        </phone:Pivot>
+            <phone:WebBrowser Grid.Row="1" BorderThickness="0" Visibility="Collapsed" IsScriptEnabled="False" Margin="8" LoadCompleted="GameDetailWebBrowser_OnLoadCompleted" x:Name="GameDetailWebBrowser"></phone:WebBrowser>
+        </Grid>
     </Grid>
 
 

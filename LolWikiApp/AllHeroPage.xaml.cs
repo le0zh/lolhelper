@@ -33,6 +33,7 @@ namespace LolWikiApp
                 this.MarksmanHeroWrapPanel, this.SupportHeroWrapPanel };
         }
 
+        
         private void LoadHeroList(int index)
         {
             if (index < 0 || index > 6)
@@ -73,34 +74,45 @@ namespace LolWikiApp
 
         }
 
-
         private void AddFreeHeroItem(Hero hero, WrapPanel wrapPanel)
         {
             if (hero == null)
                 return;
 
-            StackPanel stackPanel = new StackPanel();
-            stackPanel.Orientation = System.Windows.Controls.Orientation.Vertical;
-            stackPanel.Margin = new Thickness(0, 8, 30, 8);
-            //stackPanel.Height = 76;
-            //stackPanel.Width = 76;
+            var stackPanel = new StackPanel
+            {
+                Orientation = System.Windows.Controls.Orientation.Vertical,
+                Margin = new Thickness(0, 8, 32, 8)
+            };
 
-            Image img = new Image();
-            img.Source = new BitmapImage(new Uri(hero.ImageUrl, UriKind.Relative));
-            img.Height = 90;
-            img.Width = 90;
-            img.Stretch = Stretch.UniformToFill;
+            var img = new Image
+            {
+                Source = new BitmapImage(new Uri(hero.ImageUrl, UriKind.Relative)),
+                Height = 90,
+                Width = 90,
+                Stretch = Stretch.UniformToFill
+            };
             img.Tap += (s, e) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative));
 
-            TextBlock textBlock = new TextBlock();
-
-            string tmpTitle = hero.Title.Length > 4 ? hero.Title.Substring(0, 4) + ".." : hero.Title;
+            var textBlock = new TextBlock();
+            var tmpTitle = hero.Title.Length > 4 ? hero.Title.Substring(0, 4) + ".." : hero.Title;
             textBlock.Text = tmpTitle;
+            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock.FontSize = (double)Application.Current.Resources["PhoneFontSizeSmall"];
+            textBlock.Foreground = new SolidColorBrush(Colors.Black);
+
+            var textBlock2 = new TextBlock();
+            var tmpName = hero.Name.Length > 4 ? hero.Name.Substring(0, 4) + ".." : hero.Name;
+            textBlock2.Text = tmpName;
+            textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock2.FontSize = (double)Application.Current.Resources["PhoneFontSizeSmall"];
+            textBlock2.Foreground = new SolidColorBrush(Colors.Gray);
 
             stackPanel.Children.Add(img);
             stackPanel.Children.Add(textBlock);
+            stackPanel.Children.Add(textBlock2);
 
-            wrapPanel.Children.Add(stackPanel);            
+            wrapPanel.Children.Add(stackPanel);
         }
 
         private void HeroPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

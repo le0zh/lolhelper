@@ -105,6 +105,9 @@ namespace LolWikiApp
             ((SolidColorBrush)Application.Current.Resources["PhoneSubtleBrush"]).Color = Colors.DarkGray;
             ((SolidColorBrush)Application.Current.Resources["PhoneBorderBrush"]).Color = Colors.DarkGray;
 
+
+            ((SolidColorBrush)Application.Current.Resources["PhoneAccentBrush"]).Color = Colors.Red;
+
             //PhoneTextLowContrastBrush
             if (Current.GetTheme() == Theme.Light)
             {

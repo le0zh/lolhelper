@@ -27,8 +27,8 @@ namespace LolWikiApp
 
         private async Task<string> GetHtmlContentAsync(string url)
         {
-            HttpClient client = new HttpClient();
-            string content = await client.GetStringAsync(new Uri(url));
+            var client = new HttpClient();
+            var content = await client.GetStringAsync(new Uri(url));
             return content;
         }
 
@@ -36,7 +36,7 @@ namespace LolWikiApp
         {
             if (!string.IsNullOrEmpty(App.ViewModel.SelectedDetailGameInfoUrl))
             {
-                string detailUrl = App.ViewModel.SelectedDetailGameInfoUrl;
+                var detailUrl = App.ViewModel.SelectedDetailGameInfoUrl;
                 Debug.WriteLine("moreInfoUrl:" + detailUrl);
 
                 //this.GameDetailWebBrowser.Navigate(new Uri(detailUrl, UriKind.Absolute));
@@ -51,8 +51,7 @@ namespace LolWikiApp
         {            
             LoadingPanel.Visibility = Visibility.Visible;
 
-            string content = await GetHtmlContentAsync(url);
-
+            var content = await GetHtmlContentAsync(url);
             content = content.Substring(content.IndexOf("<body>", StringComparison.Ordinal));
 
             const string headerContentBlack = @"<html>
@@ -109,8 +108,6 @@ namespace LolWikiApp
             }
 
             this.GameDetailWebBrowser.Navigate(new Uri(path, UriKind.Relative));
-
-            
         }
 
         private void GameDetailWebBrowser_OnLoadCompleted(object sender, NavigationEventArgs e)
