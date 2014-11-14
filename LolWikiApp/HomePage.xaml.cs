@@ -895,7 +895,7 @@ namespace LolWikiApp
         #region 战绩
         private void SetBindAppBar()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
+            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
             var pinButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("/Assets/AppBar/pin-1.png", UriKind.Relative),
@@ -1091,7 +1091,8 @@ namespace LolWikiApp
 
         private void HuangliButton_OnClick(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://cache.tv.qq.com/qqplayerout.swf?vid=x0140bx185g", UriKind.Relative));
             //NavigationService.Navigate(new Uri("/NewsVideoPage.xaml", UriKind.Relative));
         }
         #endregion
@@ -1109,6 +1110,7 @@ namespace LolWikiApp
                     Debug.WriteLine("visible:false");
                     _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(0.7));
                 }
+                //PivotTitlContainer.Visibility = Visibility.Collapsed;
                 _isHideing = false;
             }
         }
@@ -1125,8 +1127,9 @@ namespace LolWikiApp
                 }
                 else
                 {
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(0.7));
+                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(0.7));                    
                 }
+                //PivotTitlContainer.Visibility = Visibility.Visible;
                 _isShowing = false;
             }
         }

@@ -39,7 +39,6 @@ namespace LolWikiApp
         private bool _isNavigated;
 
         private bool _isNeedToModify = true;
-
         private AdItem _adItem = null;
 
         public NewsDetailPage()
@@ -49,9 +48,6 @@ namespace LolWikiApp
             _popUp = new Popup();
             _adItem = new AdItem { ADKey = "64294ac6f3f1b5b2", AppID = "10000655", Size = SizeMode.SizeW480H80 };
             AdPopup.Child = _adItem;
-
-            ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
-            ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
         }
 
         private async void LoadNewsDetailAsync(string artId)
@@ -116,16 +112,26 @@ namespace LolWikiApp
                 {
                     _articleId = _artId;
                     _isNeedToModify = false;
+                    ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
+                    ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
+
                     LoadNewsDetailAsync(_artId);
                 }
 
                 if (NavigationContext.QueryString.TryGetValue("newsUrl", out _artUrl))
                 {
+                    _isNeedToModify = true;
                     ContentWebBrowser.ScriptNotify += ContentWebBrowser_ScriptNotify;
                     ContentWebBrowser.LoadCompleted += ContentWebBrowser_LoadCompleted;
                     var fullUrl = "http://qt.qq.com/static/pages/news/phone/" + _artUrl;
                     LoadingIndicator.IsRunning = true;
+
                     ContentWebBrowser.Navigate(new Uri(fullUrl, UriKind.Absolute));
+
+                    //ContentWebBrowser.NavigateToString("<!doctype html>" +
+                    //                                   "<html><head><title>video test</title></head><body style=background-color:black;>video test" +
+                    //                                   "<iframe height=\"100%\" frameborder=\"0\" allowfullscreen src=\"http://v.qq.com/iframe/player.html?vid=z0015abq8k6&amp;tiny=0&amp;auto=0\" width=\"100%\"></iframe>" +
+                    //                                   "</body></html>");
                 }
 
                 if (NavigationContext.QueryString.TryGetValue("fullUrl", out _fullUrl))
@@ -138,7 +144,7 @@ namespace LolWikiApp
 
             base.OnNavigatedTo(e);
         }
-        
+
 
         private void RetryButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -153,12 +159,22 @@ namespace LolWikiApp
                 ContentWebBrowser.InvokeScript("eval",
                @"
     var srcArray = new Array();
-
+    var videoLink;
+   
     window.onLinkPressed = function() {
         var elem = event.srcElement;
         if ( elem != null ) {
             elem.hideFocus=true;
-            window.external.notify(elem.getAttribute('link')+','+srcArray.join(','));
+            window.external.notify('img,' + elem.getAttribute('link')+','+srcArray.join(','));
+        }
+        return false;
+    }
+
+    window.onVideoPressed = function() {
+        var elem = event.srcElement;
+        if ( elem != null ) {
+            elem.hideFocus=true;
+            window.external.notify('video,' + videoLink);
         }
         return false;
     }
@@ -189,7 +205,25 @@ namespace LolWikiApp
         }
    }   
 
-   var srcArray = new Array();
+    var srcArray = new Array();
+
+    window.InitTcVideo = function(){
+        var iframeObj = document.getElementsByTagName('iframe')[0];
+        if(iframeObj){
+             var link = iframeObj.getAttribute('src');
+             var contentDiv = document.getElementsByClassName('article_content')[0];
+             if(contentDiv){
+                iframeObj.setAttribute('src','');
+                iframeObj.setAttribute('style', 'display: none;');
+                var videoDiv =  document.createElement('div');
+                videoLink = link;   
+                videoDiv.attachEvent('onmouseup', onVideoPressed);
+                videoDiv.setAttribute('style','background:red;margin-top:12px;');
+                videoDiv.innerHTML = '<div > <img src=\''+ iframeObj.getAttribute('_img') + '\'  /></div><div style=\'position : absolute;display:block;top:30%;width:40px;margin:0 auto; left:0px;right:0px;z-index:100\'><img src=\'http://ossweb-img.qq.com/images/qqtalk/act/lol_app_bg/playIcon.png\' /> </div>';
+                contentDiv.appendChild(videoDiv);
+             }           
+        }
+    }
 
     window.BindLinks = function() {
         var elems = document.getElementsByTagName('img');
@@ -215,7 +249,10 @@ namespace LolWikiApp
                 {
                     ContentWebBrowser.InvokeScript("ChangeStyle");
                     ContentWebBrowser.InvokeScript("ChangeLastSpan");
+                    ContentWebBrowser.InvokeScript("InitTcVideo");                    
                 }
+
+                Debug.WriteLine(ContentWebBrowser.SaveToString());
 
                 ContentWebBrowser.Visibility = Visibility.Visible;
                 LoadingIndicator.IsRunning = false;
@@ -302,8 +339,21 @@ namespace LolWikiApp
 
             try
             {
-                var currentIndex = Convert.ToInt32(parts[0]);
-                ShowImagePopUp(currentIndex, parts.Skip(1).Take(parts.Count - 1).ToList());
+                if (parts[0] == "img")
+                {
+                    var currentIndex = Convert.ToInt32(parts[1]);
+                    ShowImagePopUp(currentIndex, parts.Skip(2).Take(parts.Count - 1).ToList());
+                }
+                else
+                {
+                    var src = parts[1];
+                    if (!string.IsNullOrEmpty(src))
+                    {
+                        var wbt = new WebBrowserTask { Uri = new Uri(src) };
+                        wbt.Show();
+                    }
+
+                }
             }
             catch (Exception)
             {

@@ -34,7 +34,7 @@ namespace LolWikiApp.Repository
             using (var file = await persistentFolder.OpenStreamForWriteAsync(isoFileName, CreationCollisionOption.ReplaceExisting))
             using (var sr = new StreamWriter(file))
             {
-                await sr.WriteAsync(content);
+                sr.WriteAsync(content).Wait();
             }
             return true;
         }

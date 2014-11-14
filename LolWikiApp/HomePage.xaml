@@ -74,7 +74,7 @@
                                 <local:NewsListItemDataTemplateSelector Content="{Binding}">
                                     <local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
                                         <DataTemplate>
-                                            <Border x:Name="NewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
+                                            <Border x:Name="NewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="10" >
                                                 <Border.Projection><PlaneProjection></PlaneProjection></Border.Projection>
                                                 <Border.Triggers>
                                                     <EventTrigger RoutedEvent="Border.Loaded">
@@ -89,7 +89,7 @@
                                                     </EventTrigger>
                                                 </Border.Triggers>
 
-                                                <Grid MinWidth="468">
+                                                <Grid MinWidth="460">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="128"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
@@ -190,7 +190,7 @@
                                     MinWidth="468">
                         <local:RefreshableListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="Gray" x:Name="FunnyNewsListItemBorder" BorderThickness="0 0 0 0.5" Padding="6" Loaded="FunnyNewsListItemBorder_OnLoaded">
+                                <Border BorderBrush="Gray" x:Name="FunnyNewsListItemBorder" BorderThickness="0 0 0 0.5" Padding="10" Loaded="FunnyNewsListItemBorder_OnLoaded">
                                     <Border.Projection>
                                         <PlaneProjection></PlaneProjection>
                                     </Border.Projection>
@@ -269,7 +269,7 @@
                                     MinWidth="452">
                         <local:RefreshableListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border x:Name="StoryNewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
+                                <Border x:Name="StoryNewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="10" >
                                     <Border.Projection>
                                         <PlaneProjection></PlaneProjection>
                                     </Border.Projection>
@@ -347,7 +347,7 @@
                                     MinWidth="452">
                         <local:RefreshableListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border x:Name="MmNewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" >
+                                <Border x:Name="MmNewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="10" >
                                     <Border.Projection>
                                         <PlaneProjection></PlaneProjection>
                                     </Border.Projection>

@@ -421,7 +421,7 @@ namespace LolWikiApp.Repository
             {
                 Orientation = System.Windows.Controls.Orientation.Horizontal,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 10, 0, 20)
+                Margin = new Thickness(0, 10, 0, 48)
             };
 
             //var xamlBtnSd = GetVideoPlayButton("标清", videoList[0], actionPopup);

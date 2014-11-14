@@ -42,7 +42,7 @@ namespace LolWikiApp
             };
 
             _outerBorder.Tap += (s, e) => Hide();
-
+            
             _hostPopup = new Popup {Child = _outerBorder};
         }
 
