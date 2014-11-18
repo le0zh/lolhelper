@@ -39,11 +39,12 @@
 
             <!--Pivot item one-->
             <phone:PivotItem Header="所有英雄">
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                    <toolkit:WrapPanel x:Name="AllHeroWrapPanel" Orientation="Horizontal" >
 
-                    </toolkit:WrapPanel>
-                </ScrollViewer>
+                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                        <toolkit:WrapPanel x:Name="AllHeroWrapPanel" Orientation="Horizontal" >
+                        </toolkit:WrapPanel>
+                    </ScrollViewer>
+                
             </phone:PivotItem>
 
             <!--Pivot item two-->

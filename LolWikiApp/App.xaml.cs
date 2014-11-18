@@ -30,13 +30,7 @@ namespace LolWikiApp
             get
             {
                 // Delay creation of the view model until necessary
-                if (_viewModel == null)
-                    _viewModel = new MainViewModel();
-
-                if (_viewModel.IsDataLoaded == false)
-                    _viewModel.LoadHeroBaiscInfoDataAsync();
-
-                return _viewModel;
+                return _viewModel ?? (_viewModel = new MainViewModel());
             }
         }
 
@@ -183,8 +177,7 @@ namespace LolWikiApp
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-            var task = Task.Run(() => ViewModel.VideoDownloadService.SaveCacheInfoListToIso());
-            task.Wait();
+           
         }
 
         // Code to execute if a navigation fails

@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Windows.Storage;
 using LolWikiApp.Repository;
+using Microsoft.Phone.Controls;
 using Telerik.Windows.Controls.DataBoundListBox;
 
 namespace LolWikiApp
@@ -29,19 +30,15 @@ namespace LolWikiApp
 
     public class VideoDownloadService
     {
-        private const string VideoCacheFolderName = "VideoCache";
-        private const string CacheVideoInfosFileName = "CacheVideoInfos.json";
-
         private bool _isDataLoaded; //标识视频缓存数据是否被加载
-
-        private ObjectPersistentHelper<List<CachedVideoInfo>> _persistentHelper;
+        private ObjectPersistentHelper<CachedVideoInfo> _persistentHelper;
 
         public ObservableCollection<VideoDownloadRequest> Requests { get; private set; }
-        
+
         public VideoDownloadService()
         {
             Requests = new ObservableCollection<VideoDownloadRequest>();
-            _persistentHelper = new ObjectPersistentHelper<List<CachedVideoInfo>>();
+            _persistentHelper = new ObjectPersistentHelper<CachedVideoInfo>();
         }
 
         public void PauseAll()
@@ -53,7 +50,7 @@ namespace LolWikiApp
                     videoDownloadRequest.CancelDownload();
                     videoDownloadRequest.TransferStatus = VideoDownloadTransferStatus.Paused;
                 }
-            }
+            }            
         }
 
         public void AddRequest(VideoDownloadRequest request)
@@ -62,15 +59,14 @@ namespace LolWikiApp
             if (foundRequest == null)
             {
                 Requests.Add(request);
-                //Task.Factory.StartNew(() => request.DownloadAsync(new CancellationToken()));
                 request.Download();
             }
             else
             {
-                if (foundRequest.TransferStatus != VideoDownloadTransferStatus.Transfering 
+                if (foundRequest.TransferStatus != VideoDownloadTransferStatus.Transfering
                     && foundRequest.TransferStatus != VideoDownloadTransferStatus.Completed)
                 {
-                    foundRequest.Download();    
+                    foundRequest.Download();
                 }
             }
         }
@@ -79,24 +75,24 @@ namespace LolWikiApp
         {
             request.CancelDownload();
             Requests.Remove(request);
-
-            _persistentHelper.Delete(VideoCacheFolderName, request.FileName);
+            _persistentHelper.Delete(ConstValues.VideoCacheFolderName, request.FileName);
+            _persistentHelper.Delete(ConstValues.VideoCacheFolderName, request.FileName + ".json");
         }
 
-        public CachedVideoInfo ConvertToCachedVideoInfo(VideoDownloadRequest request)
-        {
-            var cachedVideoInfo = new CachedVideoInfo()
-            {
-                Title = request.FileName,
-                ImageUrl = request.DisplayUrl,
-                Length = request.DisplayLength,
-                Src = request.SourceUrl,
-                Percent = request.PercentDisplay,
-                Size = request.TotalBytes
-            };
+        //public CachedVideoInfo ConvertToCachedVideoInfo(VideoDownloadRequest request)
+        //{
+        //    var cachedVideoInfo = new CachedVideoInfo()
+        //    {
+        //        Title = request.FileName,
+        //        ImageUrl = request.DisplayUrl,
+        //        Length = request.DisplayLength,
+        //        Src = request.SourceUrl,
+        //        Percent = request.PercentDisplay,
+        //        Size = request.TotalBytes
+        //    };
 
-            return cachedVideoInfo;
-        }
+        //    return cachedVideoInfo;
+        //}
 
         public VideoDownloadRequest ConvertToVideoDownloadRequestInfo(CachedVideoInfo info)
         {
@@ -106,29 +102,10 @@ namespace LolWikiApp
                 DisplayUrl = info.ImageUrl,
                 FileName = info.Title,
                 SourceUrl = info.Src,
-                PercentDisplay = info.Percent,
-                TotalBytes = info.Size,
-                TransferStatus = (info.Percent == 100) ? VideoDownloadTransferStatus.Completed : VideoDownloadTransferStatus.Paused
+                TotalBytes = info.TotalSize//todo:
             };
 
             return request;
-        }
-
-        public async Task<bool> SaveCacheInfoListToIso()
-        {
-            var cacheInfoList = new List<CachedVideoInfo>();
-
-            PauseAll();
-
-            foreach (var videoDownloadRequest in Requests)
-            {               
-                cacheInfoList.Add(ConvertToCachedVideoInfo(videoDownloadRequest));
-            } 
-            
-            var result = await _persistentHelper.Save(cacheInfoList, VideoCacheFolderName, CacheVideoInfosFileName);
-            Debug.WriteLine("----------VideoDownloadService.SaveInfoToIso successed");
-
-            return result;
         }
 
         public async Task ReadCacheInfoFromIso()
@@ -136,15 +113,38 @@ namespace LolWikiApp
             if (_isDataLoaded == false)
             {
                 Debug.WriteLine("load video cache infomation from ISO files.");
+                var localFolder = ApplicationData.Current.LocalFolder;
 
-                var list = await _persistentHelper.Read(VideoCacheFolderName, CacheVideoInfosFileName);
-                if (list == null)
-                    return;
-
-                foreach (var cachingVideoInfo in list)
+                //Read caching video files
+                var cachingFolder = await localFolder.CreateFolderAsync(ConstValues.VideoCacheFolderName, CreationCollisionOption.OpenIfExists);
+                var cachingFiles = await cachingFolder.GetFilesAsync();
+                foreach (var cachingFile in cachingFiles)
                 {
-                    var request = ConvertToVideoDownloadRequestInfo(cachingVideoInfo);
-                    Requests.Add(request);
+                    if (!cachingFile.Name.EndsWith(".json"))
+                        continue;
+
+                    var cacheinfo = await _persistentHelper.Read(cachingFile);
+                    try
+                    {
+                        var videoCacheFile = await cachingFolder.GetFileAsync(cacheinfo.Title);
+                        var properties = await videoCacheFile.GetBasicPropertiesAsync();
+                        var request = ConvertToVideoDownloadRequestInfo(cacheinfo);
+
+                        Debug.WriteLine("properties.Size:{0}, request.TotalBytes: {1}", properties.Size, request.TotalBytes);
+
+                        request.PercentDisplay = request.TotalBytes == 0 ? 0
+                                                                         : (int)((long)properties.Size * 100 / request.TotalBytes);
+                        request.TransferStatus = request.PercentDisplay == 100
+                                                                ? VideoDownloadTransferStatus.Completed
+                                                                : VideoDownloadTransferStatus.Paused;
+
+                        Requests.Add(request);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+
                 }
                 _isDataLoaded = true;
             }
@@ -164,8 +164,7 @@ namespace LolWikiApp
 
     public class VideoDownloadRequest : INotifyPropertyChanged
     {
-        private const string VideoCacheFolerName = "VideoCache";
-
+        private ObjectPersistentHelper<CachedVideoInfo> _persistentHelper = new ObjectPersistentHelper<CachedVideoInfo>();
         private CancellationTokenSource _cts = new CancellationTokenSource();
 
         public string DisplayUrl { get; set; }
@@ -176,7 +175,15 @@ namespace LolWikiApp
 
         public string SourceUrl { get; set; }
 
-        public string SizeDisplay { get; set; }
+        private string _sizeDisplay;
+        public string SizeDisplay
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(_sizeDisplay) ? _sizeDisplay : (TotalBytes / 1048576).ToString();
+            }
+            set { _sizeDisplay = value; }
+        }
 
         public object Tag { get; set; }
 
@@ -271,8 +278,11 @@ namespace LolWikiApp
         {
             if (TransferStatus == VideoDownloadTransferStatus.Completed)
             {
+                SizeDisplay = (TotalBytes / 1048576).ToString();
+                Debug.WriteLine("SizeDisplay:{0}, TotalBytes:{1}", SizeDisplay, TotalBytes);
+                NotifyPropertyChanged("SizeDisplay");
                 NotifyPropertyChanged("IsDone");
-                NotifyPropertyChanged("IsDownloading");                
+                NotifyPropertyChanged("IsDownloading");
             }
 
             if (StatusChangedHandler != null)
@@ -304,8 +314,8 @@ namespace LolWikiApp
         {
             FileName = videoListInfo.Title;
             DisplayUrl = videoListInfo.Cover_Url;
-            DisplayLength = videoListInfo.VideoLengthDisplay;
             SourceUrl = url;
+            DisplayLength = videoListInfo.VideoLengthDisplay;
             Tag = videoListInfo;
             TransferStatus = VideoDownloadTransferStatus.Paused;
         }
@@ -319,6 +329,9 @@ namespace LolWikiApp
         {
             _cts = new CancellationTokenSource();
 
+            //TODO: verify this works or not
+            Microsoft.Phone.Shell.PhoneApplicationService.Current.ApplicationIdleDetectionMode = Microsoft.Phone.Shell.IdleDetectionMode.Disabled;
+
             TransferStatus = VideoDownloadTransferStatus.Transfering;
             OnStatusChanged();
 
@@ -326,7 +339,7 @@ namespace LolWikiApp
                 throw new ArgumentException("FileName or SourceUrl is not setted for video downloader.");
 
             var localFolder = ApplicationData.Current.LocalFolder;
-            var newsCacheRootFolder = await localFolder.CreateFolderAsync(VideoCacheFolerName, CreationCollisionOption.OpenIfExists);
+            var newsCacheRootFolder = await localFolder.CreateFolderAsync(ConstValues.VideoCacheFolderName, CreationCollisionOption.OpenIfExists);
 
             var localFile = await newsCacheRootFolder.CreateFileAsync(FileName, CreationCollisionOption.OpenIfExists);
             var lStartPos = 0L;
@@ -338,14 +351,15 @@ namespace LolWikiApp
             try
             {
                 var myrq = WebRequest.CreateHttp(SourceUrl);
-                myrq.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; .NET CLR 1.0.3705)";
+                myrq.UserAgent = "Mozilla/5.0 (iPhone; U; CPU like Mac OS X) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/4A93 Safari/419.3 ";
+                //myrq.AddRange("bytes", lStartPos);
 
                 if (lStartPos > 0)
                 {
-                    myrq.Headers["bytes"] = lStartPos.ToString();
-                    Debug.WriteLine("lStartPos: " + lStartPos);
+                    myrq.Headers["Range"] = "bytes=" + lStartPos + "-";
+                    Debug.WriteLine("lStartPos in header: " + lStartPos);
                 }
-
+                
                 myrq.BeginGetResponse((result) =>
                 {
                     var response = myrq.EndGetResponse(result);
@@ -369,15 +383,33 @@ namespace LolWikiApp
 
         private async void GetResponseCallback(CancellationToken cancellationToken, WebResponse response, long lStartPos, string fileName)
         {
-            Debug.WriteLine(response.Headers["Accept-Ranges"]);
+            Debug.WriteLine("----------------------Accept-Ranges:" + response.Headers["Accept-Ranges"]);
 
             var totalBytes = response.ContentLength + lStartPos;
-            Debug.WriteLine("totalBytes: " + totalBytes);
+            //var totalBytes = response.ContentLength; 
+            Debug.WriteLine("--response.ContentLength:{0}", response.ContentLength);
+            Debug.WriteLine("--totalBytes:{0}", totalBytes);
+
+            //if temp video file is already there, skip to cache json file .
+            if (lStartPos == 0)
+            {
+                var cacheInfo = new CachedVideoInfo()
+                {
+                    Title = fileName,
+                    ImageUrl = DisplayUrl,
+                    Length = DisplayLength,
+                    Src = SourceUrl,
+                    TotalSize = totalBytes
+                };
+
+                await _persistentHelper.Save(cacheInfo, ConstValues.VideoCacheFolderName, fileName + ".json");
+            }
+           
+
             var localFolder = ApplicationData.Current.LocalFolder;
+            var newsCachingRootFolder = await localFolder.CreateFolderAsync(ConstValues.VideoCacheFolderName, CreationCollisionOption.OpenIfExists);
 
-            var newsCacheRootFolder = await localFolder.CreateFolderAsync(VideoCacheFolerName, CreationCollisionOption.OpenIfExists);
-
-            var localFile = await newsCacheRootFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+            var localFile = await newsCachingRootFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
             using (var fs = await localFile.OpenStreamForWriteAsync())
             using (var responseStream = response.GetResponseStream())
@@ -387,6 +419,7 @@ namespace LolWikiApp
                     fs.Seek(lStartPos, SeekOrigin.Current);
                 }
 
+                Debug.WriteLine("lStartPos:{0}", lStartPos);
                 var totalDownloadedByte = lStartPos;
                 var by = new byte[1024];
                 if (responseStream != null)
@@ -429,31 +462,33 @@ namespace LolWikiApp
                             OnTransferProgressChanged(new TransferProgressChangedEventArgs()
                             {
                                 Speed = seepText + " KB/s",
-                                TotalBytes = totalBytes / 1048576,
-                                DownloadedBytes = downloadedByte / 1048576,
+                                TotalBytes = totalBytes,
+                                DownloadedBytes = downloadedByte,
                                 PercentDisplay = (int)(downloadedByte * 100 / totalBytes)
                             });
 
                             tmpsize = 0;
                             startTime = DateTime.Now;
                         }
-                        //Debug.WriteLine((int)downloadedByte);
-
                         osize = responseStream.Read(by, 0, by.Length);
                     }
                 }
                 fs.Close();
                 if (responseStream != null) responseStream.Close();
 
-                if (_downloadedBytes == _totalBytes)
+                if (_downloadedBytes / 1048576 == _totalBytes / 1048576)
                 {
                     TransferStatus = VideoDownloadTransferStatus.Completed;
                     PercentDisplay = 100;
+
                     OnStatusChanged();
                 }
                 else
                 {
+                    Debug.WriteLine("_downloadedBytes:{0}, _totalBytes:{1}", _downloadedBytes, _totalBytes);
                     SpeedDisplay = string.Empty;
+                    TransferStatus = VideoDownloadTransferStatus.Error;
+                    OnStatusChanged();
                 }
             }
         }

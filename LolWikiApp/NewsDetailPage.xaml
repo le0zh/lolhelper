@@ -34,9 +34,9 @@
                 <TextBlock Text="加载中" Foreground="Black"></TextBlock>
             </StackPanel>-->
 
-        <StackPanel  Grid.Row="0" Margin="12 48 0 0" Visibility="Collapsed" x:Name="RetryNetPanel">
+        <StackPanel  Grid.Row="0" Margin="18 24 0 0" Visibility="Collapsed" x:Name="RetryNetPanel">
             <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="Black" Text="貌似网络不太稳定，加载内容失败。"></TextBlock>
-            <Button Width="200" Margin="-12 12 0 0" Click="RetryButton_OnClick" Content="重试" x:Name="RetryButton" HorizontalAlignment="Left"></Button>
+            <Button Width="200" Margin="0" Click="RetryButton_OnClick" Content="重试" x:Name="RetryButton" HorizontalAlignment="Left"></Button>
         </StackPanel>
         <!--</StackPanel>-->
 

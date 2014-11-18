@@ -24,7 +24,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+        <Border x:Name="PivotTitlContainer" Height="50" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
             <TextBlock Text="摇一摇" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
                            VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
         </Border>

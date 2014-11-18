@@ -174,46 +174,46 @@ namespace LolWikiApp.Repository
             Debug.WriteLine("----Originial-----");
             Debug.WriteLine(detail.Content);
 
-            var pNodes = doc.DocumentNode.SelectNodes("div/p");
+            //var pNodes = doc.DocumentNode.SelectNodes("div/p");
 
-            if (pNodes != null)
-            {
-                foreach (var node in pNodes)
-                {
-                    //var innerText = node.InnerText.Trim().ToLower();
-                    //if (innerText == "&nbsp;" || innerText == "")
-                    //{
-                    //    node.Remove();
-                    //    continue;
-                    //}
-                    var style = node.GetAttributeValue("style", "N/A");
+            //if (pNodes != null)
+            //{
+            //    foreach (var node in pNodes)
+            //    {
+            //        //var innerText = node.InnerText.Trim().ToLower();
+            //        //if (innerText == "&nbsp;" || innerText == "")
+            //        //{
+            //        //    node.Remove();
+            //        //    continue;
+            //        //}
+            //        var style = node.GetAttributeValue("style", "N/A");
                    
-                    if (style != "N/A")
-                    {
-                        if (!style.ToLower().Contains("center") && !style.ToLower().Contains("text-indent"))
-                        {
-                            node.SetAttributeValue("style", "");
-                        }
+            //        if (style != "N/A")
+            //        {
+            //            if (!style.ToLower().Contains("center") && !style.ToLower().Contains("text-indent"))
+            //            {
+            //                node.SetAttributeValue("style", "");
+            //            }
 
-                        if (style.ToLower().Contains("center"))
-                        {
-                            node.SetAttributeValue("style", "text-align:center");
-                        }
-                        if (style.ToLower().Contains("text-indent"))
-                        {
-                            node.SetAttributeValue("style", "text-indent:2em");
-                        }
-                    }
-                }
-            }
+            //            if (style.ToLower().Contains("center"))
+            //            {
+            //                node.SetAttributeValue("style", "text-align:center");
+            //            }
+            //            if (style.ToLower().Contains("text-indent"))
+            //            {
+            //                node.SetAttributeValue("style", "text-indent:2em");
+            //            }
+            //        }
+            //    }
+            //}
 
             detail.Content = doc.DocumentNode.OuterHtml;
 
             var html = htmlTemplate.Replace("$title$", detail.Title)
                 .Replace("$postTime$", detail.Posttime)
                 .Replace("$site$", detail.Site)
-                //.Replace("$content$", detail.Content);
-                .Replace("$content$", detail.Content.Replace("<div", "<p").Replace("</div", "</p"));
+                .Replace("$content$", detail.Content);
+                //.Replace("$content$", detail.Content.Replace("<div", "<p").Replace("</div", "</p"));
 
             return HelperRepository.Unicode2Html(html);
         }

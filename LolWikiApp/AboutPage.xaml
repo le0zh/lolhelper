@@ -11,56 +11,55 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Landscape"
+    SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.Opacity="0"
-    shell:SystemTray.BackgroundColor="White"
-    shell:SystemTray.ForegroundColor="Black"
-    Style="{StaticResource TransitionPageStyle}">
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White">
 
     <Grid x:Name="LayoutRoot">
-        <phone:Pivot Title="英雄联盟助手" x:Name="MainPivot" Background="White" Foreground="black"
-                     TitleTemplate ="{StaticResource MainPivotTitleTemplate}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-            <phone:Pivot.HeaderTemplate>
-                <DataTemplate>
-                    <StackPanel  Margin="-12 0 0 -20">
-                        <TextBlock Text="{Binding}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
+        <Border x:Name="PivotTitlContainer" Height="50" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+            <TextBlock Text="关于" x:Name="TitleTextBlock" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
+                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        </Border>
 
-            <!--PivotItem item 1-->
-            <phone:PivotItem Header="关于">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="1" Margin="0" >
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                        <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-				                <Run Text="软件版本： v1.6.7"/>
-                        </TextBlock>
+            <StackPanel Grid.Row="1" Margin="12 8 0 0" >
 
-                        <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+				                <Run Text="软件版本： v2.0.0"/>
+                </TextBlock>
+
+                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				            <Run Text="官方数据版本："/>
-				            <Run Text="{Binding DataVersion}"/>
-                        </TextBlock>
+				            <Run Text="v4.18.1"/>
+                </TextBlock>
 
-                        <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-				            <Run Text="数据更新日期："/>
-				            <Run Text="2014-10-11"/>
-                        </TextBlock>
-                      
-                    </StackPanel>
+                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+				            <Run Text="意见反馈："/>
+				            <Run Text="newlight@qq.com"/>
+                </TextBlock>
+
+                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+				            <Run Text="交流QQ群："/>
+				            <Run Text="49573963"/>
+                </TextBlock>
+
+            </StackPanel>
 
 
-                </Grid>
-            </phone:PivotItem>
-        </phone:Pivot>
+        </Grid>
 
     </Grid>
 </phone:PhoneApplicationPage>

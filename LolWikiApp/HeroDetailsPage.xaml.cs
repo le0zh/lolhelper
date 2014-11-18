@@ -31,7 +31,6 @@ namespace LolWikiApp
         private readonly ObservableCollection<EquipmentRecommend> equipmentRecommends;
         private readonly ObservableCollection<HeroSkin> heroSkins;
         private readonly ObservableCollection<HeroRankWrapper> heroRankList;
-        private readonly Popup _imagePopUp;
         private readonly FullScreenPopup _actionPopup;
         private bool _isPivotFirstLoaded;
         private int _currentLateastPage = 1;
@@ -47,7 +46,6 @@ namespace LolWikiApp
             equipmentRecommends = new ObservableCollection<EquipmentRecommend>();
             heroSkins = new ObservableCollection<HeroSkin>();
             heroRankList = new ObservableCollection<HeroRankWrapper>();
-            _imagePopUp = new Popup();
             _actionPopup = new FullScreenPopup();
 
             _letvHeroVideoListInfos = new ObservableCollection<LetvVideoListInfo>();
@@ -295,16 +293,16 @@ namespace LolWikiApp
 
         private void HideImagePopUp()
         {
-            if (_imagePopUp.IsOpen)
+            if (BigImageWindow.IsOpen)
             {
-                _imagePopUp.IsOpen = false;
+                BigImageWindow.IsOpen = false;
                 ApplicationBar = null;
             }
         }
 
         private void DetailsPage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
-            if (_imagePopUp.IsOpen)
+            if (BigImageWindow.IsOpen)
             {
                 HideImagePopUp();
                 e.Cancel = true;
@@ -318,8 +316,8 @@ namespace LolWikiApp
 
             base.OnBackKeyPress(e);
         }
-
-        private async void SkinImage_OnTap(object sender, GestureEventArgs e)
+        
+        private void SkinImage_OnTap(object sender, GestureEventArgs e)
         {
             var img = sender as Image;
             if (img == null)
@@ -327,55 +325,12 @@ namespace LolWikiApp
 
             var bitmap = img.Source as BitmapImage;
 
-            var htmlContent = await App.ViewModel.GetImageHtmlTemplate();
-            htmlContent = htmlContent.Replace("$src$", img.Tag.ToString())
-                                     .Replace("$w2$", (bitmap.PixelWidth / 2).ToString())
-                                     .Replace("$h2$", (bitmap.PixelHeight / 2).ToString())
-                                     .Replace("$w$", bitmap.PixelWidth.ToString())
-                                     .Replace("$h$", bitmap.DecodePixelHeight.ToString());
+            
 
-            var wb = new WebBrowser { Height = 800, Width = 480 };
-
-            var tmpFilePath = await App.NewsViewModel.NewsRepository.SaveHtmlToTempIsoFile(htmlContent);
-            wb.Navigate(new Uri(tmpFilePath, UriKind.Relative));
-
-            wb.Background = Application.Current.GetTheme() == Theme.Dark ? new SolidColorBrush(Colors.Black)
-                                                                         : new SolidColorBrush(Colors.White);
-            _imagePopUp.Child = wb;
-
-            ApplicationBar = new ApplicationBar { Opacity = 1 };
-            var downloadButton = new ApplicationBarIconButton();
-            var closeButton = new ApplicationBarIconButton();
-
-            downloadButton.IconUri = new Uri("/Assets/AppBar/save.png", UriKind.Relative);
-            downloadButton.Text = "保存";
-
-            closeButton.IconUri = new Uri("/Assets/AppBar/close.png", UriKind.Relative);
-            closeButton.Text = "关闭";
-
-            downloadButton.Click += (s2, e2) =>
-            {
-                var isSuccess = HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), bitmap);
-                if (isSuccess)
-                {
-                    ToastPromts.GetToastWithImgAndTitle("图片保存成功").Show();
-                }
-                else
-                {
-                    ToastPromts.GetToastWithImgAndTitle("图片保存失败").Show();
-                }
-
-            };
-
-            closeButton.Click += (s3, e3) => HideImagePopUp();
-
-            ApplicationBar.Buttons.Add(downloadButton);
-            ApplicationBar.Buttons.Add(closeButton);
-
-            wb.LoadCompleted += (s3, e3) =>
-            {
-                _imagePopUp.IsOpen = true;
-            };
+            //wb.LoadCompleted += (s3, e3) =>
+            //{
+            //    _imagePopUp.IsOpen = true;
+            //};
         }
 
         private void HeroRanListBox_OnTap(object sender, GestureEventArgs e)
@@ -472,6 +427,52 @@ namespace LolWikiApp
             {
                 HeroVideoLongListSelector.ScrollTo(lastVideoListInfo);
             }
+        }
+
+        private void HorizontalFlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ImageTextBlock.Text = string.Format("{0}/{1}", HorizontalFlipView.SelectedIndex + 1, heroSkins.Count);
+        }
+
+        private void SkinLongListSelector_OnTap(object sender, GestureEventArgs e)
+        {
+            HorizontalFlipView.ItemsSource = heroSkins;
+            var selectedSkin = SkinLongListSelector.SelectedItem as HeroSkin;
+            if (selectedSkin == null)
+                return;
+
+            HorizontalFlipView.SelectedItem = selectedSkin;
+            BigImageWindow.IsOpen = true;
+
+            ApplicationBar = new ApplicationBar { Opacity = 1 };
+            var downloadButton = new ApplicationBarIconButton();
+            var closeButton = new ApplicationBarIconButton();
+
+            downloadButton.IconUri = new Uri("/Assets/AppBar/save.png", UriKind.Relative);
+            downloadButton.Text = "保存";
+
+            closeButton.IconUri = new Uri("/Assets/AppBar/close.png", UriKind.Relative);
+            closeButton.Text = "关闭";
+
+            downloadButton.Click += (s2, e2) =>
+            {
+                ImageTemp.Source = new BitmapImage(new Uri(selectedSkin.BigImg));
+                var isSuccess = HelperRepository.SaveImage(DateTime.Now.ToFileTime().ToString(), ImageTemp.Source as BitmapImage);
+                if (isSuccess)
+                {
+                    ToastPromts.GetToastWithImgAndTitle("图片保存成功").Show();
+                }
+                else
+                {
+                    ToastPromts.GetToastWithImgAndTitle("图片保存失败").Show();
+                }
+
+            };
+
+            closeButton.Click += (s3, e3) => HideImagePopUp();
+
+            ApplicationBar.Buttons.Add(downloadButton);
+            ApplicationBar.Buttons.Add(closeButton);
         }
     }
 }

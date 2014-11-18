@@ -193,7 +193,7 @@ namespace LolWikiApp.ViewModels
         /// <summary>
         /// Creates and adds a few ItemViewModel objects into the Items collection.
         /// </summary>
-        public async void LoadHeroBaiscInfoDataAsync()
+        public async Task LoadHeroBaiscInfoDataAsync()
         {
             // Sample data; replace with real data
             if (HeroBasicInfoCollection.Count > 0)

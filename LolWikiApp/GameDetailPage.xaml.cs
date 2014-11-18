@@ -52,7 +52,14 @@ namespace LolWikiApp
             LoadingPanel.Visibility = Visibility.Visible;
 
             var content = await GetHtmlContentAsync(url);
-            content = content.Substring(content.IndexOf("<body>", StringComparison.Ordinal));
+            if (content.IndexOf("<body>") != -1)
+            {
+                content = content.Substring(content.IndexOf("<body>", StringComparison.Ordinal));
+            }
+            else
+            {
+                content = "<body><h4>对不起，暂时无法查看比赛详细记录。</h4></body>";
+            }
 
             const string headerContentBlack = @"<html>
 <head>
@@ -77,27 +84,13 @@ namespace LolWikiApp
 	<meta name='format-detection' content='address=no'>
     <link rel='stylesheet' type='text/css' href='global_light.css' media='all'>
 </head>";
-
-            //if (Application.Current.GetTheme() == Theme.Dark)
-            //{
-            //    content = headerContentBlack + content;
-            //    this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.Black);
-            //}
-            //else
-            //{
-            //    content = headerContentLight + content;
-            //    this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.White);
-            //}
+           
 
             content = headerContentLight + content;
             this.GameDetailWebBrowser.Background = new SolidColorBrush(Colors.White);
             
-            //content = content.Replace("img/touch_js.js", "http://lolbox.duowan.com/phone/img/touch_js.js");
             Debug.WriteLine(content);
-
-            //const string testContent = @"<html><head></head><body><img src='http://img.lolbox.duowan.com//spells/7_24x24.jpg' /></body></html>";
-
-            //string path = HelperRepository.SaveTempHtmlFileToIsolatedStorage(content);
+           
             const string path = "Data/html/game_detail.html";
             var bytes = Encoding.UTF8.GetBytes(content);
 

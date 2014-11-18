@@ -49,8 +49,8 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <StackPanel x:Name="NewsLoadingBar" Grid.Row="0" Orientation="Horizontal" Margin="18,0,0,0">
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}" VerticalAlignment="Center" Margin="8 0 0 0"></TextBlock>
+                    <StackPanel x:Name="NewsLoadingBar" Grid.Row="0" Orientation="Horizontal" Margin="18,24,0,0">
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}" VerticalAlignment="Center"></TextBlock>
                     </StackPanel>
 
                     <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
@@ -169,7 +169,7 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <StackPanel x:Name="TcFunnyNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,0,0,0">
+                    <StackPanel x:Name="TcFunnyNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,24,0,0">
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
@@ -248,7 +248,7 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <StackPanel x:Name="TcSotryNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,0,0,0">
+                    <StackPanel x:Name="TcSotryNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,24,0,0">
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
@@ -326,7 +326,7 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <StackPanel x:Name="TcMmNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,0,0,0">
+                    <StackPanel x:Name="TcMmNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,24,0,0">
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
@@ -398,8 +398,8 @@
             <phone:PivotItem Header="周免">
                 <!--<ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">-->
                 <StackPanel  Margin="0 0 0 0" >
-                    <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical">
-                        <ProgressBar HorizontalAlignment="Left" Height="18" Margin="18,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical" Margin="18,24,0,0">
+                        <ProgressBar HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
@@ -417,17 +417,17 @@
             <phone:PivotItem Header="我的" Foreground="Black">
                 <!--<ScrollViewer Margin="0">-->
                 <StackPanel Margin="0" Orientation="Vertical">
-                    <StackPanel x:Name="MyDataLoadingBar" Visibility="Collapsed" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="12,12,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <StackPanel x:Name="MyDataLoadingBar" Visibility="Collapsed" Margin="18 24 0 0" Orientation="Vertical">
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18"   VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
-                    <StackPanel Visibility="Collapsed" x:Name="NeedBindPlayerInfoPanel" Margin="12 24 0 0">
-                        <TextBlock Text="您还没有关绑定唤师信息。" FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    <StackPanel Visibility="Collapsed" x:Name="NeedBindPlayerInfoPanel" Margin="18 24 0 0">
+                        <TextBlock Text="您还没有关绑定唤师信息。" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                         <!--<Button Width="150" HorizontalAlignment="Left" Content="绑定" Margin="-12 12 0 0" x:Name="AddFollowButton" Click="AddFollowButton_OnClick"></Button>-->
                     </StackPanel>
 
-                    <local:HttpRequest404Control Margin="0 24 0 0" Visibility="Collapsed"
+                    <local:HttpRequest404Control Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="MyInfomationRetryNetPanel" Message="加载召唤师信息失败。"/>
 
                     <Grid x:Name="PlayerRecordPanel" Visibility="Collapsed" Margin="12 12 12 0">
@@ -646,7 +646,12 @@
                     </Border>
 
                     <Border BorderBrush="LightGray" BorderThickness="0 0 1 1" Grid.Row="1" Grid.Column="2">
-
+                        <Button x:Name="AllHeroButton" Click="AllHeroButton_OnClick" Padding="20" HorizontalAlignment="Center" BorderThickness="0">
+                            <StackPanel>
+                                <Path Width="34" Height="38"  Stretch="Fill" Fill="Gray" Data="F1 M 38,19C 47.3888,19 55,21.0147 55,23.5038L 55,25.5C 55,27.9853 47.3888,30 38,30C 28.6112,30 21,27.9853 21,25.5L 21,23.5C 21,21.0147 28.6112,19 38,19 Z M 55,52.5C 55,54.9853 47.3888,57 38,57C 28.6112,57 21,54.9853 21,52.5L 21,46.5C 21,48.9853 28.6112,51 38,51C 47.384,51 54.9921,48.9874 55,46.5039L 55,52.5 Z M 55,43.5C 55,45.9853 47.3888,48 38,48C 28.6112,48 21,45.9853 21,43.5L 21,37.5C 21,39.9853 28.6112,42 38,42C 47.384,42 54.9921,39.9874 55,37.5038L 55,43.5 Z M 55,34.5C 55,36.9853 47.3888,39 38,39C 28.6112,39 21,36.9853 21,34.5L 21,28.5C 21,30.9853 28.6112,33 38,33C 47.384,33 54.9921,30.9874 55,28.5038L 55,34.5 Z "/>
+                                <TextBlock Margin="0" Text="英雄数据"  FontSize="{StaticResource PhoneFontSizeMedium}" Foreground="Black"></TextBlock>
+                            </StackPanel>
+                        </Button>
                     </Border>
                 </Grid>
             </phone:PivotItem>

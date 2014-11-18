@@ -19,7 +19,19 @@
                               Background="White"
                               Margin="0"
                               Padding="0"                        
-                              IsScriptEnabled="True"></phone:WebBrowser>
+                              IsScriptEnabled="True">
+            <phone:WebBrowser.Triggers>
+                <EventTrigger RoutedEvent="phone:WebBrowser.Loaded">
+                    <BeginStoryboard>
+                        <BeginStoryboard.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ContentWebBrowser"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"></DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard.Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </phone:WebBrowser.Triggers>
+        </phone:WebBrowser>
     </Grid>
 
 </phone:PhoneApplicationPage>

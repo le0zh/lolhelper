@@ -25,7 +25,7 @@ namespace LolWikiApp.Repository
 {
     public class ObjectPersistentHelper<T> where T : new()
     {
-        public async Task<bool> Save(T obj, string isoFolderName, string isoFileName)
+        public async Task Save(T obj, string isoFolderName, string isoFileName)
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var content = JsonConvert.SerializeObject(obj);
@@ -36,7 +36,26 @@ namespace LolWikiApp.Repository
             {
                 sr.WriteAsync(content).Wait();
             }
-            return true;
+        }
+
+        public async Task<T> Read(StorageFile file)
+        {
+            var obj = default(T);
+            try
+            {
+                using (var stream = await file.OpenReadAsync())
+                using (var sr = new StreamReader(stream.AsStream()))
+                {
+                    var content = await sr.ReadToEndAsync();
+                    obj = JsonConvert.DeserializeObject<T>(content);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            return obj;
         }
 
         public async Task<T> Read(string isoFolderName, string isoFileName)
@@ -83,7 +102,7 @@ namespace LolWikiApp.Repository
     {
         private object _lockobj = new object();
         private const string NewsCacheFolerName = "NewsCache";
-        
+
         public async void SetBitmapSource(string imgName, BitmapSource bitmapSource, string id = "")
         {
             if (string.IsNullOrEmpty(imgName))

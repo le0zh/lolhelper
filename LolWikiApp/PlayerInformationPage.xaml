@@ -26,7 +26,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
+        <Border x:Name="PivotTitlContainer" Height="50" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
             <TextBlock Text="英雄联盟助手" x:Name="TitleTextBlock" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
                            VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
         </Border>
@@ -37,12 +37,12 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Vertical" Grid.Row="0">
-                <TextBlock Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
+            <StackPanel Margin="0 12 0 0" Orientation="Vertical" Grid.Row="0">
+                <TextBlock FontSize="{StaticResource PhoneFontSizeMedium}" Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
                 <TextBox x:Name="PlayerNameTextBox" Padding="6 0 0 0"  Text="" Background="White" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
                 <toolkit:PickerBox x:Name="ServerListPicker" 
                                    Header="服务器名称:" BorderThickness="0 0 0 1.5" 
-                                          
+                                   FontSize="{StaticResource PhoneFontSizeMedium}"
                                    FullModeHeader="请选择服务器：">
                     <toolkit:PickerBox.HeaderTemplate>
                         <DataTemplate>

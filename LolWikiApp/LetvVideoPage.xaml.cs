@@ -19,6 +19,7 @@ using Microsoft.Phone.BackgroundTransfer;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
+using Telerik.Windows.Controls;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace LolWikiApp
@@ -42,7 +43,8 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(_isPostBack) return;
+            if (_isPostBack) 
+                return;
 
             _isPostBack = true;
             LatestVideoLongListSelector.ItemsSource = _letvLatestVideoListInfos;
@@ -51,7 +53,6 @@ namespace LolWikiApp
             {
                 LoadLocalVideoCache();
             }
-
             base.OnNavigatedFrom(e);
         }
 
@@ -110,6 +111,7 @@ namespace LolWikiApp
             JieshuoRetryNetPanel.Visibility = Visibility.Collapsed;
 
             JieshuoWrapPanel.Children.Clear();
+
             try
             {
                 if (_letvVideoTypeList == null)
@@ -286,7 +288,7 @@ namespace LolWikiApp
                 }
             }
         }
-        
+
         private void MainPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (MainPivot.SelectedIndex)
@@ -340,14 +342,8 @@ namespace LolWikiApp
 
         private void LoadLocalVideoCache()
         {
-            InitialTansferStatusCheck();
-            if (TransferListBox.Items.Count > 0)
-            {
-                TransferListBox.ItemsSource = null;
-                TransferListBox.Items.Clear();
-            }
-            
             TransferListBox.ItemsSource = App.ViewModel.VideoDownloadService.Requests;
+            InitialTansferStatusCheck();
         }
 
         private async void InitialTansferStatusCheck()
@@ -363,6 +359,8 @@ namespace LolWikiApp
                 transfer.TransferProgressChangedHandler += transfer_TransferProgressChanged;
                 //ProcessTransfer(transfer);
             }
+
+            UpdateUi();
         }
 
         void transfer_TransferStatusChanged(object sender, EventArgs e)
@@ -375,7 +373,6 @@ namespace LolWikiApp
             //        App.ViewModel.VideoDownloadService.RemoveRequest(request);
             //    }
             //}
-
         }
 
         void transfer_TransferProgressChanged(object sender, TransferProgressChangedEventArgs e)
@@ -385,18 +382,17 @@ namespace LolWikiApp
 
         private void UpdateUi()
         {
-            // Update the TransferListBox with the list of transfer requests. 
-            TransferListBox.ItemsSource = App.ViewModel.VideoDownloadService.Requests;
-
             // If there are 1 or more transfers, hide the "no transfers" 
             // TextBlock. IF there are zero transfers, show the TextBlock. 
-            if (TransferListBox.Items.Count > 0)
+            if (TransferListBox.ItemsSource.Count() > 0)
             {
+                NoCachedVideoPanel.Visibility = Visibility.Collapsed;
                 TransferListBox.Visibility = Visibility.Visible;
             }
             else
             {
                 TransferListBox.Visibility = Visibility.Collapsed;
+                NoCachedVideoPanel.Visibility = Visibility.Visible;
             }
         }
 
@@ -557,15 +553,20 @@ namespace LolWikiApp
                     pauseItem.Click += (s2, e2) => request.CancelDownload();
                     cm.Items.Add(pauseItem);
                     break;
+                case VideoDownloadTransferStatus.Error:
                 case VideoDownloadTransferStatus.Paused:
-                    var downloadItem = GetMenuItem("下载", "Data/appbar.download.png");
+                    var downloadItem = GetMenuItem("继续下载", "Data/appbar.download.png");
                     downloadItem.Click += (s1, e1) => request.Download();
                     cm.Items.Add(downloadItem);
                     break;
             }
 
             var deleteItem = GetMenuItem("删除", "Data/appbar.delete.png");
-            deleteItem.Click += (s3, e3) => App.ViewModel.VideoDownloadService.RemoveRequest(request);
+            deleteItem.Click += (s3, e3) =>
+            {
+                App.ViewModel.VideoDownloadService.RemoveRequest(request);
+                UpdateUi();
+            };
             cm.Items.Add(deleteItem);
 
             cm.Closed += (s, e2) =>

@@ -214,7 +214,7 @@
             </phone:PivotItem>
 
            <phone:PivotItem Header="最近比赛">
-                <ScrollViewer  Margin="0" VerticalScrollBarVisibility="Auto">
+                
                     <phone:LongListSelector x:Name="RecentGameLongListSelector" Tap="RecentGameLongListSelector_OnTap" ItemsSource="{Binding RecentGameInfoList}">
                         <phone:LongListSelector.ListHeaderTemplate>
                             <DataTemplate>
@@ -238,8 +238,8 @@
 
                         <phone:LongListSelector.ItemTemplate>
                             <DataTemplate>
-                                <Border Margin="0 0 12 12" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}">
-                                    <Grid >
+                                <Border Padding="0 12 12 12" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}">
+                                    <Grid VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -247,7 +247,7 @@
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
 
-                                        <Image HorizontalAlignment="Left" Height="50" Width="50" Margin="0" Grid.Column="0" Source="{Binding HeroImageUrl}"></Image>
+                                        <Image HorizontalAlignment="Left" VerticalAlignment="Center" Height="50" Width="50" Margin="0" Grid.Column="0" Source="{Binding HeroImageUrl}"></Image>
 
                                         <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding GameMode}"></TextBlock>
                                         <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding Result}"></TextBlock>
@@ -257,7 +257,6 @@
                             </DataTemplate>
                         </phone:LongListSelector.ItemTemplate>
                     </phone:LongListSelector>
-                </ScrollViewer>
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>

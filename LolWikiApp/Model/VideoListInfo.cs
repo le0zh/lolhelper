@@ -98,8 +98,6 @@ namespace LolWikiApp
         public string ImageUrl { get; set; }
         public string Length { get; set; }
         public string Src { get; set; }
-        public int Percent { get; set; }
-
-        public long Size { get; set; }
+        public long TotalSize { get; set; }
     }
 }

@@ -264,7 +264,23 @@
 
         <!--LETV视频列表数据模板，通用列表, 在用-->
         <DataTemplate x:Key="LetvVideoListDataTemplate">
-            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6">
+            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" x:Name="LetvVideoBorder" >
+                <Border.Projection>
+                    <PlaneProjection></PlaneProjection>
+                </Border.Projection>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="Border.Loaded">
+                        <BeginStoryboard>
+                            <BeginStoryboard.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="LetvVideoBorder" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
+                                    <DoubleAnimation Storyboard.TargetName="LetvVideoBorder"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"></DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard.Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150"></ColumnDefinition>

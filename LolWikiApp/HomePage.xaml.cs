@@ -87,7 +87,14 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (_isPostBack) return;
+            if (_isPostBack)
+            {
+                if (MainPivot.SelectedIndex == 5)
+                {
+                    BindRecords();
+                }
+                return;
+            }
 
             _isPostBack = true;
 
@@ -791,6 +798,13 @@ namespace LolWikiApp
             var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
             aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
 
+            var feedBackMenuItem = new ApplicationBarMenuItem() {Text = "意见反馈"};
+            feedBackMenuItem.Click += (s, e) =>
+            {
+                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
+                task.Show();
+            };
+            ApplicationBar.MenuItems.Add(feedBackMenuItem);
             ApplicationBar.MenuItems.Add(aboutMenuItem);
 
             ApplicationBar.Buttons.Add(refreshButton);
@@ -828,24 +842,7 @@ namespace LolWikiApp
             this.FreeHeroRetryNetPanel.Visibility = Visibility.Collapsed;
             //SystemTray.ProgressIndicator.IsVisible = false;
         }
-
-        private int GetHeroKeyById(string id)
-        {
-            if (!App.ViewModel.IsDataLoaded)
-            {
-                App.ViewModel.LoadHeroBaiscInfoDataAsync();
-            }
-
-            var hero = App.ViewModel.HeroBasicInfoCollection.First(h => h.Id == id);
-            var key = 0;
-            if (hero != null)
-            {
-                key = hero.Key;
-            }
-
-            return key;
-        }
-
+        
         private void AddFreeHeroItem(Hero hero)
         {
             if (hero == null)
@@ -907,6 +904,14 @@ namespace LolWikiApp
             var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
             aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
 
+            var feedBackMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
+            feedBackMenuItem.Click += (s, e) =>
+            {
+                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
+                task.Show();
+            };
+            ApplicationBar.MenuItems.Add(feedBackMenuItem);
+
             ApplicationBar.MenuItems.Add(aboutMenuItem);
 
             ApplicationBar.Buttons.Add(pinButton);
@@ -914,7 +919,7 @@ namespace LolWikiApp
 
         private void SetRetryAppBar()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
+            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
             var retryButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
@@ -926,6 +931,14 @@ namespace LolWikiApp
             var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
             aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
 
+            var feedBackMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
+            feedBackMenuItem.Click += (s, e) =>
+            {
+                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
+                task.Show();
+            };
+            ApplicationBar.MenuItems.Add(feedBackMenuItem);
+
             ApplicationBar.MenuItems.Add(aboutMenuItem);
 
             ApplicationBar.Buttons.Add(retryButton);
@@ -933,7 +946,7 @@ namespace LolWikiApp
 
         private void SetMoreUnBindAndSearchAppBar()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
+            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
             var moreButton = new ApplicationBarIconButton();
             var unpinButton = new ApplicationBarIconButton();
             var searchButton = new ApplicationBarIconButton();
@@ -955,6 +968,14 @@ namespace LolWikiApp
 
             var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
             aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+
+            var feedBackMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
+            feedBackMenuItem.Click += (s, e) =>
+            {
+                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
+                task.Show();
+            };
+            ApplicationBar.MenuItems.Add(feedBackMenuItem);
 
             ApplicationBar.MenuItems.Add(aboutMenuItem);
 
@@ -1085,15 +1106,17 @@ namespace LolWikiApp
 
         private void VideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Uri("/VideoPage.xaml", UriKind.Relative));
-            NavigationService.Navigate(new Uri("/LetvVideoPage.xaml", UriKind.Relative));
+           NavigationService.Navigate(new Uri("/LetvVideoPage.xaml", UriKind.Relative));
         }
 
         private void HuangliButton_OnClick(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
-            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://cache.tv.qq.com/qqplayerout.swf?vid=x0140bx185g", UriKind.Relative));
-            //NavigationService.Navigate(new Uri("/NewsVideoPage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
+        }
+
+        private void AllHeroButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/AllHeroPage.xaml", UriKind.Relative));
         }
         #endregion
 
@@ -1138,7 +1161,5 @@ namespace LolWikiApp
         {
             Debug.WriteLine("FunnyBorderLoaded: " + DateTime.Now);
         }
-
-
     }
 }

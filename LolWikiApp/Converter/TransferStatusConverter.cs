@@ -28,7 +28,7 @@ namespace LolWikiApp
                     statusDisplay = "暂停";
                     break;
                 case VideoDownloadTransferStatus.Error:
-                    statusDisplay = "下载遇到错误!";
+                    statusDisplay = "下载被中断";
                     break;
             }
 

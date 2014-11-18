@@ -19,6 +19,7 @@ namespace LolWikiApp
     {
         private readonly string[] heroTags = { "All", "Fighter", "Mage", "Assassin", "Tank", "Marksman", "Support" };
         private WrapPanel[] heroPanels;
+        private bool _isPostback;
 
         public AllHeroPage()
         {
@@ -33,8 +34,8 @@ namespace LolWikiApp
                 this.MarksmanHeroWrapPanel, this.SupportHeroWrapPanel };
         }
 
-        
-        private void LoadHeroList(int index)
+
+        private async void LoadHeroList(int index)
         {
             if (index < 0 || index > 6)
                 return;
@@ -46,10 +47,10 @@ namespace LolWikiApp
 
             if (!App.ViewModel.IsDataLoaded)
             {
-                App.ViewModel.LoadHeroBaiscInfoDataAsync();
+               await App.ViewModel.LoadHeroBaiscInfoDataAsync();
             }
-
-            Task t = new Task(() => this.Dispatcher.BeginInvoke(() =>
+            
+            var t = new Task(() => this.Dispatcher.BeginInvoke(() =>
             {
                 foreach (Hero hero in (
                                     index == 0 ? App.ViewModel.HeroBasicInfoCollection
@@ -62,6 +63,12 @@ namespace LolWikiApp
             }));
             t.Start();
 
+            //foreach (Hero hero in (index == 0 ? App.ViewModel.HeroBasicInfoCollection
+            //                                   : App.ViewModel.HeroBasicInfoCollection.Where(h => h.Tags.Contains(heroTags[index]))))
+            //{
+            //    AddFreeHeroItem(hero, heroPanels[index]);
+            //}
+
             //Debug.WriteLine("index:" + index.ToString());
 
             //foreach (Hero hero in
@@ -70,8 +77,15 @@ namespace LolWikiApp
             //{
             //    AddFreeHeroItem(hero, heroPanels[index]);
             //}
+        }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (_isPostback) return;
 
+            LoadHeroList(0);
+            _isPostback = true;
+            base.OnNavigatedTo(e);
         }
 
         private void AddFreeHeroItem(Hero hero, WrapPanel wrapPanel)

@@ -127,11 +127,6 @@ namespace LolWikiApp
                     LoadingIndicator.IsRunning = true;
 
                     ContentWebBrowser.Navigate(new Uri(fullUrl, UriKind.Absolute));
-
-                    //ContentWebBrowser.NavigateToString("<!doctype html>" +
-                    //                                   "<html><head><title>video test</title></head><body style=background-color:black;>video test" +
-                    //                                   "<iframe height=\"100%\" frameborder=\"0\" allowfullscreen src=\"http://v.qq.com/iframe/player.html?vid=z0015abq8k6&amp;tiny=0&amp;auto=0\" width=\"100%\"></iframe>" +
-                    //                                   "</body></html>");
                 }
 
                 if (NavigationContext.QueryString.TryGetValue("fullUrl", out _fullUrl))
@@ -218,8 +213,8 @@ namespace LolWikiApp
                 var videoDiv =  document.createElement('div');
                 videoLink = link;   
                 videoDiv.attachEvent('onmouseup', onVideoPressed);
-                videoDiv.setAttribute('style','background:red;margin-top:12px;');
-                videoDiv.innerHTML = '<div > <img src=\''+ iframeObj.getAttribute('_img') + '\'  /></div><div style=\'position : absolute;display:block;top:30%;width:40px;margin:0 auto; left:0px;right:0px;z-index:100\'><img src=\'http://ossweb-img.qq.com/images/qqtalk/act/lol_app_bg/playIcon.png\' /> </div>';
+                videoDiv.setAttribute('style','background:red;margin-top:12px;position : relative; height:200px; width:300px;');
+                videoDiv.innerHTML = '<div > <img  height:200px; width:300px; src=\''+ iframeObj.getAttribute('_img') + '\'  /></div><div style=\'position : absolute;display:block;top:30%;width:40px;margin:0 auto; left:0px;right:0px;z-index:100\'><img src=\'http://ossweb-img.qq.com/images/qqtalk/act/lol_app_bg/playIcon.png\' /> </div>';
                 contentDiv.appendChild(videoDiv);
              }           
         }
@@ -274,7 +269,6 @@ namespace LolWikiApp
             ImageTextBlock.Text = string.Format("{0}/{1}", HorizontalFlipView.SelectedIndex + 1, _totalImage);
         }
 
-        //TODO: MULTI-IMAGE-VIEW
         private void ShowImagePopUp(int currentIndex, List<string> srcList)
         {
             HideAdPopup();
@@ -301,7 +295,7 @@ namespace LolWikiApp
             BigImageWindow.VerticalAlignment = VerticalAlignment.Center;
             BigImageWindow.IsOpen = true;
 
-            ApplicationBar = new ApplicationBar { Opacity = 1 };
+            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
 
             var downloadButton = new ApplicationBarIconButton();
             var closeButton = new ApplicationBarIconButton();
