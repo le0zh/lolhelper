@@ -277,16 +277,50 @@ namespace LolWikiApp.Repository
 
             if (jObject == null)
             {
-                Debug.WriteLine("json object is null");
                 return videoList;
             }
 
             var myLetvSourceConverter = new LetvSourceConverter();
 
-            var standardVideo = jObject["data"]["video_list"]["video_1"]["main_url"].ToString();
-            var hdVideo = jObject["data"]["video_list"]["video_2"]["main_url"].ToString();
-            var superHdVideo = jObject["data"]["video_list"]["video_3"]["main_url"].ToString();
-            var originalHdVideo = jObject["data"]["video_list"]["video_4"]["main_url"].ToString();
+            var standardVideo = string.Empty;
+            try
+            {
+                standardVideo = jObject["data"]["video_list"]["video_1"]["main_url"].ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            var hdVideo = string.Empty;
+            try
+            {
+                hdVideo = jObject["data"]["video_list"]["video_2"]["main_url"].ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            var superHdVideo = string.Empty;
+            try
+            {
+                superHdVideo = jObject["data"]["video_list"]["video_3"]["main_url"].ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            var originalHdVideo = string.Empty;
+            try
+            {
+                originalHdVideo = jObject["data"]["video_list"]["video_4"]["main_url"].ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
 
             videoList.Add(myLetvSourceConverter.Decode(standardVideo));
             videoList.Add(myLetvSourceConverter.Decode(hdVideo));
@@ -338,8 +372,8 @@ namespace LolWikiApp.Repository
 
         private Button GetVideoPlayButton(string text, string src, FullScreenPopup actionPopup)
         {
-            
-                
+
+
             const string template = @"<Button xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Width='100' Margin='0' BorderThickness='0' HorizontalAlignment='Center'>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -356,7 +390,7 @@ namespace LolWikiApp.Repository
             {
                 btn.IsEnabled = false;
             }
-                
+
             if (btn != null)
             {
                 btn.Tap += (s, e) =>
@@ -424,17 +458,77 @@ namespace LolWikiApp.Repository
                 Margin = new Thickness(0, 10, 0, 48)
             };
 
-            //var xamlBtnSd = GetVideoPlayButton("标清", videoList[0], actionPopup);
-            var xamlBtnHd = GetVideoPlayButton("高清", videoList[1], actionPopup);
-            var xamlBtnSuperHd = GetVideoPlayButton("超清", videoList[2], actionPopup);
-            var xamlBtnOriginal = GetVideoPlayButton("原画", videoList[3], actionPopup);
-            var xamlBtnCache = GetVdieoCacheButton("下载", videoList[2], actionPopup, videoListInfo);
+            Button xamlBtnSd = null;
+            Button xamlBtnHd = null;
+            Button xamlBtnSuperHd = null;
+            Button xamlBtnOriginal = null;
+            Button xamlBtnCache = null;
 
-            //actionPanel.Children.Add(xamlBtnSd);
-            actionPanel.Children.Add(xamlBtnHd);
-            actionPanel.Children.Add(xamlBtnSuperHd);
-            actionPanel.Children.Add(xamlBtnOriginal);
-            actionPanel.Children.Add(xamlBtnCache);
+
+            if (videoList[3] == string.Empty && videoList[0] != string.Empty)
+            {
+                xamlBtnSd = GetVideoPlayButton("标清", videoList[0], actionPopup);
+            }
+
+            if (videoList[1] != string.Empty)
+            {
+                xamlBtnHd = GetVideoPlayButton("高清", videoList[1], actionPopup);
+            }
+
+            if (videoList[2] != string.Empty)
+            {
+                xamlBtnSuperHd = GetVideoPlayButton("超清", videoList[2], actionPopup);
+                xamlBtnCache = GetVdieoCacheButton("下载", videoList[2], actionPopup, videoListInfo);                
+            }
+            else if (videoList[1] != string.Empty)
+            {
+                xamlBtnCache = GetVdieoCacheButton("下载", videoList[1], actionPopup, videoListInfo);
+            }
+            else if (videoList[0] != string.Empty)
+            {
+                xamlBtnCache = GetVdieoCacheButton("下载", videoList[0], actionPopup, videoListInfo);
+            }
+
+            if (videoList[3] != string.Empty)
+            {
+                xamlBtnOriginal = GetVideoPlayButton("原画", videoList[3], actionPopup);
+            }
+
+            if (videoList.All(v => v == string.Empty))
+            {
+                var textBlock = new TextBlock() { Text = "视频地址解析失败." };
+                actionPanel.Children.Add(textBlock);
+            }
+
+            //0
+            if (xamlBtnSd != null)
+            {
+                actionPanel.Children.Add(xamlBtnSd);
+            }
+
+            //1
+            if (xamlBtnHd != null)
+            {
+                actionPanel.Children.Add(xamlBtnHd);
+            }
+
+            //2
+            if (xamlBtnSuperHd != null)
+            {
+                actionPanel.Children.Add(xamlBtnSuperHd);
+            }
+
+            //3
+            if (xamlBtnOriginal != null)
+            {
+                actionPanel.Children.Add(xamlBtnOriginal);
+            }
+
+            //4
+            if (xamlBtnCache != null)
+            {
+                actionPanel.Children.Add(xamlBtnCache);
+            }
 
             grid.Children.Add(actionPanel);
 

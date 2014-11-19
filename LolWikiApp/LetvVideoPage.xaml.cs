@@ -43,7 +43,7 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (_isPostBack) 
+            if (_isPostBack)
                 return;
 
             _isPostBack = true;
@@ -241,7 +241,8 @@ namespace LolWikiApp
             var hubTitle = new HubTile()
             {
                 IsFrozen = false,
-                Title = videoSubcategory.Name.Length > 4 ? videoSubcategory.Name.Substring(0, 4) : videoSubcategory.Name,
+                //Title = videoSubcategory.Name.Length > 4 ? videoSubcategory.Name.Substring(0, 4) : videoSubcategory.Name,
+                Title = videoSubcategory.Name,
                 Margin = new Thickness(0, 0, 8, 10),
                 GroupTag = groupTag,
                 Style = (Style)Application.Current.Resources["MyHubTileStyle"],
@@ -283,6 +284,7 @@ namespace LolWikiApp
                 if (videoListInfo != null)
                 {
                     longListSelector.SelectedItem = null;//reset selected item
+                    ActionPopup.Child = null;
                     App.ViewModel.VideoRepository.PrepareLetvVideoActionPopup(ActionPopup, videoListInfo);
                     ActionPopup.Show();
                 }
@@ -450,11 +452,6 @@ namespace LolWikiApp
         //            break;
         //    }
         //}
-
-        private void RemoveTransferRequest(string transferId)
-        {
-
-        }
 
         private async void LatestVideoLongListSelector_OnGettingMoreTriggered(object sender, EventArgs e)
         {

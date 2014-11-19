@@ -50,7 +50,7 @@ namespace LolWikiApp
                     videoDownloadRequest.CancelDownload();
                     videoDownloadRequest.TransferStatus = VideoDownloadTransferStatus.Paused;
                 }
-            }            
+            }
         }
 
         public void AddRequest(VideoDownloadRequest request)
@@ -359,7 +359,7 @@ namespace LolWikiApp
                     myrq.Headers["Range"] = "bytes=" + lStartPos + "-";
                     Debug.WriteLine("lStartPos in header: " + lStartPos);
                 }
-                
+
                 myrq.BeginGetResponse((result) =>
                 {
                     var response = myrq.EndGetResponse(result);
@@ -386,6 +386,7 @@ namespace LolWikiApp
             Debug.WriteLine("----------------------Accept-Ranges:" + response.Headers["Accept-Ranges"]);
 
             var totalBytes = response.ContentLength + lStartPos;
+            var totalDownloadedByte = lStartPos;
             //var totalBytes = response.ContentLength; 
             Debug.WriteLine("--response.ContentLength:{0}", response.ContentLength);
             Debug.WriteLine("--totalBytes:{0}", totalBytes);
@@ -404,7 +405,7 @@ namespace LolWikiApp
 
                 await _persistentHelper.Save(cacheInfo, ConstValues.VideoCacheFolderName, fileName + ".json");
             }
-           
+
 
             var localFolder = ApplicationData.Current.LocalFolder;
             var newsCachingRootFolder = await localFolder.CreateFolderAsync(ConstValues.VideoCacheFolderName, CreationCollisionOption.OpenIfExists);
@@ -420,7 +421,7 @@ namespace LolWikiApp
                 }
 
                 Debug.WriteLine("lStartPos:{0}", lStartPos);
-                var totalDownloadedByte = lStartPos;
+
                 var by = new byte[1024];
                 if (responseStream != null)
                 {
@@ -448,7 +449,6 @@ namespace LolWikiApp
                         //Debug.WriteLine("fs.write: " + osize);
                         fs.Write(by, 0, osize);
 
-                        var downloadedByte = totalDownloadedByte;
                         tmpsize += osize;
                         var time = startTime;
                         var tmpsize1 = tmpsize;
@@ -463,8 +463,8 @@ namespace LolWikiApp
                             {
                                 Speed = seepText + " KB/s",
                                 TotalBytes = totalBytes,
-                                DownloadedBytes = downloadedByte,
-                                PercentDisplay = (int)(downloadedByte * 100 / totalBytes)
+                                DownloadedBytes = totalDownloadedByte,
+                                PercentDisplay = (int)(totalDownloadedByte * 100 / totalBytes)
                             });
 
                             tmpsize = 0;
@@ -476,11 +476,11 @@ namespace LolWikiApp
                 fs.Close();
                 if (responseStream != null) responseStream.Close();
 
-                if (_downloadedBytes / 1048576 == _totalBytes / 1048576)
+                Debug.WriteLine("{0}/{1}", totalDownloadedByte, totalBytes);
+                if (totalDownloadedByte == totalBytes)
                 {
                     TransferStatus = VideoDownloadTransferStatus.Completed;
                     PercentDisplay = 100;
-
                     OnStatusChanged();
                 }
                 else

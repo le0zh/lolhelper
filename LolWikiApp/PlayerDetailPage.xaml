@@ -22,7 +22,7 @@
     </shell:SystemTray.ProgressIndicator>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid >
+    <Grid Margin="0 -1 0 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>

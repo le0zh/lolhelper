@@ -18,16 +18,21 @@
     SupportedOrientations="Portrait" 
     shell:SystemTray.IsVisible="True"
     shell:SystemTray.BackgroundColor="#29282e"
-    shell:SystemTray.ForegroundColor="White"
-    toolkit:TiltEffect.IsTiltEnabled="True"
+    shell:SystemTray.ForegroundColor="White"   
+    toolkit:TiltEffect.IsTiltEnabled="True"  
     BackKeyPress="DetailsPage_OnBackKeyPress">
+
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="视频地址解析中..." />
+    </shell:SystemTray.ProgressIndicator>
 
     <!--Data context is set to sample data above and first item in sample data collection below and LayoutRoot contains the root grid where all other page content is placed-->
 
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Margin="0 -12 0 0" Background="#29282e">
 
         <phone:Pivot Title="{Binding}" x:Name="HeroDetailMainPivot" SelectionChanged="HeroDetailMainPivot_OnSelectionChanged"  
                      Style="{StaticResource PivotStyle2}"
+                     Background="#29282e"
                      ItemContainerStyle="{StaticResource PivotItemStyle1}">
 
             <phone:PivotItem Header="技能">
@@ -354,7 +359,7 @@
             </phone:PivotItem>
 
             <phone:PivotItem Header="皮肤">
-                <Grid Background="#29282e">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -402,11 +407,11 @@
                                                EndScaleY="0"/>
                         </telerikPrimitives:RadWindow.CloseAnimation>
                         <!--<Grid Height="800" Width="480" Background="{StaticResource PhoneSemitransparentBrush}">-->
-                        <Grid Height="760" Width="480" Background="#29282e" Margin="0 0 0 40">
+                        <Grid Height="800" Width="481" Background="#29282e" Margin="0 24 0 0">
                             
                             <toolkit:FlipView x:Name="HorizontalFlipView"
                                               VerticalAlignment="Center"
-                                              Height="800" Width="480"
+                                              Height="800" Width="481"
                                               SelectionChanged="HorizontalFlipView_OnSelectionChanged"
                                               UseTouchAnimationsForAllNavigation="True">
                                 <toolkit:FlipView.ItemTemplate>
@@ -423,8 +428,8 @@
                             </toolkit:FlipView>
 
                             <Image x:Name="CurrentImage" Visibility="Collapsed"></Image>
-                            <Border Background="#29282e" Height="30" HorizontalAlignment="Center" Padding="5" VerticalAlignment="Top">
-                                <TextBlock x:Name="ImageTextBlock" Text="" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
+                            <Border Background="#29282e" Height="30" Margin="0 24 0 0" HorizontalAlignment="Center" Padding="5" VerticalAlignment="Top">
+                                <TextBlock x:Name="ImageTextBlock"  Text="" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
                             </Border>
                         </Grid>
                     </telerikPrimitives:RadWindow>

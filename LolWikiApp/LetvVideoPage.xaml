@@ -19,11 +19,11 @@
     mc:Ignorable="d">
 
     <shell:SystemTray.ProgressIndicator>
-        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="加载中..." />
+        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="视频地址解析中..." />
     </shell:SystemTray.ProgressIndicator>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Margin="0 -1 0 0" Background="#29282e">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -185,7 +185,7 @@
                     <ListBox Margin="0 2 0 0" Grid.Row="2" Name="TransferListBox"  Tap="TransferListBox_OnTap">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6">
+                                <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6 6 6 6">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="120"/>
@@ -206,7 +206,7 @@
                                                 <RowDefinition Height="24"></RowDefinition>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Row="0" Text="{Binding FileName}" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black" />
+                                            <TextBlock Grid.Row="0" Text="{Binding FileName}" Margin="0 0 4 0" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black" />
 
                                             <ProgressBar MinWidth="344" Grid.Row="1" IsIndeterminate="False" HorizontalAlignment="Left" Margin="-10 4 0 4" x:Name="CachingProgressBar" 
                                                          Style="{StaticResource MyProgressBarStyle}" 
@@ -236,7 +236,7 @@
                                                      <Run Text= " MB" ></Run>
                                                 </TextBlock>
                                                 <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
-                                                           Margin="0 0 14 0"
+                                                           Margin="0 0 18 0"
                                                            Visibility="{Binding IsDone,Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
                                                         <Run Text="时长："></Run>
                                                         <Run Text="{Binding DisplayLength}"></Run>

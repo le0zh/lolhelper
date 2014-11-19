@@ -134,6 +134,11 @@ namespace LolWikiApp
                     _isNeedToModify = false;
                     LoadingIndicator.IsRunning = true;
                     ContentWebBrowser.Navigate(new Uri(_fullUrl, UriKind.Absolute));
+                    ContentWebBrowser.LoadCompleted += (s, ee) =>
+                    {
+                        ContentWebBrowser.Visibility = Visibility.Visible;
+                        LoadingIndicator.IsRunning = false;
+                    };
                 }
             }
 

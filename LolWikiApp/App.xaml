@@ -264,23 +264,7 @@
 
         <!--LETV视频列表数据模板，通用列表, 在用-->
         <DataTemplate x:Key="LetvVideoListDataTemplate">
-            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" x:Name="LetvVideoBorder" >
-                <Border.Projection>
-                    <PlaneProjection></PlaneProjection>
-                </Border.Projection>
-                <Border.Triggers>
-                    <EventTrigger RoutedEvent="Border.Loaded">
-                        <BeginStoryboard>
-                            <BeginStoryboard.Storyboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetName="LetvVideoBorder" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
-                                    <DoubleAnimation Storyboard.TargetName="LetvVideoBorder"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"></DoubleAnimation>
-                                </Storyboard>
-                            </BeginStoryboard.Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Border.Triggers>
-
+            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6" x:Name="LetvVideoBorder">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150"></ColumnDefinition>
@@ -479,7 +463,7 @@
                                                             Duration="0">
                                                 <DiscreteObjectKeyFrame  KeyTime="0">
                                                     <DiscreteObjectKeyFrame.Value>
-                                                        <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+                                                        <SolidColorBrush Color="Red"/>
                                                     </DiscreteObjectKeyFrame.Value>
                                                 </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
@@ -863,24 +847,23 @@
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
-            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="phone:Pivot">
                         <Grid Background="White" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
+                                <!--<RowDefinition Height="Auto"/>-->
                                 <RowDefinition Height="55"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid Grid.RowSpan="2" Background="#29282e">
+                            <Grid Grid.RowSpan="1" Background="#29282e">
                                 <!--<Grid.Background>
                                     <ImageBrush Stretch="Fill" ImageSource="/Data/top_bg.png"/>
                                 </Grid.Background>-->
                             </Grid>
-                            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource PivotTitleDataTemplate}" Content="{TemplateBinding Title}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 0 0 0"/>
-                            <primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="1"  Style="{StaticResource PivotHeadersControlStyle1}" />
-                            <ItemsPresenter x:Name="PivotItemPresenter" Margin="0" Grid.Row="2" />
+                            <!--<ContentControl Grid.Row="0" ContentTemplate="{StaticResource PivotTitleDataTemplate}" Content="{TemplateBinding Title}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 0 0 0"/>-->
+                            <primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="0"  Style="{StaticResource PivotHeadersControlStyle1}" />
+                            <ItemsPresenter x:Name="PivotItemPresenter" Margin="0" Grid.Row="1" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>

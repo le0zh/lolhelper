@@ -17,7 +17,7 @@
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White">
 
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Margin="0 -1 0 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -27,7 +27,6 @@
             <TextBlock Text="关于" x:Name="TitleTextBlock" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
                            VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
         </Border>
-
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

@@ -10,6 +10,9 @@ namespace LolWikiApp
     {
         public string Decode(string input)
         {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
             int k = 0;
             StringBuilder j = new StringBuilder();
             if (string.IsNullOrEmpty(input)) return input;

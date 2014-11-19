@@ -38,6 +38,9 @@ namespace LolWikiApp
         private readonly FullScreenPopup _newsCategoryPopup;
         private bool _isQuitConfirmOpened = false;
 
+        private ApplicationBarMenuItem _feedBackApplicationBarMenuItem;
+        private ApplicationBarMenuItem _aboutApplicationBarMenuItem;
+
         private bool _isPostBack;
 
         public HomePage()
@@ -51,6 +54,16 @@ namespace LolWikiApp
             _currentNewsType = NewsType.Latest;
             _newsCategoryPopup = new FullScreenPopup();
             _newsCategoryPopup.PopUpHided += (s, e) => SetAppbarForNewsList();
+
+            _feedBackApplicationBarMenuItem = new ApplicationBarMenuItem(){Text="意见反馈"};
+            _feedBackApplicationBarMenuItem.Click += (s, e) =>
+            {
+                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈-英雄联盟助手v2.0" };
+                task.Show();
+            };
+
+            _aboutApplicationBarMenuItem = new ApplicationBarMenuItem(){Text="关于"};
+            _aboutApplicationBarMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
         }
 
         private void HomePageMain()
@@ -120,15 +133,6 @@ namespace LolWikiApp
             //base.OnNavigatingFrom(e);
         }
 
-        //protected override void OnNavigate(NavigationEventArgs e)
-        //{
-        //    TcFunnyNewsLongListSelector.ItemsSource = null;
-        //    TcStoryNewsLongListSelector.ItemsSource = null;
-        //    TcMmNewsLongListSelector.ItemsSource = null;
-
-        //    //base.OnNavigatedFrom(e);
-        //}
-
         private void HomePage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
             if (_newsCategoryPopup.IsOpen)
@@ -160,7 +164,7 @@ namespace LolWikiApp
                 };
             }
         }
-
+        
         #region Pivot
         private void MainPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -226,10 +230,8 @@ namespace LolWikiApp
 
             refreshButton.Click += (s, e) => LoadTcMmNewsData();
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
             ApplicationBar.Buttons.Add(refreshButton);
         }
@@ -327,10 +329,8 @@ namespace LolWikiApp
 
             refreshButton.Click += (s, e) => LoadTcStoryNewsData();
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
             ApplicationBar.Buttons.Add(refreshButton);
         }
@@ -429,10 +429,8 @@ namespace LolWikiApp
 
             refreshButton.Click += (s, e) => LoadTcNewsData();
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
             ApplicationBar.Buttons.Add(refreshButton);
         }
@@ -538,10 +536,8 @@ namespace LolWikiApp
             categoryButton.Click += (s, e) => ShowNewsCategoriesPopup();
             cacheButton.Click += (s, e) => NavigationService.Navigate(new Uri("/NewsCachePage.xaml", UriKind.Relative));
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(categoryButton);
@@ -795,17 +791,8 @@ namespace LolWikiApp
             moreButton.Click += (s, e) => NavigationService.Navigate(new Uri("/AllHeroPage.xaml", UriKind.Relative));
             refreshButton.Click += (s1, e1) => RefreshFreeHeroList(true);
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            var feedBackMenuItem = new ApplicationBarMenuItem() {Text = "意见反馈"};
-            feedBackMenuItem.Click += (s, e) =>
-            {
-                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
-                task.Show();
-            };
-            ApplicationBar.MenuItems.Add(feedBackMenuItem);
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(moreButton);
@@ -901,19 +888,8 @@ namespace LolWikiApp
 
             pinButton.Click += (s, e) => NavigationService.Navigate(new Uri("/PlayerInformationPage.xaml?mode=bind", UriKind.Relative));
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            var feedBackMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
-            feedBackMenuItem.Click += (s, e) =>
-            {
-                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
-                task.Show();
-            };
-            ApplicationBar.MenuItems.Add(feedBackMenuItem);
-
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
-
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
             ApplicationBar.Buttons.Add(pinButton);
         }
 
@@ -928,18 +904,8 @@ namespace LolWikiApp
 
             retryButton.Click += (s, e) => BindRecords(); ;
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            var feedBackMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
-            feedBackMenuItem.Click += (s, e) =>
-            {
-                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
-                task.Show();
-            };
-            ApplicationBar.MenuItems.Add(feedBackMenuItem);
-
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
             ApplicationBar.Buttons.Add(retryButton);
         }
@@ -966,18 +932,8 @@ namespace LolWikiApp
 
             searchButton.Click += (s3, e3) => SearchPlayer();
 
-            var aboutMenuItem = new ApplicationBarMenuItem { Text = "关于" };
-            aboutMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
-
-            var feedBackMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
-            feedBackMenuItem.Click += (s, e) =>
-            {
-                var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈" };
-                task.Show();
-            };
-            ApplicationBar.MenuItems.Add(feedBackMenuItem);
-
-            ApplicationBar.MenuItems.Add(aboutMenuItem);
+            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
             ApplicationBar.Buttons.Add(moreButton);
             ApplicationBar.Buttons.Add(searchButton);
@@ -1150,7 +1106,7 @@ namespace LolWikiApp
                 }
                 else
                 {
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(0.7));                    
+                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(0.7));
                 }
                 //PivotTitlContainer.Visibility = Visibility.Visible;
                 _isShowing = false;

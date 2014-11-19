@@ -392,6 +392,8 @@ namespace LolWikiApp
                 if (videoListInfo != null)
                 {
                     longListSelector.SelectedItem = null;//reset selected item
+                   
+                    _actionPopup.Child = null;
                     App.ViewModel.VideoRepository.PrepareLetvVideoActionPopup(_actionPopup, videoListInfo);
                     _actionPopup.Show();
                 }
