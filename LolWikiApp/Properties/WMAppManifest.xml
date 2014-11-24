@@ -5,7 +5,7 @@
     <Language code="zh-Hans" />
   </Languages>
   <App xmlns="" ProductID="{f016d6df-d8be-4c63-a9c4-970e2991eaec}" Title="英雄联盟助手" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="le0zh" Description="Sample description" Publisher="le0zh" PublisherID="{f9ddef64-38a4-4ba8-9796-c148e02ec8a2}">
-    <IconPath IsRelative="true" IsResource="false">icon.png</IconPath>
+    <IconPath IsRelative="true" IsResource="false">62X62.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
@@ -17,6 +17,7 @@
       <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />
       <Capability Name="ID_CAP_IDENTITY_USER" />
+      <Capability Name="ID_CAP_LOCATION" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="HomePage.xaml" />
@@ -24,9 +25,9 @@
     <Tokens>
       <PrimaryToken TokenID="LolWikiAppToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">title-small.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">173x173.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">title-medium.png</BackgroundImageURI>
+          <BackgroundImageURI IsRelative="true" IsResource="false">200x200.png</BackgroundImageURI>
           <Title>英雄联盟助手</Title>
           <BackContent>
           </BackContent>
@@ -34,9 +35,13 @@
           </BackBackgroundImageURI>
           <BackTitle>
           </BackTitle>
+          <LargeBackgroundImageURI IsRelative="true" IsResource="false">310x150.png</LargeBackgroundImageURI>
+          <LargeBackContent />
+          <LargeBackBackgroundImageURI IsRelative="true" IsResource="false">
+          </LargeBackBackgroundImageURI>
           <DeviceLockImageURI IsRelative="true" IsResource="false">
           </DeviceLockImageURI>
-          <HasLarge>False</HasLarge>
+          <HasLarge>True</HasLarge>
         </TemplateFlip>
       </PrimaryToken>
     </Tokens>

@@ -24,6 +24,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using TiltEffect = Microsoft.Phone.Controls.TiltEffect;
 
+
 namespace LolWikiApp
 {
     public partial class HomePage : PhoneApplicationPage
@@ -55,14 +56,14 @@ namespace LolWikiApp
             _newsCategoryPopup = new FullScreenPopup();
             _newsCategoryPopup.PopUpHided += (s, e) => SetAppbarForNewsList();
 
-            _feedBackApplicationBarMenuItem = new ApplicationBarMenuItem(){Text="意见反馈"};
+            _feedBackApplicationBarMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
             _feedBackApplicationBarMenuItem.Click += (s, e) =>
             {
                 var task = new EmailComposeTask { To = "newlight@qq.com", Subject = "意见反馈-英雄联盟助手v2.0" };
                 task.Show();
             };
 
-            _aboutApplicationBarMenuItem = new ApplicationBarMenuItem(){Text="关于"};
+            _aboutApplicationBarMenuItem = new ApplicationBarMenuItem() { Text = "关于" };
             _aboutApplicationBarMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
         }
 
@@ -164,7 +165,7 @@ namespace LolWikiApp
                 };
             }
         }
-        
+
         #region Pivot
         private void MainPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -538,7 +539,7 @@ namespace LolWikiApp
 
             ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
             ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
-
+            
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(categoryButton);
             ApplicationBar.Buttons.Add(cacheButton);
@@ -829,7 +830,7 @@ namespace LolWikiApp
             this.FreeHeroRetryNetPanel.Visibility = Visibility.Collapsed;
             //SystemTray.ProgressIndicator.IsVisible = false;
         }
-        
+
         private void AddFreeHeroItem(Hero hero)
         {
             if (hero == null)
@@ -1062,7 +1063,7 @@ namespace LolWikiApp
 
         private void VideoButton_OnClick(object sender, RoutedEventArgs e)
         {
-           NavigationService.Navigate(new Uri("/LetvVideoPage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/LetvVideoPage.xaml", UriKind.Relative));
         }
 
         private void HuangliButton_OnClick(object sender, RoutedEventArgs e)

@@ -83,7 +83,6 @@ namespace LolWikiApp
         {
             if (_isPostback) return;
 
-            LoadHeroList(0);
             _isPostback = true;
             base.OnNavigatedTo(e);
         }
