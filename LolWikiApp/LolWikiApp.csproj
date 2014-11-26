@@ -279,6 +279,7 @@
     <Content Include="200x200.png" />
     <Content Include="310x150.png" />
     <Content Include="62X62.png" />
+    <Content Include="63x63.png" />
     <Content Include="ApplicationIcon.png" />
     <Content Include="Assets\appbar.video.highdefinition.png" />
     <Content Include="Assets\appbar.video.standarddefinition.png" />
