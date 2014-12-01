@@ -17,19 +17,17 @@ using Newtonsoft.Json.Linq;
 
 namespace LolWikiApp.Repository
 {
-  
-
-    public class PlayerRepository : Repository
+   public class PlayerRepository : Repository
     {
-        private const string playerSettingsKey = "_playerSettings";
+        private const string PlayerSettingsKey = "_playerSettings";
 
-        private const string currentMatchUrlForamt =
+        private const string CurrentMatchUrlForamt =
             "http://lolbox.duowan.com/phone/apiCurrentMatch.php?action=getCurrentMatch&serverName={0}&OSType=iOS7.1.1&target={1}";
 
         public async Task<CurrentGameInfo> GetCurrentGameInfoAsync(string serverName, string userName)
         {
-            string url = string.Format(currentMatchUrlForamt, serverName, userName);
-            string json = await GetJsonStringViaHttpAsync(url);
+            var url = string.Format(CurrentMatchUrlForamt, serverName, userName);
+            var json = await GetJsonStringViaHttpAsync(url);
             //string json = string.Empty;
 
             if (string.IsNullOrEmpty(json))
@@ -42,21 +40,21 @@ namespace LolWikiApp.Repository
             //    json = await sr.ReadToEndAsync();
             //}
             
-            JObject jObject = JObject.Parse(json);
-            CurrentGameInfo gameInfo = JsonConvert.DeserializeObject<CurrentGameInfo>(jObject["gameInfo"].ToString());
+            var jObject = JObject.Parse(json);
+            var gameInfo = JsonConvert.DeserializeObject<CurrentGameInfo>(jObject["gameInfo"].ToString());
 
-            List<string> sort100List = JsonConvert.DeserializeObject<List<string>>(jObject["gameInfo"]["100_sort"].ToString());
-            List<string> sort200List = JsonConvert.DeserializeObject<List<string>>(jObject["gameInfo"]["200_sort"].ToString());
+            var sort100List = JsonConvert.DeserializeObject<List<string>>(jObject["gameInfo"]["100_sort"].ToString());
+            var sort200List = JsonConvert.DeserializeObject<List<string>>(jObject["gameInfo"]["200_sort"].ToString());
 
             gameInfo.Sort100 = sort100List;
             gameInfo.Sort200 = sort200List;
 
-            Dictionary<string, string> user100HerosDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["gameInfo"]["100"].ToString());
-            Dictionary<string, string> user200HerosDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["gameInfo"]["200"].ToString());
+            var user100HerosDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["gameInfo"]["100"].ToString());
+            var user200HerosDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["gameInfo"]["200"].ToString());
 
             foreach (string s in sort100List)
             {
-                PlayerInfo p = JsonConvert.DeserializeObject<PlayerInfo>(jObject["playerInfo"][s].ToString());
+                var p = JsonConvert.DeserializeObject<PlayerInfo>(jObject["playerInfo"][s].ToString());
                 p.Name = s;
                 p.HeroName = user100HerosDict[s];
                 gameInfo.Sort100PlayerInfos.Add(p);
@@ -83,13 +81,13 @@ namespace LolWikiApp.Repository
                 ServerInfo = serverInfo
             };
 
-            if (settings.Contains(playerSettingsKey))
+            if (settings.Contains(PlayerSettingsKey))
             {
-                settings[playerSettingsKey] = wrapper;
+                settings[PlayerSettingsKey] = wrapper;
             }
             else
             {
-                settings.Add(playerSettingsKey, wrapper);
+                settings.Add(PlayerSettingsKey, wrapper);
             }
 
             settings.Save();
@@ -97,19 +95,16 @@ namespace LolWikiApp.Repository
         
         public Player ReadPlayerInfoSettings()
         {
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(playerSettingsKey))
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(PlayerSettingsKey))
             {
                 return null;
             }
 
-            PlayerInfoSettingWrapper wrapper =
-                IsolatedStorageSettings.ApplicationSettings[playerSettingsKey] as PlayerInfoSettingWrapper;
+            var wrapper =
+                IsolatedStorageSettings.ApplicationSettings[PlayerSettingsKey] as PlayerInfoSettingWrapper;
             if (wrapper != null)
             {
-                Player p = new Player();
-                p.Name = wrapper.Name;
-                p.ServerInfo = wrapper.ServerInfo;
-                p.IsDataLoaded = false;
+                var p = new Player {Name = wrapper.Name, ServerInfo = wrapper.ServerInfo, IsDataLoaded = false};
 
                 return p;
             }
@@ -121,12 +116,12 @@ namespace LolWikiApp.Repository
 
         private Player PharsePlayerInfo(HtmlDocument doc)
         {
-            Player player = new Player();
+            var player = new Player();
 
             //解析返回的html内容
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            Dictionary<string, string> infoPathDictionary = new Dictionary<string, string>();
+            var infoPathDictionary = new Dictionary<string, string>();
 
             HtmlNode headerSectionNode = doc.DocumentNode.SelectSingleNode("/html[1]/body[1]/header[1]/section[1]");
 
@@ -156,26 +151,28 @@ namespace LolWikiApp.Repository
             }
 
             //从script中读取排位和战斗力信息
-            HtmlNode scriptNode = doc.DocumentNode.SelectSingleNode("/html[1]/head[1]/script[2]");
+            var scriptNode = doc.DocumentNode.SelectSingleNode("/html[1]/head[1]/script[2]");
             if (scriptNode != null)
             {
                 string[] functions = scriptNode.InnerText.Split(new string[] { "function" },
                     StringSplitOptions.RemoveEmptyEntries);
                 string showDataFoo = functions.Last();
                 string[] ifStatements = showDataFoo.Split(new string[] { "if" }, StringSplitOptions.RemoveEmptyEntries);
-                Regex liRegex = new Regex("(?<=<li>)[\\s\\S]+?(?=</li>)");
+                var liRegex = new Regex("(?<=<li>)[\\s\\S]+?(?=</li>)");
                 string rankInfo = ifStatements[ifStatements.Length - 2];
                 string li1 = liRegex.Match(rankInfo).ToString();
                 if (!string.IsNullOrEmpty(li1))
                 {
-                    HtmlDocument rankDoc = new HtmlDocument();
+                    var rankDoc = new HtmlDocument();
                     rankDoc.LoadHtml(li1);
 
-                    RankGameInfo rankGameInfo = new RankGameInfo();
-                    rankGameInfo.Type = rankDoc.DocumentNode.SelectSingleNode("span[1]").InnerText;
-                    rankGameInfo.WinRate = rankDoc.DocumentNode.SelectSingleNode("span[2]").InnerText;
-                    rankGameInfo.WinNumber = rankDoc.DocumentNode.SelectSingleNode("span[3]").InnerText;
-                    rankGameInfo.RangeAndWinPoint = rankDoc.DocumentNode.SelectSingleNode("span[4]").InnerText;
+                    var rankGameInfo = new RankGameInfo
+                    {
+                        Type = rankDoc.DocumentNode.SelectSingleNode("span[1]").InnerText,
+                        WinRate = rankDoc.DocumentNode.SelectSingleNode("span[2]").InnerText,
+                        WinNumber = rankDoc.DocumentNode.SelectSingleNode("span[3]").InnerText,
+                        RangeAndWinPoint = rankDoc.DocumentNode.SelectSingleNode("span[4]").InnerText
+                    };
 
                     player.RankGmeInfo = rankGameInfo;
                 }
@@ -184,14 +181,16 @@ namespace LolWikiApp.Repository
                 string li2 = liRegex.Match(zdlInfo).ToString();
                 if (!string.IsNullOrEmpty(li2))
                 {
-                    HtmlDocument zdlDoc = new HtmlDocument();
+                    var zdlDoc = new HtmlDocument();
                     zdlDoc.LoadHtml(li2);
 
-                    PowerDetailInfo powerDetailInfo = new PowerDetailInfo();
-                    powerDetailInfo.TotaScore = zdlDoc.DocumentNode.SelectSingleNode("span[1]").InnerText;
-                    powerDetailInfo.BaseScore = zdlDoc.DocumentNode.SelectSingleNode("span[2]").InnerText;
-                    powerDetailInfo.WinRateScore = zdlDoc.DocumentNode.SelectSingleNode("span[3]").InnerText;
-                    powerDetailInfo.WinNumberScore = zdlDoc.DocumentNode.SelectSingleNode("span[4]").InnerText;
+                    var powerDetailInfo = new PowerDetailInfo
+                    {
+                        TotaScore = zdlDoc.DocumentNode.SelectSingleNode("span[1]").InnerText,
+                        BaseScore = zdlDoc.DocumentNode.SelectSingleNode("span[2]").InnerText,
+                        WinRateScore = zdlDoc.DocumentNode.SelectSingleNode("span[3]").InnerText,
+                        WinNumberScore = zdlDoc.DocumentNode.SelectSingleNode("span[4]").InnerText
+                    };
 
                     player.PowerDetailInfo = powerDetailInfo;
                 }
@@ -244,7 +243,7 @@ namespace LolWikiApp.Repository
                     if (matchHeroImgNode == null)
                         continue;
 
-                    GameInfo gameInfo = new GameInfo();
+                    var gameInfo = new GameInfo();
 
                     string moreInfoUrl = matchNode.Attributes["onclick"].Value;
                     //Regex urlRegex = new Regex("(?<=()[\\s\\S]+?(?=);)");
@@ -267,13 +266,38 @@ namespace LolWikiApp.Repository
             return player;
         }
 
+       public async Task<HttpActionResult> GameDetailTest()
+        {
+            const string notFoundTitle = "召唤师搜索";
+            var httpActionResult = new HttpActionResult();
+
+            var client = new HttpClient();
+            const string url = @"http://lolbox.duowan.com/matchList.php?serverName=%E7%BD%91%E9%80%9A%E5%9B%9B&playerName=%E6%B5%AA%E6%BD%AE%E4%B9%8B%E5%B7%85#10249034537,NORMAL";
+
+            string content;
+
+            try
+            {
+                content = await client.GetStringAsync(new Uri(url));
+            }
+            catch (Exception exception404)
+            {
+                //HTTP请求有异常
+                httpActionResult.Result = ActionResult.Exception404;
+                return httpActionResult;
+            }
+
+            httpActionResult.Result = ActionResult.Success;
+            httpActionResult.Value = content;
+            return httpActionResult;
+       }
         
         public async Task<HttpActionResult> PharsePlayerInfo(string sn, string pn)
         {
             const string notFoundTitle = "召唤师搜索";
-            HttpActionResult httpActionResult = new HttpActionResult();
+            var httpActionResult = new HttpActionResult();
 
-            HttpClient client = new HttpClient();
+            var client = new HttpClient();
             const string urlFormat = @"http://lolbox.duowan.com/phone/playerDetail_ios.php?sn={0}&target={1}";
             string url = string.Format(urlFormat, sn, pn);
          
@@ -290,10 +314,10 @@ namespace LolWikiApp.Repository
                 return httpActionResult;
             }
 
-            HtmlDocument doc = new HtmlDocument();
+            var doc = new HtmlDocument();
             doc.LoadHtml(content);
 
-            HtmlNode titleNode = doc.DocumentNode.SelectSingleNode("/html[1]/head[1]/title[1]");
+            var titleNode = doc.DocumentNode.SelectSingleNode("/html[1]/head[1]/title[1]");
 
             if (titleNode != null)
             {
@@ -311,9 +335,9 @@ namespace LolWikiApp.Repository
 
         public void RemovePlayerInfoFromSettings()
         {
-            if (IsolatedStorageSettings.ApplicationSettings.Contains(playerSettingsKey))
+            if (IsolatedStorageSettings.ApplicationSettings.Contains(PlayerSettingsKey))
             {
-                IsolatedStorageSettings.ApplicationSettings.Remove(playerSettingsKey);
+                IsolatedStorageSettings.ApplicationSettings.Remove(PlayerSettingsKey);
                 IsolatedStorageSettings.ApplicationSettings.Save();
             }
         }

@@ -613,11 +613,11 @@ namespace LolWikiApp
             if (_isHideing == false && _isShowing == false)
             {
                 _isHideing = true;
-                if (PivotTitlContainer.Height > 0)
-                {
-                    Debug.WriteLine("visible:false");
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(1));
-                }
+                //if (PivotTitlContainer.Height > 0)
+                //{
+                //    Debug.WriteLine("visible:false");
+                //    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(1));
+                //}
                 _isHideing = false;
             }
         }
@@ -634,7 +634,7 @@ namespace LolWikiApp
                 }
                 else
                 {
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(1));
+                    //_adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(1));
                 }
                 _isShowing = false;
             }

@@ -25,7 +25,7 @@ namespace LolWikiApp.Repository
 
         public EventHandler<ProgressChangedArgs> NewsContentCacheProgressChangedEventHandler;
         public EventHandler<ProgressChangedArgs> NewsContentCacheCompletedEventHandler;
-        
+
         private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}"; //{0}: artId, {1}: random
         private readonly LocalFileRepository _localFileRepository = new LocalFileRepository();
 
@@ -35,37 +35,28 @@ namespace LolWikiApp.Repository
         private const string TcNewsStoryListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c16_list_{0}.shtml"; //{0}: page
         private const string TcNewsMmListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c17_list_{0}.shtml"; //{0}: page
 
-        public async Task<List<TcNewsListInfo>> GetTcPagedNewsList(int page = 1)
+        public async Task<List<TcNewsListInfo>> GetTcPagedNewsList(NewsType type = NewsType.Funny, int page = 1)
         {
-            var url = string.Format(TcNewsFunnyListtRequestUrl, page);
+            var url = string.Empty;
+            switch (type)
+            {
+                case NewsType.Funny:
+                    url = string.Format(TcNewsFunnyListtRequestUrl, page);
+                    break;
+                case NewsType.Story:
+                    url = string.Format(TcNewsStoryListtRequestUrl, page);
+                    break;
+                case NewsType.Beatury:
+                    url = string.Format(TcNewsMmListtRequestUrl, page);
+                    break;
+            }
 
             var json = await GetJsonStringViaHttpAsync(url);
             var jObject = JObject.Parse(json);
             var newsList = JsonConvert.DeserializeObject<List<TcNewsListInfo>>(jObject["list"].ToString());
 
             return newsList.ToList();
-        }
 
-        public async Task<List<TcNewsListInfo>> GetTcPagedMmNewsList(int page = 1)
-        {
-            var url = string.Format(TcNewsMmListtRequestUrl, page);
-
-            var json = await GetJsonStringViaHttpAsync(url);
-            var jObject = JObject.Parse(json);
-            var newsList = JsonConvert.DeserializeObject<List<TcNewsListInfo>>(jObject["list"].ToString());
-
-            return newsList.ToList();
-        }
-
-        public async Task<List<TcNewsListInfo>> GetTcPagedStoryNewsList(int page = 1)
-        {
-            var url = string.Format(TcNewsStoryListtRequestUrl, page);
-
-            var json = await GetJsonStringViaHttpAsync(url);
-            var jObject = JObject.Parse(json);
-            var newsList = JsonConvert.DeserializeObject<List<TcNewsListInfo>>(jObject["list"].ToString());
-
-            return newsList.ToList();
         }
         #endregion
 
@@ -170,7 +161,7 @@ namespace LolWikiApp.Repository
             #endregion
 
             var doc = new HtmlDocument();
-            doc.LoadHtml("<div>" +  detail.Content + "</div>");
+            doc.LoadHtml("<div>" + detail.Content + "</div>");
             Debug.WriteLine("----Originial-----");
             Debug.WriteLine(detail.Content);
 
@@ -187,7 +178,7 @@ namespace LolWikiApp.Repository
             //        //    continue;
             //        //}
             //        var style = node.GetAttributeValue("style", "N/A");
-                   
+
             //        if (style != "N/A")
             //        {
             //            if (!style.ToLower().Contains("center") && !style.ToLower().Contains("text-indent"))
@@ -213,7 +204,7 @@ namespace LolWikiApp.Repository
                 .Replace("$postTime$", detail.Posttime)
                 .Replace("$site$", detail.Site)
                 .Replace("$content$", detail.Content);
-                //.Replace("$content$", detail.Content.Replace("<div", "<p").Replace("</div", "</p"));
+            //.Replace("$content$", detail.Content.Replace("<div", "<p").Replace("</div", "</p"));
 
             return HelperRepository.Unicode2Html(html);
         }
@@ -287,7 +278,7 @@ namespace LolWikiApp.Repository
             var listTmp = await GetPagedNewsList(NewsType.Latest);
             _newsToCacheCount += listTmp.Count;
             ReadNewsListToCacheProgreessChanged();
-            
+
             ReadNewsListToCacheCompleted();
 
             await SaveNewsListContent(listTmp);
@@ -497,8 +488,8 @@ namespace LolWikiApp.Repository
             var newsList = JsonConvert.DeserializeObject<List<NewsListInfo>>(json);
 
             var selectedNewsList = from n in newsList
-                where n.Site != "超级辅助"
-                select n;
+                                   where n.Site != "超级辅助"
+                                   select n;
 
             return selectedNewsList.ToList();
         }
@@ -526,14 +517,18 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public List<NewsTypeWrapper> GetNewsTypeList()
         {
-            var t1 = new NewsTypeWrapper() { Type = NewsType.Latest, DisplayName = "最新资讯" };
-            var t2 = new NewsTypeWrapper() { Type = NewsType.MostCommented, DisplayName = "热评资讯" };
-            var t3 = new NewsTypeWrapper() { Type = NewsType.Offical, DisplayName = "官方资讯" };
-            var t4 = new NewsTypeWrapper() { Type = NewsType.OutsideServer, DisplayName = "外服资讯" };
-            var t5 = new NewsTypeWrapper() { Type = NewsType.Match, DisplayName = "赛事资讯" };
-            var t6 = new NewsTypeWrapper() { Type = NewsType.Guide, DisplayName = "攻略资讯" };
+            var t1 = new NewsTypeWrapper() { Type = NewsType.Latest, DisplayName = "最新资讯", Source = "HELPER" };
+            var t2 = new NewsTypeWrapper() { Type = NewsType.MostCommented, DisplayName = "热评资讯", Source = "HELPER" };
+            var t3 = new NewsTypeWrapper() { Type = NewsType.Offical, DisplayName = "官方资讯", Source = "HELPER" };
+            var t4 = new NewsTypeWrapper() { Type = NewsType.OutsideServer, DisplayName = "外服资讯", Source = "HELPER" };
+            var t5 = new NewsTypeWrapper() { Type = NewsType.Match, DisplayName = "赛事资讯", Source = "HELPER" };
+            var t6 = new NewsTypeWrapper() { Type = NewsType.Guide, DisplayName = "攻略资讯", Source = "HELPER" };
 
-            var newsTypeList = new List<NewsTypeWrapper>() { t1, t2, t3, t4, t5, t6 };
+            var t7 = new NewsTypeWrapper() { Type = NewsType.Funny, DisplayName = "搞笑娱乐", Source = "TC" };
+            var t8 = new NewsTypeWrapper() { Type = NewsType.Story, DisplayName = "漫画连载", Source = "TC" };
+            var t9 = new NewsTypeWrapper() { Type = NewsType.Beatury, DisplayName = "美图COSPLAY", Source = "TC" };
+
+            var newsTypeList = new List<NewsTypeWrapper>() { t1, t2, t3, t4, t5, t6, t7, t8, t9 };
             return newsTypeList;
         }
     }

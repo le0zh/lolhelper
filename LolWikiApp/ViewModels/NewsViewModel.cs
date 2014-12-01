@@ -27,11 +27,7 @@ namespace LolWikiApp.ViewModels
         public int TotalToCacheCount { get; set; }
 
         private NewsType _oldNewsType;
-        public ObservableCollection<NewsListInfo> NewsListInfObservableCollection { get; private set; }
-
-        public ObservableCollection<TcNewsListInfo> TcNewsListInfObservableCollection { get; private set; }
-        public ObservableCollection<TcNewsListInfo> TcStoryListInfObservableCollection { get; private set; }
-        public ObservableCollection<TcNewsListInfo> TcMmListInfObservableCollection { get; private set; }
+        public ObservableCollection<NewsListBaseInfo> NewsListInfObservableCollection { get; private set; }
 
         private List<NewsTypeWrapper> _newsTypeList;
         public List<NewsTypeWrapper> NewsTypeList
@@ -58,10 +54,7 @@ namespace LolWikiApp.ViewModels
 
         public NewsViewModel()
         {
-            NewsListInfObservableCollection = new ObservableCollection<NewsListInfo>();
-            TcNewsListInfObservableCollection = new ObservableCollection<TcNewsListInfo>();
-            TcStoryListInfObservableCollection = new ObservableCollection<TcNewsListInfo>();
-            TcMmListInfObservableCollection = new ObservableCollection<TcNewsListInfo>();
+            NewsListInfObservableCollection = new ObservableCollection<NewsListBaseInfo>();
 
             _oldNewsType = NewsType.Latest;
 
@@ -77,59 +70,20 @@ namespace LolWikiApp.ViewModels
             return newsList;
         }
 
-        //GetTcPagedMmNewsList
-        public async Task LoadTecentMmListInfosByPageAsync(int page = 1, bool refresh = false)
+        public async Task LoadNewsListInfosByTypeAndPageAsync(NewsTypeWrapper typeWrapper, int page = 1, bool refresh = false)
         {
-            var newsList = await NewsRepository.GetTcPagedMmNewsList(page);
-
-            if (refresh)
+            
+            if (refresh || (typeWrapper.Type != _oldNewsType))
             {
-                TcMmListInfObservableCollection.Clear();
-            }
-            foreach (var n in newsList)
-            {
-                TcMmListInfObservableCollection.Add(n);
-            }
-        }
-
-        public async Task LoadTecentStoryListInfosByPageAsync(int page = 1, bool refresh = false)
-        {
-            var newsList = await NewsRepository.GetTcPagedStoryNewsList(page);
-
-            if (refresh)
-            {
-                TcStoryListInfObservableCollection.Clear();
-            }
-            foreach (var n in newsList)
-            {
-                TcStoryListInfObservableCollection.Add(n);
-            }
-        }
-
-        public async Task LoadTecentNewsListInfosByTypeAndPageAsync(int page = 1, bool refresh = false)
-        {
-            var newsList = await NewsRepository.GetTcPagedNewsList(page);
-
-            if (refresh)
-            {
-                TcNewsListInfObservableCollection.Clear();
-            }
-            foreach (var n in newsList)
-            {
-                TcNewsListInfObservableCollection.Add(n);
-            }
-        }
-
-        public async Task LoadNewsListInfosByTypeAndPageAsync(NewsType type = NewsType.Latest, int page = 1, bool refresh = false)
-        {
-            var newsList = await NewsRepository.GetPagedNewsList(type, page);
-            CurrentPage = page;
-            if (refresh || (type != _oldNewsType))
-            {
-                _oldNewsType = type;
+                _oldNewsType = typeWrapper.Type;
                 NewsListInfObservableCollection.Clear();
+            }
 
-                if (type == NewsType.Latest)
+            if (typeWrapper.Source == "HELPER")
+            {
+                var newsList = await NewsRepository.GetPagedNewsList(typeWrapper.Type, page);
+
+                if (typeWrapper.Type == NewsType.Latest)
                 {
                     try
                     {
@@ -140,14 +94,33 @@ namespace LolWikiApp.ViewModels
                     }
                     catch
                     {
-                        Debug.WriteLine("Banner News not found.");
+                        Debug.WriteLine("banner news got failed.");
                     }
                 }
+                else
+                {
+                    var bannerNewsInfo = new NewsListInfo() { IsFlipNews = true };
+                    bannerNewsInfo.BannerListInfos.Add(new NewsListInfo()
+                    {
+                        Img = "/Data/banner3.png"
+                    });
+                    NewsListInfObservableCollection.Add(bannerNewsInfo);
+                }
+
+                foreach (var n in newsList)
+                {
+                    n.NewsType = typeWrapper;
+                    NewsListInfObservableCollection.Add(n);
+                }
             }
-            
-            foreach (var n in newsList)
+            else if (typeWrapper.Source == "TC")
             {
-                NewsListInfObservableCollection.Add(n);
+                var newsList = await NewsRepository.GetTcPagedNewsList(typeWrapper.Type, page);
+                foreach (var n in newsList)
+                {
+                    n.NewsType = typeWrapper;
+                    NewsListInfObservableCollection.Add(n);
+                }
             }
         }
 

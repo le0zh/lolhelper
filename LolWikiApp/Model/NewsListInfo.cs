@@ -10,7 +10,12 @@ using Microsoft.Phone.Tasks;
 
 namespace LolWikiApp
 {
-    public class NewsListInfo
+    public class NewsListBaseInfo
+    {
+        public NewsTypeWrapper NewsType { get; set; }
+    }
+
+    public class NewsListInfo : NewsListBaseInfo
     {
         public string Id { get; set; }
 
@@ -61,6 +66,8 @@ namespace LolWikiApp
         public NewsType Type { get; set; }
 
         public string DisplayName { get; set; }
+
+        public string Source { get; set; }
     }
 
     public enum NewsType
@@ -70,10 +77,14 @@ namespace LolWikiApp
         Offical, //官方新闻
         OutsideServer, //外服新闻
         Match, //赛事新闻
-        Guide //攻略
+        Guide, //攻略
+
+        Funny, //搞笑
+        Story, //连载
+        Beatury //美女
     }
 
-    public class TcNewsListInfo
+    public class TcNewsListInfo : NewsListBaseInfo
     {
         public string article_id { get; set; }
 

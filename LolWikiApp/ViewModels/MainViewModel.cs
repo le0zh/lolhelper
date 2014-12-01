@@ -94,7 +94,7 @@ namespace LolWikiApp.ViewModels
 
         public async Task<HttpActionResult> GetPlayerDetailInfo(string sn,string pn)
         {
-            HttpActionResult result = await _playerRepository.PharsePlayerInfo(sn,pn);
+            HttpActionResult result = await _playerRepository.PharsePlayerInfo(sn,pn);//sn: server name, pn: player name
             return result;
         }
 

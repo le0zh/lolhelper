@@ -12,7 +12,8 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait" 
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
+    shell:SystemTray.Opacity="1"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True"    
@@ -22,32 +23,20 @@
         <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="加载中..." />
     </shell:SystemTray.ProgressIndicator>
 
-    <!--LayoutRoot contains the root grid where all other page content is placed-->
-    <Grid x:Name="LayoutRoot" Margin="0 -1 0 0" Background="#29282e">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-
-        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Grid.Row="0" Background="#29282e" Padding="0 8 0 8">
-            <TextBlock Text="英雄联盟助手" Foreground="White"  HorizontalAlignment="Center"                         
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
-        </Border>
-
+    <Grid>
         <phone:Pivot SelectionChanged="MainPivot_OnSelectionChanged" 
                      x:Name="MainPivot" 
-                     Grid.Row="1"
-                     Margin="0"
                      Foreground="White"
+                     Margin="0 0 0 -90"
                      Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
             <!--PivotItem item 1-->
-            <phone:PivotItem Header="资讯">
+            <phone:PivotItem Header="资讯中心">
                 <Grid Margin="0 0 0 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="60"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
                     <StackPanel x:Name="NewsLoadingBar" Grid.Row="0" Orientation="Horizontal" Margin="18,24,0,0">
@@ -57,16 +46,29 @@
                     <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="NewsRetryNetPanel" Message="加载资讯列表失败。"/>
 
-                    <!--Row2-->
-                    <local:RefreshableListBox Grid.Row="2"
+                    <Grid Width="480" x:Name="CategoryGrid" Margin="0" Background="Transparent" Grid.Row="2" Visibility="Visible" Height="60" VerticalAlignment="Top" Tap="ButtonBase_OnClick" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="4"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid x:Name="CategoryBackGroundGrid" Grid.Row="0" Background="#29282e" Opacity="0.8"></Grid>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Image Source="/Data/hanbaobao.png" HorizontalAlignment="Right"></Image>
+                            <TextBlock Text="最新资讯" x:Name="CategoryTextBlock" Foreground="White" Margin="0 0 12 0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                        </StackPanel>
+                        <Grid Grid.Row="1" Background="LightGray" OpacityMask="LightGray">
+                        </Grid>
+                    </Grid>
+
+                    <local:RefreshableListBox Grid.Row="3"
                                     Tap="NewsLongListSelector_Tap"
                                     Visibility="Collapsed"
                                     x:Name="NewsLongListSelector" 
                                     IsGetMoreEnabled="True"
-                                    Margin="0"
+                                    Margin="0 -4 0 0"
                                     Loaded="NewsLongListSelector_OnLoaded"
                                     GettingMoreTriggered="NewsLongListSelector_OnGettingMoreTriggered"
-                                    RefreshTriggered="NewsLongListSelector_OnRefreshTriggered"
+                                    IsRefreshEnabled="False"
                                     ListScrollingUp="LongListSelector_OnListScrollingUp"
                                     ListScrollingDown="LongListSelector_OnListScrollingDown"
                                     MinWidth="468">
@@ -76,7 +78,9 @@
                                     <local:NewsListItemDataTemplateSelector.NormalNewsDataTemplate>
                                         <DataTemplate>
                                             <Border x:Name="NewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="10" >
-                                                <Border.Projection><PlaneProjection></PlaneProjection></Border.Projection>
+                                                <Border.Projection>
+                                                    <PlaneProjection></PlaneProjection>
+                                                </Border.Projection>
                                                 <Border.Triggers>
                                                     <EventTrigger RoutedEvent="Border.Loaded">
                                                         <BeginStoryboard>
@@ -95,7 +99,7 @@
                                                         <ColumnDefinition Width="128"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
-                                                    
+
                                                     <Image Grid.Column="0"
                                                                Margin="0 0 8 0"
                                                                VerticalAlignment="Top" Width="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
@@ -109,27 +113,7 @@
                                                                     <Run Text="{Binding PostTime}"></Run></TextBlock>-->
                                                     </StackPanel>
 
-                                                    <!--<Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto"></RowDefinition>
-                                                        <RowDefinition Height="Auto"></RowDefinition>
-                                                        <RowDefinition Height="Auto"></RowDefinition>
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="128"></ColumnDefinition>
-                                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                                    </Grid.ColumnDefinitions>
 
-                                                    <Image Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
-                                                               Margin="0 0 8 0"
-                                                               VerticalAlignment="Top" Width="120" Height="130" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
-
-                                                    <TextBlock Grid.Column="1" Grid.Row="0" 
-                                                               Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
-                                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding DescDisplay}"
-								                                           Foreground="Gray"
-                                                                           FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
-                                                    <TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
-                                                                    <Run Text="{Binding PostTime}"></Run></TextBlock>-->
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -140,282 +124,91 @@
                                             <toolkit:FlipView x:Name="HorizontalFlipView"
                                                       ItemsSource="{Binding BannerListInfos}"
                                                       UseTouchAnimationsForAllNavigation="True"
-                                                      Tap="HorizontalFlipView_Tap"
+                                                      
                                                       MinWidth="468"
-                                                      Margin="0" 
-                                                      >
+                                                      Margin="0" >
                                                 <toolkit:FlipView.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Image Source="{Binding Img}" Height="200" Stretch="Fill" ></Image>
+                                                        <Image Source="{Binding Img}" Stretch="Fill" ></Image>
                                                     </DataTemplate>
                                                 </toolkit:FlipView.ItemTemplate>
                                             </toolkit:FlipView>
                                         </DataTemplate>
                                     </local:NewsListItemDataTemplateSelector.FlipViewNewsDataTemplate>
+
+                                    <local:NewsListItemDataTemplateSelector.TcViewNewsDataTemplate>
+                                        <DataTemplate>
+                                            <Border x:Name="TcNewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="10" >
+                                                <Border.Projection>
+                                                    <PlaneProjection></PlaneProjection>
+                                                </Border.Projection>
+                                                <Border.Triggers>
+                                                    <EventTrigger RoutedEvent="Border.Loaded">
+                                                        <BeginStoryboard>
+                                                            <BeginStoryboard.Storyboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetName="TcNewsListItemBorder" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
+                                                                    <DoubleAnimation Storyboard.TargetName="TcNewsListItemBorder"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"></DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard.Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                </Border.Triggers>
+                                                <Grid MinWidth="468">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"></RowDefinition>
+                                                        <RowDefinition Height="Auto"></RowDefinition>
+
+
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="128"></ColumnDefinition>
+                                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                               Margin="0 0 8 0"
+                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
+
+                                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
+                                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
+								                                   Foreground="Gray"
+								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
+
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </local:NewsListItemDataTemplateSelector.TcViewNewsDataTemplate>
                                 </local:NewsListItemDataTemplateSelector>
                             </DataTemplate>
                         </local:RefreshableListBox.ItemTemplate>
-
                     </local:RefreshableListBox>
+
+
                 </Grid>
             </phone:PivotItem>
 
             <!--PivotItem item 2-->
-            <phone:PivotItem Header="搞笑">
-                <Grid Margin="0 0 0 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
+            <phone:PivotItem Header="周免英雄">
+                <!--<ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">-->
+            <StackPanel  Margin="0 0 0 0" >
+                <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical" Margin="18,24,0,0">
+                    <ProgressBar HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                    <StackPanel x:Name="TcFunnyNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,24,0,0">
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+                <local:HttpRequest404Control Margin="18 24 0 0" Visibility="Collapsed"
+                                    x:Name="FreeHeroRetryNetPanel" Message="加载周免英雄失败。"/>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
-                                    x:Name="TcFunyNewsRetryNetPanel" Message="加载资讯列表失败。"/>
+                <toolkit:WrapPanel Margin="12 0 -24 0" x:Name="HeroWrapPanel" Orientation="Horizontal" />
 
-                    <!--Row2-->
-                    <local:RefreshableListBox Grid.Row="2"
-                                    Tap="TcFunnyNewsLongListSelector_OnTap"
-                                    Visibility="Collapsed"
-                                    x:Name="TcFunnyNewsLongListSelector" 
-                                    IsGetMoreEnabled="True"
-                                    IsRefreshEnabled="False"
-                                    GettingMoreTriggered="TcFunnyNewsLongListSelector_OnGettingMoreTriggered"
-                                    Margin="0"
-                                    ListScrollingUp="LongListSelector_OnListScrollingUp"
-                                    ListScrollingDown="LongListSelector_OnListScrollingDown"
-                                    MinWidth="468">
-                        <local:RefreshableListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderBrush="Gray" x:Name="FunnyNewsListItemBorder" BorderThickness="0 0 0 0.5" Padding="10" Loaded="FunnyNewsListItemBorder_OnLoaded">
-                                    <Border.Projection>
-                                        <PlaneProjection></PlaneProjection>
-                                    </Border.Projection>
-                                    <Border.Triggers>
-                                        <EventTrigger RoutedEvent="Border.Loaded">
-                                            <BeginStoryboard>
-                                                <BeginStoryboard.Storyboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetName="FunnyNewsListItemBorder" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
-                                                        <DoubleAnimation Storyboard.TargetName="FunnyNewsListItemBorder"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"></DoubleAnimation>
-                                                    </Storyboard>
-                                                </BeginStoryboard.Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </Border.Triggers>
-                                    <Grid MinWidth="468">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <!--<RowDefinition Height="Auto"></RowDefinition>-->
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="128"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
+            </StackPanel>
 
-                                        <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                               Margin="0 0 8 0"
-                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
-
-                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
-                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
-								                                   Foreground="Gray"
-								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
-                                        <!--<TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
-                                                                    
-                                                                    <Run Text="{Binding publication_date}"></Run></TextBlock>-->
-
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </local:RefreshableListBox.ItemTemplate>
-
-                    </local:RefreshableListBox>
-                </Grid>
+            <!--</ScrollViewer>-->
             </phone:PivotItem>
 
             <!--PivotItem item 3-->
-            <phone:PivotItem Header="连载">
-                <Grid Margin="0 0 0 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-
-                    <StackPanel x:Name="TcSotryNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,24,0,0">
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
-
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
-                                    x:Name="TcSotryNewsRetryNetPanel" Message="加载资讯列表失败。"/>
-
-                    <!--Row2-->
-                    <local:RefreshableListBox Grid.Row="2"
-                                    Tap="TcStoryNewsLongListSelector_OnTap"
-                                    Visibility="Collapsed"
-                                    x:Name="TcStoryNewsLongListSelector" 
-                                    IsGetMoreEnabled="True"
-                                    IsRefreshEnabled="False"
-                                    GettingMoreTriggered="TcStoryNewsLongListSelector_OnGettingMoreTriggered"
-                                    ListScrollingUp="LongListSelector_OnListScrollingUp"
-                                    ListScrollingDown="LongListSelector_OnListScrollingDown"                                              
-                                    Margin="0"
-                                    MinWidth="452">
-                        <local:RefreshableListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border x:Name="StoryNewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="10" >
-                                    <Border.Projection>
-                                        <PlaneProjection></PlaneProjection>
-                                    </Border.Projection>
-                                    <Border.Triggers>
-                                        <EventTrigger RoutedEvent="Border.Loaded">
-                                            <BeginStoryboard>
-                                                <BeginStoryboard.Storyboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetName="StoryNewsListItemBorder" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
-                                                        <DoubleAnimation Storyboard.TargetName="StoryNewsListItemBorder"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"></DoubleAnimation>
-                                                    </Storyboard>
-                                                </BeginStoryboard.Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </Border.Triggers>
-                                    <Grid MinWidth="468">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <!--<RowDefinition Height="Auto"></RowDefinition>-->
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="128"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                               Margin="0 0 8 0"
-                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
-
-                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
-                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
-								                                   Foreground="Gray"
-								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
-                                        <!--<TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
-                                                                    
-                                                                    <Run Text="{Binding publication_date}"></Run></TextBlock>-->
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </local:RefreshableListBox.ItemTemplate>
-
-                    </local:RefreshableListBox>
-                </Grid>
-            </phone:PivotItem>
-
-            <!--PivotItem item 4-->
-            <phone:PivotItem Header="美女">
-                <Grid Margin="0 0 0 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-
-                    <StackPanel x:Name="TcMmNewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,24,0,0">
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
-
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
-                                    x:Name="TcMmNewsRetryNetPanel" Message="加载资讯列表失败。"/>
-
-                    <!--Row2-->
-                    <local:RefreshableListBox Grid.Row="2"
-                                    Tap="TcMmNewsLongListSelector_OnTap"
-                                    Visibility="Collapsed"
-                                    x:Name="TcMmNewsLongListSelector" 
-                                    IsGetMoreEnabled="True"
-                                    IsRefreshEnabled="False"
-                                    GettingMoreTriggered="TcMmNewsLongListSelector_OnGettingMoreTriggered"
-                                    ListScrollingUp="LongListSelector_OnListScrollingUp"
-                                    ListScrollingDown="LongListSelector_OnListScrollingDown"                                              
-                                    Margin="0"
-                                    MinWidth="452">
-                        <local:RefreshableListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border x:Name="MmNewsListItemBorder" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="10" >
-                                    <Border.Projection>
-                                        <PlaneProjection></PlaneProjection>
-                                    </Border.Projection>
-                                    <Border.Triggers>
-                                        <EventTrigger RoutedEvent="Border.Loaded">
-                                            <BeginStoryboard>
-                                                <BeginStoryboard.Storyboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetName="MmNewsListItemBorder" Storyboard.TargetProperty="(Projection).(PlaneProjection.RotationX)" From="-120" To="0" Duration="0:0:0.5" />
-                                                        <DoubleAnimation Storyboard.TargetName="MmNewsListItemBorder"  Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"></DoubleAnimation>
-                                                    </Storyboard>
-                                                </BeginStoryboard.Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </Border.Triggers>
-                                    <Grid MinWidth="468">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <!--<RowDefinition Height="Auto"></RowDefinition>-->
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="128"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                               Margin="0 0 8 0"
-                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
-
-                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
-                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
-								                                   Foreground="Gray"
-								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
-                                        <!--<TextBlock Grid.Column="1" Grid.Row="2" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontSize="{StaticResource PhoneFontSizeSmall}">
-                                                                    
-                                                                    <Run Text="{Binding publication_date}"></Run></TextBlock>-->
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </local:RefreshableListBox.ItemTemplate>
-
-                    </local:RefreshableListBox>
-                </Grid>
-            </phone:PivotItem>
-
-            <!--PivotItem item 5-->
-            <phone:PivotItem Header="周免">
-                <!--<ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">-->
-                <StackPanel  Margin="0 0 0 0" >
-                    <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical" Margin="18,24,0,0">
-                        <ProgressBar HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
-
-                    <local:HttpRequest404Control Margin="18 24 0 0" Visibility="Collapsed"
-                                    x:Name="FreeHeroRetryNetPanel" Message="加载周免英雄失败。"/>
-
-                    <toolkit:WrapPanel Margin="12 0 -24 0" x:Name="HeroWrapPanel" Orientation="Horizontal" />
-
-                </StackPanel>
-
-                <!--</ScrollViewer>-->
-            </phone:PivotItem>
-
-            <!--PivotItem item 6-->
-            <phone:PivotItem Header="我的" Foreground="Black">
+            <phone:PivotItem Header="我的关注" Foreground="Black">
                 <!--<ScrollViewer Margin="0">-->
                 <StackPanel Margin="0" Orientation="Vertical">
                     <StackPanel x:Name="MyDataLoadingBar" Visibility="Collapsed" Margin="18 24 0 0" Orientation="Vertical">
@@ -584,7 +377,7 @@
                 <!--</ScrollViewer>-->
             </phone:PivotItem>
 
-            <!--PivotItem item 7-->
+            <!--PivotItem item 4-->
             <phone:PivotItem Header="更多" >
                 <Grid>
                     <Grid.RowDefinitions>
@@ -657,6 +450,72 @@
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>
+
+        <Popup x:Name="SlideMenuPopup">
+            <Grid x:Name="PopGrid" Background="{StaticResource PhoneSemitransparentBrush}"  Width="480" Height="800" Tap="PopGrid_OnTap">
+                <Grid  x:Name="MenuListStackPanel" Tap="MenuListStackPanel_OnTap" Width="220" Background="Black" HorizontalAlignment="Right">
+                    <Grid.RenderTransform>
+                        <TranslateTransform></TranslateTransform>
+                    </Grid.RenderTransform>
+                    <Grid.Projection>
+                        <PlaneProjection></PlaneProjection>
+                    </Grid.Projection>
+                    <Grid.Triggers>
+                        <EventTrigger RoutedEvent="Grid.Loaded">
+                            <BeginStoryboard>
+                                <BeginStoryboard.Storyboard>
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="MenuListStackPanel">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0">
+                                                <EasingDoubleKeyFrame.EasingFunction>
+                                                    <ExponentialEase EasingMode="EaseOut" Exponent="6"/>
+                                                </EasingDoubleKeyFrame.EasingFunction>
+                                            </EasingDoubleKeyFrame>
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" Storyboard.TargetName="MenuListStackPanel">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="-80"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.35" Value="0">
+                                                <EasingDoubleKeyFrame.EasingFunction>
+                                                    <ExponentialEase EasingMode="EaseOut" Exponent="6"/>
+                                                </EasingDoubleKeyFrame.EasingFunction>
+                                            </EasingDoubleKeyFrame>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="MenuListStackPanel">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.01" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="MenuListStackPanel">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard.Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Grid.Triggers>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="90"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Margin="0 20 0 0" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}" Padding="6">
+                        <TextBlock Text="资讯类别:" Foreground="White" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                    </Border>
+
+                    <ListBox x:Name="NewsCategoryListBox"
+                             Margin="0 12 0 0"
+                             Padding="0 4 0 0"
+                             Tap="NewsCategoryListBox_OnTap"
+                             Grid.Row="1"
+                        ItemTemplate="{StaticResource NewsTypeListBoxTemplate}" ItemContainerStyle="{StaticResource NewsTypeListBoxItemStyle}"></ListBox>
+                </Grid>
+            </Grid>
+        </Popup>
     </Grid>
 
 </phone:PhoneApplicationPage>

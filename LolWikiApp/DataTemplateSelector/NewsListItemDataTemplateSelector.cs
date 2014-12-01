@@ -28,17 +28,28 @@ namespace LolWikiApp
         public DataTemplate NormalNewsDataTemplate { get; set; }
         public DataTemplate FlipViewNewsDataTemplate { get; set; }
 
+        public DataTemplate TcViewNewsDataTemplate { get; set; }
+
         public override DataTemplate SelectDataTemplate(object item, DependencyObject container)
         {
-            var news = item as NewsListInfo;
+            var news = item as NewsListBaseInfo;
 
             if (news != null)
             {
-                if (news.IsFlipNews)
+                if (news.NewsType ==null || news.NewsType.Source == "HELPER")
                 {
-                    return FlipViewNewsDataTemplate;
+                    var helperNews = item as NewsListInfo;
+                    if (helperNews!=null && helperNews.IsFlipNews)
+                    {
+                        return FlipViewNewsDataTemplate;
+                    }
+                    return NormalNewsDataTemplate;
                 }
-                return NormalNewsDataTemplate;
+                
+                if (news.NewsType.Source == "TC")
+                {
+                    return TcViewNewsDataTemplate;
+                }
             }
 
             return base.SelectDataTemplate(item, container);

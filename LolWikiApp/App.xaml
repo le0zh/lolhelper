@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:LolWikiApp"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"   
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-    
     xmlns:primitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone">
 
     <!--Application Resources-->
@@ -730,83 +729,6 @@
 
 
         <!--新的MAIN-PIVOT 样式-->
-        <Style x:Key="PivotHeadersControlStyle1" TargetType="primitives:PivotHeadersControl">
-            <Setter Property="ItemContainerStyle">
-                <Setter.Value>
-                    <Style TargetType="primitives:PivotHeaderItem">
-                        <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeLarge}"/>
-                        <Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiLight}"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Padding" Value="18,0,0,0"/>
-                        <Setter Property="Margin" Value="0 0 0 0"/>
-                        <Setter Property="ContentTemplate">
-                            <Setter.Value>
-                                <DataTemplate>
-                                    <!--<StackPanel Orientation="Horizontal">
-                                        <Path Width="48.0313" Height="43" Stretch="Fill" Fill="#ffffff" Data="F1 M 28,48C 28,50 27.5,53 26.5,53L 48,53C 50.5,53 51,50.5 51,48L 51,29L 28,29L 28,48 Z M 55,48C 55,52.3723 52,57 48.5,57L 22,57C 19.3766,57 17,52.8723 17,48.5L 17,31L 24,31L 24,25L 55,25L 55,48 Z M 21,35L 21,49C 21,51.6234 21.6255,53.25 22.5,53.25C 23.3744,53.25 24,51.6234 24,49L 24,35L 21,35 Z M 40,38L 49,38L 49,48L 40,48L 40,38 Z M 30,32L 49,32L 49,35L 30,35L 30,32 Z M 30,38L 38,38L 38,40L 30,40L 30,38 Z M 30,42L 38,42L 38,44L 30,44L 30,42 Z M 30,46L 38,46L 38,48L 30,48L 30,46 Z M 53,14L 53,20L 50,20L 50,14L 53,14 Z M 61.9215,18.5239L 57.6789,22.7665L 55.5576,20.6452L 59.8002,16.4026L 61.9215,18.5239 Z M 65.0313,28.0313L 59.0313,28.0313L 59.0313,25.0313L 65.0313,25.0313L 65.0313,28.0313 Z M 43.4926,17.1096L 47.7353,21.3523L 45.6139,23.4736L 41.3713,19.231L 43.4926,17.1096 Z M 60.6792,36.8028L 56.3631,32.6349L 58.4471,30.4768L 62.7631,34.6448L 60.6792,36.8028 Z "/>
-                                        <TextBlock Text="{Binding}"></TextBlock>
-                                    </StackPanel>-->
-                                    <TextBlock Text="{Binding}"></TextBlock>
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="primitives:PivotHeaderItem">
-                                    <Grid>
-                                        <VisualStateManager.VisualStateGroups>
-                                            <VisualStateGroup x:Name="SelectionStates">
-                                                <VisualStateGroup.Transitions>
-                                                    <VisualTransition GeneratedDuration="0:0:0.3">
-                                                        <VisualTransition.GeneratedEasingFunction>
-                                                            <CubicEase EasingMode="EaseInOut"/>
-                                                        </VisualTransition.GeneratedEasingFunction>
-                                                    </VisualTransition>
-                                                </VisualStateGroup.Transitions>
-                                                <VisualState x:Name="Unselected">
-                                                    <Storyboard>
-                                                        <!--<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ContentPresenter"/>-->
-                                                        <DoubleAnimation Duration="" From="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ItemBorder"/>
-                                                    </Storyboard>
-                                                </VisualState>
-                                                <VisualState x:Name="Selected">
-                                                    <Storyboard>
-                                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ContentPresenter"/>
-                                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ItemBorder"/>
-
-                                                        <!--<DoubleAnimation Duration="0" To="1.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="ItemBorder" />-->
-                                                        <!--<DoubleAnimation Duration="0" To="-4" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="ContentPresenter" />-->
-                                                        <!--<DoubleAnimation Duration="0" To="1.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="ContentPresenter" />
-                                                        <DoubleAnimation Duration="0" To="1.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="ContentPresenter" />-->
-                                                    </Storyboard>
-                                                </VisualState>
-                                            </VisualStateGroup>
-                                        </VisualStateManager.VisualStateGroups>
-
-                                        <ContentControl x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" 
-                                            Content="{TemplateBinding Content}"                                                      
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            Opacity="{StaticResource PhonePivotUnselectedItemOpacity}"
-                                            Margin="{TemplateBinding Padding}" FontFamily="Portable User Interface" >
-                                            <ContentControl.RenderTransform>
-                                                <CompositeTransform/>
-                                            </ContentControl.RenderTransform>
-                                        </ContentControl>
-
-                                        <Border x:Name="ItemBorder" BorderBrush="Red" Margin="{TemplateBinding Padding}" BorderThickness="0 0 0 3" Opacity="0">
-                                            <Border.RenderTransform>
-                                                <CompositeTransform/>
-                                            </Border.RenderTransform>
-                                        </Border>
-                                    </Grid>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="PivotItemStyle1" TargetType="phone:PivotItem">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Margin" Value="0 0 0 0"/>
@@ -834,43 +756,66 @@
             </Setter>
         </Style>
 
-        <DataTemplate x:Key="PivotTitleDataTemplate">
-            <Grid Margin="0 0 0 4" Visibility="Collapsed">
-                <!--<Image Source="Data/logo.png" Height="40" Margin="18 0 0 0"></Image>
-                <TextBlock Text="{Binding Title}"  HorizontalAlignment="Center" Margin="0" 
-                            Visibility="{Binding IsVisible,Converter={StaticResource BooleanToVisibilityConverter}}"
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>-->
-            </Grid>
-        </DataTemplate>
-
-        <Style x:Key="PivotStyle1" TargetType="phone:Pivot">
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+        <Style x:Key="PivotHeadersControlStyle1" TargetType="primitives:PivotHeadersControl">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Canvas Margin="0 0 0 0"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="primitives:PivotHeaderItem">
+                        <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeLarge}"/>
+                        <Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiLight}"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="phone:Pivot">
-                        <Grid Background="White" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
-                            <Grid.RowDefinitions>
-                                <!--<RowDefinition Height="Auto"/>-->
-                                <RowDefinition Height="55"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.RowSpan="1" Background="#29282e">
-                                <!--<Grid.Background>
-                                    <ImageBrush Stretch="Fill" ImageSource="/Data/top_bg.png"/>
-                                </Grid.Background>-->
-                            </Grid>
-                            <!--<ContentControl Grid.Row="0" ContentTemplate="{StaticResource PivotTitleDataTemplate}" Content="{TemplateBinding Title}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 0 0 0"/>-->
-                            <primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="0"  Style="{StaticResource PivotHeadersControlStyle1}" />
-                            <ItemsPresenter x:Name="PivotItemPresenter" Margin="0" Grid.Row="1" />
+                    <ControlTemplate TargetType="primitives:PivotHeadersControl">
+                        <Grid Margin="0,0,0,0">
+                            <Canvas x:Name="Canvas" Margin="0">
+                                <ItemsPresenter Margin="0"/>
+                            </Canvas>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
+        <Style x:Key="PivotStyle1" TargetType="phone:Pivot">
+            <Setter Property="Margin" Value="0 0 0 0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="phone:Pivot">
+                        <Grid Background="White" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="90"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Background="#29282e" CacheMode="BitmapCache" Grid.ColumnSpan="2" />
+                           
+                            <Grid Grid.Row="0" Grid.Column="0" Margin="0 4 0 0">
+                                <Image Source="Data/logo.png" Width="40" Height="40" VerticalAlignment="Center" HorizontalAlignment="Right"></Image>
+                            </Grid>
 
+                            <primitives:PivotHeadersControl Grid.Row="0" Grid.Column="1" x:Name="HeadersListElement" Style="{StaticResource PivotHeadersControlStyle1}" />
+                            <ItemsPresenter x:Name="PivotItemPresenter" Margin="0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- 英雄详情页面的pivot样式 -->
         <DataTemplate  x:Key="HeroDetailPivotTitleDataTemplate">
             <Border Background="White" Width="480" Margin="0"  BorderThickness="0"  BorderBrush="{StaticResource PhoneAccentBrush}">
                 <Grid Background="#29282e">
@@ -905,7 +850,6 @@
             </Border>
         </DataTemplate>
 
-
         <Style x:Key="PivotStyle2" TargetType="phone:Pivot">
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="0"/>
@@ -934,6 +878,10 @@
             </Setter>
         </Style>
 
+
+        <DataTemplate x:Key="NewsDataTemplateForSourceHelper">
+           
+        </DataTemplate>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

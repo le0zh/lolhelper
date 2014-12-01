@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,9 +40,17 @@ namespace LolWikiApp
                 var detailUrl = App.ViewModel.SelectedDetailGameInfoUrl;
                 Debug.WriteLine("moreInfoUrl:" + detailUrl);
 
-                //this.GameDetailWebBrowser.Navigate(new Uri(detailUrl, UriKind.Absolute));
+                var reg = new Regex("shareKey=\\w+(?=&)");
 
-                LoadAndShowInWebBrowser(detailUrl);
+                if (reg.Match(detailUrl).Success)
+                {
+                    var shareKey = reg.Match(detailUrl).Value;
+                    var newDetailUrl = "http://zdl.mbox.duowan.com/phone/matchDetail.php?" + shareKey;
+                    //this.GameDetailWebBrowser.Navigate(new Uri(detailUrl, UriKind.Absolute));
+
+                    LoadAndShowInWebBrowser(newDetailUrl);
+                }
+              
             }
 
             base.OnNavigatedTo(e);
@@ -50,9 +59,9 @@ namespace LolWikiApp
         private async void LoadAndShowInWebBrowser(string url)
         {            
             LoadingPanel.Visibility = Visibility.Visible;
-
+            Debug.WriteLine(url);
             var content = await GetHtmlContentAsync(url);
-            if (content.IndexOf("<body>") != -1)
+            if (content.IndexOf("<body>", StringComparison.Ordinal) != -1)
             {
                 content = content.Substring(content.IndexOf("<body>", StringComparison.Ordinal));
             }

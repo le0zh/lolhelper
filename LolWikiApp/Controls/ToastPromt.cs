@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Coding4Fun.Toolkit.Controls;
 
 namespace LolWikiApp
@@ -19,12 +20,13 @@ namespace LolWikiApp
             {
                 TextOrientation = System.Windows.Controls.Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
-                Stretch = Stretch.UniformToFill,
+                Stretch = Stretch.Fill,
                 Message = message,
-                Background = new SolidColorBrush(Color.FromArgb(255, 41, 40, 46)),
-                AnimationType = Clarity.Phone.Extensions.DialogService.AnimationTypes.SlideHorizontal,
-                Margin = new Thickness(-8, 0, 0, 0),
-                IsAppBarVisible = true
+                //ImageSource = new BitmapImage(new Uri("/Data/logo.png", UriKind.Relative)),
+                //Background = new SolidColorBrush(Color.FromArgb(255, 41, 40, 46)),
+                Background = new SolidColorBrush(Colors.Red),
+                AnimationType = Clarity.Phone.Extensions.DialogService.AnimationTypes.Vetical,
+                Margin = new Thickness(0, 0, 0, 0)
             };
         }
     }
