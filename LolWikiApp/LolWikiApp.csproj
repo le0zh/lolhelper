@@ -307,6 +307,11 @@
     <Content Include="Data\banner1.png" />
     <Content Include="Data\banner3.png" />
     <Content Include="Data\champion.json" />
+    <Content Include="Data\GameDetailIcon\assitant.png" />
+    <Content Include="Data\GameDetailIcon\dead.png" />
+    <Content Include="Data\GameDetailIcon\kill-icon.png" />
+    <Content Include="Data\GameDetailIcon\lose-team.png" />
+    <Content Include="Data\GameDetailIcon\win-team.png" />
     <Content Include="Data\hanbaobao.png" />
     <Content Include="Data\hero_bg1.jpg" />
     <Content Include="Data\html\common.css" />

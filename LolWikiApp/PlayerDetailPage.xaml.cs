@@ -19,8 +19,6 @@ namespace LolWikiApp
         public PlayerDetailPage()
         {
             InitializeComponent();
-
-            SystemTray.ProgressIndicator = indicator;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

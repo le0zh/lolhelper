@@ -13,52 +13,37 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White">
 
-    <Grid x:Name="LayoutRoot" Margin="0 -1 0 0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
+    <phone:Pivot x:Name="LayoutPivot" Foreground="White"
+                 Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
+        <phone:PivotItem Header="关于">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <Border x:Name="PivotTitlContainer" Height="50" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
-            <TextBlock Text="关于" x:Name="TitleTextBlock" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
-        </Border>
-
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <StackPanel Grid.Row="1" Margin="12 8 0 0" >
-
-                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                <StackPanel Grid.Row="1" Margin="12 8 0 0"  >
+                    <TextBlock Foreground="Black" Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				                <Run Text="软件版本： v2.0.0"/>
-                </TextBlock>
-
-                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                    </TextBlock>
+                    <TextBlock Foreground="Black" Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				            <Run Text="官方数据版本："/>
 				            <Run Text="v4.18.1"/>
-                </TextBlock>
-
-                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                    </TextBlock>
+                    <TextBlock Foreground="Black" Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				            <Run Text="意见反馈："/>
 				            <Run Text="newlight@qq.com"/>
-                </TextBlock>
-
-                <TextBlock Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                    </TextBlock>
+                    <TextBlock Foreground="Black" Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				            <Run Text="交流QQ群："/>
 				            <Run Text="49573963"/>
-                </TextBlock>
-
-            </StackPanel>
-
-
-        </Grid>
-
-    </Grid>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </phone:PivotItem>
+    </phone:Pivot>
 </phone:PhoneApplicationPage>

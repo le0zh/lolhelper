@@ -487,6 +487,26 @@
 
         <local:LocalizedStrings  x:Key="LocalizedStrings"/>
 
+
+        <Style x:Key="UnScrollableListBoxStyle" TargetType="ListBox">
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"></Setter>
+        </Style>
+        
+        <!--TODO: 合并水平listbox样式定义-->
+        <!--水平排列的listbox样式定义，-->
+        <Style x:Key="CommonHorizontalListBoxStyle" TargetType="ListBox">
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"></Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!--水平排列的listbox样式定义，用来展示装备图标-->
         <Style x:Key="HorizontalListBoxStyle" TargetType="ListBox">
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
@@ -802,7 +822,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Grid Background="#29282e" CacheMode="BitmapCache" Grid.ColumnSpan="2" />
-                           
+
                             <Grid Grid.Row="0" Grid.Column="0" Margin="0 4 0 0">
                                 <Image Source="Data/logo.png" Width="40" Height="40" VerticalAlignment="Center" HorizontalAlignment="Right"></Image>
                             </Grid>
@@ -814,7 +834,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <!-- 英雄详情页面的pivot样式 -->
         <DataTemplate  x:Key="HeroDetailPivotTitleDataTemplate">
             <Border Background="White" Width="480" Margin="0"  BorderThickness="0"  BorderBrush="{StaticResource PhoneAccentBrush}">
@@ -879,8 +899,65 @@
         </Style>
 
 
-        <DataTemplate x:Key="NewsDataTemplateForSourceHelper">
-           
+        <DataTemplate x:Key="TeamMemberDataTemplate">
+            <Grid MinWidth="480">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"></RowDefinition>
+                    <RowDefinition Height="60"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="2"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="60"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Height="120" Source="{Binding HeroIcon}" Stretch="UniformToFill"></Image>
+
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+
+                    <ListBox Margin="12 0 0 0"
+                             ItemsSource="{Binding MasterIconList}"
+                             Style="{StaticResource CommonHorizontalListBoxStyle}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Image Height="25" Width="25" Margin="0 0 12 0" Source="{Binding}"></Image>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+
+                <ListBox Grid.Row="1" Grid.Column="1" 
+                         ItemsSource="{Binding ZbIconList}"
+                         Style="{StaticResource CommonHorizontalListBoxStyle}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Image Height="25" Width="25" Margin="0 0 12 0" Source="{Binding}"></Image>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Data/GameDetailIcon/kill-icon.png"></Image>
+                        <TextBlock Text="{Binding Kill}"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Data/GameDetailIcon/dead.png"></Image>
+                        <TextBlock Text="{Binding Dead}"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Data/GameDetailIcon/assitant.png"></Image>
+                        <TextBlock Text="{Binding Assistant}"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+
+                <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Height="2" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}"></Border>
+            </Grid>
         </DataTemplate>
     </Application.Resources>
 

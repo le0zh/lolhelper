@@ -47,8 +47,7 @@ namespace LolWikiApp.ViewModels
             Debug.WriteLine("-------LOADED CACHED NEWS LIST COUNT " + count);
         }
 
-        public int CurrentPage { get; set; }
-        public int CurrentPageForFunnyNews { get; set; }
+       public int CurrentPageForFunnyNews { get; set; }
 
         public int TotalPage { get; set; }
 
@@ -66,7 +65,6 @@ namespace LolWikiApp.ViewModels
         public async Task<List<NewsListInfo>> LoadNewsListInfoListAsync(NewsType type, int page = 1)
         {
             List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
-            CurrentPage = page;
             return newsList;
         }
 
@@ -83,28 +81,31 @@ namespace LolWikiApp.ViewModels
             {
                 var newsList = await NewsRepository.GetPagedNewsList(typeWrapper.Type, page);
 
-                if (typeWrapper.Type == NewsType.Latest)
+                if (page == 1)
                 {
-                    try
+                    if (typeWrapper.Type == NewsType.Latest)
                     {
-                        var bannerList = await NewsRepository.GetBannerNewsList();
+                        try
+                        {
+                            var bannerList = await NewsRepository.GetBannerNewsList();
+                            var bannerNewsInfo = new NewsListInfo() { IsFlipNews = true };
+                            bannerNewsInfo.BannerListInfos.AddRange(bannerList);
+                            NewsListInfObservableCollection.Add(bannerNewsInfo);
+                        }
+                        catch
+                        {
+                            Debug.WriteLine("banner news got failed.");
+                        }
+                    }
+                    else
+                    {
                         var bannerNewsInfo = new NewsListInfo() { IsFlipNews = true };
-                        bannerNewsInfo.BannerListInfos.AddRange(bannerList);
+                        bannerNewsInfo.BannerListInfos.Add(new NewsListInfo()
+                        {
+                            Img = "/Data/banner3.png"
+                        });
                         NewsListInfObservableCollection.Add(bannerNewsInfo);
                     }
-                    catch
-                    {
-                        Debug.WriteLine("banner news got failed.");
-                    }
-                }
-                else
-                {
-                    var bannerNewsInfo = new NewsListInfo() { IsFlipNews = true };
-                    bannerNewsInfo.BannerListInfos.Add(new NewsListInfo()
-                    {
-                        Img = "/Data/banner3.png"
-                    });
-                    NewsListInfObservableCollection.Add(bannerNewsInfo);
                 }
 
                 foreach (var n in newsList)

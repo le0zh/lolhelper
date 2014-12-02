@@ -11,103 +11,94 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True">
-    
-    <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Margin="0 -1 0 0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
 
-        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 0" Grid.Row="0" Background="#29282e">
-            <TextBlock Text="推荐出装" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
-        </Border>
+    <phone:Pivot x:Name="LayoutPivot" Foreground="White"
+                 Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
+        <phone:PivotItem Header="推荐出装">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
+                <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0 0 1">
+                    <Grid Margin="12 0 0 0" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="90"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
 
-            <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0 0 1">
-                <Grid Margin="12 0 0 0" Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="90"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-
-                    <Image HorizontalAlignment="Left" Grid.Column="0" Height="80" Width="80" Source="{Binding ImageUrl, Converter={StaticResource ImageSourceConverter}}"></Image>
-                    <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                        <TextBlock Text="{Binding Title}"></TextBlock>
-                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
+                        <Image HorizontalAlignment="Left" Grid.Column="0" Height="80" Width="80" Source="{Binding ImageUrl, Converter={StaticResource ImageSourceConverter}}"></Image>
+                        <StackPanel Grid.Column="1" Margin="8 0 0 0">
+                            <TextBlock Text="{Binding Title}"></TextBlock>
+                            <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
                         <Run Text="作   者："></Run>
                         <Run Text="{Binding User_name}"></Run>
-                        </TextBlock>
-                        <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
+                            </TextBlock>
+                            <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
                         <Run Text="战斗力："></Run>
                         <Run  Text="{Binding Combat}"></Run>
-                        </TextBlock>
-                    </StackPanel>
-                </Grid>
-
-            </Border>
-           
-            <ScrollViewer Grid.Row="1" Margin="0 2 0 0"  VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
-                        <StackPanel Orientation="Vertical" Margin="12 0 0 0">
-                            <TextBlock Text="前期" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 0 0 8"></TextBlock>
+                            </TextBlock>
                         </StackPanel>
-                    </Border>
-                    <Canvas>
+                    </Grid>
 
-                    </Canvas>
-                    <ListBox Margin="12 0 0 0" ItemsSource="{Binding PreSkillImageUrls}"
+                </Border>
+
+                <ScrollViewer Grid.Row="1" Margin="0 2 0 0"  VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
+                            <StackPanel Orientation="Vertical" Margin="12 0 0 0">
+                                <TextBlock Text="前期" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 0 0 8"></TextBlock>
+                            </StackPanel>
+                        </Border>
+                        <Canvas>
+
+                        </Canvas>
+                        <ListBox Margin="12 0 0 0" ItemsSource="{Binding PreSkillImageUrls}"
                                           Style="{StaticResource HorizontalSkillListBoxStyle}"/>
-                    <ListBox Margin="12 0 0 0" ItemsSource="{Binding PreEquipmentImageUrls}"
+                        <ListBox Margin="12 0 0 0" ItemsSource="{Binding PreEquipmentImageUrls}"
                                           Style="{StaticResource HorizontalListBoxStyle}"/>
-                    <TextBlock Text="{Binding Pre_explain}" TextWrapping="Wrap" Margin="12 0 0 12"></TextBlock>
+                        <TextBlock Text="{Binding Pre_explain}" TextWrapping="Wrap" Margin="12 0 0 12"></TextBlock>
 
 
-                    <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
-                        <TextBlock Text="中期" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="12 0 0 8"></TextBlock>
-                    </Border>
-                    <ListBox Margin="12 0 0 0" ItemsSource="{Binding MidSkillImageUrls}"
+                        <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
+                            <TextBlock Text="中期" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="12 0 0 8"></TextBlock>
+                        </Border>
+                        <ListBox Margin="12 0 0 0" ItemsSource="{Binding MidSkillImageUrls}"
                                           Style="{StaticResource HorizontalSkillListBoxStyle}"/>
-                    <ListBox Margin="12 0 0 0" ItemsSource="{Binding MidEquipmentImageUrls}"
+                        <ListBox Margin="12 0 0 0" ItemsSource="{Binding MidEquipmentImageUrls}"
                                           Style="{StaticResource HorizontalListBoxStyle}"/>
-                    <TextBlock Text="{Binding Mid_explain}" TextWrapping="Wrap" Margin="12 0 0 12"></TextBlock>
+                        <TextBlock Text="{Binding Mid_explain}" TextWrapping="Wrap" Margin="12 0 0 12"></TextBlock>
 
 
-                    <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
-                        <TextBlock Text="后期" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="12 0 0 8"></TextBlock>
-                    </Border>
-                    <ListBox Margin="12 0 0 0" ItemsSource="{Binding EndSkillImageUrls}"
+                        <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
+                            <TextBlock Text="后期" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="12 0 0 8"></TextBlock>
+                        </Border>
+                        <ListBox Margin="12 0 0 0" ItemsSource="{Binding EndSkillImageUrls}"
                                           Style="{StaticResource HorizontalSkillListBoxStyle}"/>
-                    <ListBox Margin="12 0 0 0" ItemsSource="{Binding EndEquipmentImageUrls}"
+                        <ListBox Margin="12 0 0 0" ItemsSource="{Binding EndEquipmentImageUrls}"
                                           Style="{StaticResource HorizontalListBoxStyle}"/>
-                    <TextBlock Text="{Binding End_explain}" TextWrapping="Wrap" Margin="12 0 0 12"></TextBlock>
+                        <TextBlock Text="{Binding End_explain}" TextWrapping="Wrap" Margin="12 0 0 12"></TextBlock>
 
 
-                    <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
-                        <TextBlock Text="逆风" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="12 0 0 8"></TextBlock>
-                    </Border>
-                    <ListBox Margin="12 0 0 0" ItemsSource="{Binding NfEquipmentImageUrls}"
+                        <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
+                            <TextBlock Text="逆风" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="12 0 0 8"></TextBlock>
+                        </Border>
+                        <ListBox Margin="12 0 0 0" ItemsSource="{Binding NfEquipmentImageUrls}"
                                           Style="{StaticResource HorizontalListBoxStyle}"/>
-                    <TextBlock Margin="12 0 0 0" Text="{Binding Nf_explain}" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Margin="12 0 0 0" Text="{Binding Nf_explain}" TextWrapping="Wrap"></TextBlock>
 
-                </StackPanel>
+                    </StackPanel>
 
-            </ScrollViewer>
+                </ScrollViewer>
 
-        </Grid>
-    </Grid>
-
+            </Grid>
+        </phone:PivotItem>
+    </phone:Pivot>
 
 
 </phone:PhoneApplicationPage>

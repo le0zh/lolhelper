@@ -29,6 +29,8 @@ namespace LolWikiApp
         private Player _selectedPlayer;
         private bool _isToBind;
 
+        public string TitleText { get; set; }
+
         public PlayerInformationPage()
         {
             InitializeComponent();
@@ -51,7 +53,8 @@ namespace LolWikiApp
                     _isToBind = true;
             }
 
-            TitleTextBlock.Text = _isToBind ? "绑定召唤师信息" : "搜索召唤师";
+            TitleText = _isToBind ? "绑定召唤师信息" : "搜索召唤师";
+            DataContext = this;
 
             base.OnNavigatedTo(e);
         }

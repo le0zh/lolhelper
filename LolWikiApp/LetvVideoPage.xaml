@@ -11,248 +11,228 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait"  
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True"
     BackKeyPress="LetvVideoPage_OnBackKeyPress"
     mc:Ignorable="d">
 
-    <shell:SystemTray.ProgressIndicator>
-        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="视频地址解析中..." />
-    </shell:SystemTray.ProgressIndicator>
-
-    <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Margin="0 -1 0 0" Background="#29282e">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-
-        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
-            <TextBlock Text="视频中心" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
-        </Border>
-
-        <phone:Pivot Title="视频中心" x:Name="MainPivot" Foreground="White"
-                     Grid.Row="1"
+    <phone:Pivot Title="视频中心" x:Name="MainPivot" Foreground="White"
                      Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}"
                      SelectionChanged="MainPivot_OnSelectionChanged">
 
-            <!--PivotItem item 0-->
-            <phone:PivotItem Header="最新">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+        <!--PivotItem item 0-->
+        <phone:PivotItem Header="最新">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <StackPanel Margin="18 24 0 0" x:Name="LateastLoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Foreground="Red" Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+                <StackPanel Margin="18 24 0 0" x:Name="LateastLoadingBar" Grid.Row="0" Orientation="Vertical">
+                    <ProgressBar Foreground="Red" Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="LateastRetryNetPanel" Message="加载视频列表失败。"/>
 
-                    <local:RefreshableListBox x:Name="LatestVideoLongListSelector" 
+                <local:RefreshableListBox x:Name="LatestVideoLongListSelector" 
                                           Grid.Row ="2"
                                           Margin="0 2 0 0"
                                           IsGetMoreEnabled="True"
                                           IsRefreshEnabled ="False"
-                                              ListScrollingUp="VideoLongListSelector_OnListScrollingUp"
-                                              ListScrollingDown="VideoLongListSelector_OnListScrollingDown"
                                           Tap="VideoListLongListSelector_OnTap"
                                           GettingMoreTriggered="LatestVideoLongListSelector_OnGettingMoreTriggered"
                                           ItemTemplate="{StaticResource LetvVideoListDataTemplate}" />
 
-                </Grid>
-            </phone:PivotItem>
+            </Grid>
+        </phone:PivotItem>
 
-            <!--PivotItem item 1-->
-            <phone:PivotItem Header="解说">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+        <!--PivotItem item 1-->
+        <phone:PivotItem Header="解说">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <StackPanel Margin="18 24 0 0" x:Name="JieshuoLoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+                <StackPanel Margin="18 24 0 0" x:Name="JieshuoLoadingBar" Grid.Row="0" Orientation="Vertical">
+                    <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="JieshuoRetryNetPanel" Message="加载视频列表失败。"/>
 
-                    <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
-                        <toolkit:WrapPanel x:Name="JieshuoWrapPanel"></toolkit:WrapPanel>
-                    </ScrollViewer>
+                <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
+                    <toolkit:WrapPanel x:Name="JieshuoWrapPanel"></toolkit:WrapPanel>
+                </ScrollViewer>
 
-                </Grid>
-            </phone:PivotItem>
+            </Grid>
+        </phone:PivotItem>
 
-            <!--PivotItem item 2-->
-            <phone:PivotItem Header="搞笑">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+        <!--PivotItem item 2-->
+        <phone:PivotItem Header="搞笑">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <StackPanel Margin="18 24 0 0" x:Name="FunnyLoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+                <StackPanel Margin="18 24 0 0" x:Name="FunnyLoadingBar" Grid.Row="0" Orientation="Vertical">
+                    <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="FunnyRetryNetPanel" Message="加载视频列表失败。"/>
 
-                    <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
-                        <toolkit:WrapPanel x:Name="FunnyWrapPanel"></toolkit:WrapPanel>
-                    </ScrollViewer>
-                </Grid>
-            </phone:PivotItem>
+                <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
+                    <toolkit:WrapPanel x:Name="FunnyWrapPanel"></toolkit:WrapPanel>
+                </ScrollViewer>
+            </Grid>
+        </phone:PivotItem>
 
-            <!--PivotItem item 3-->
-            <phone:PivotItem Header="综合">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+        <!--PivotItem item 3-->
+        <phone:PivotItem Header="综合">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <StackPanel Margin="18 24 0 0" x:Name="ZhongheLoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+                <StackPanel Margin="18 24 0 0" x:Name="ZhongheLoadingBar" Grid.Row="0" Orientation="Vertical">
+                    <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="ZhongheRetryNetPanel" Message="加载视频列表失败。"/>
 
-                    <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
-                        <toolkit:WrapPanel x:Name="ZhongheWrapPanel"></toolkit:WrapPanel>
-                    </ScrollViewer>
-                </Grid>
-            </phone:PivotItem>
+                <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
+                    <toolkit:WrapPanel x:Name="ZhongheWrapPanel"></toolkit:WrapPanel>
+                </ScrollViewer>
+            </Grid>
+        </phone:PivotItem>
 
-            <!--PivotItem item 4-->
-            <phone:PivotItem Header="比赛">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+        <!--PivotItem item 4-->
+        <phone:PivotItem Header="比赛">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <StackPanel Margin="18 24 0 0" x:Name="MatchLoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+                <StackPanel Margin="18 24 0 0" x:Name="MatchLoadingBar" Grid.Row="0" Orientation="Vertical">
+                    <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                    <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
+                <local:HttpRequest404Control Grid.Row="1" Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="MatchRetryNetPanel" Message="加载视频列表失败。"/>
 
-                    <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
-                        <toolkit:WrapPanel x:Name="MatchWrapPanel"></toolkit:WrapPanel>
-                    </ScrollViewer>
-                </Grid>
-            </phone:PivotItem>
+                <ScrollViewer Grid.Row="2" Margin="10 2 0 0">
+                    <toolkit:WrapPanel x:Name="MatchWrapPanel"></toolkit:WrapPanel>
+                </ScrollViewer>
+            </Grid>
+        </phone:PivotItem>
 
-            <!--PivotItem item 5-->
-            <phone:PivotItem Header="本地">
-                <!--ContentPanel - place additional content here-->
-                <Grid x:Name="ContentPanel">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+        <!--PivotItem item 5-->
+        <phone:PivotItem Header="本地">
+            <!--ContentPanel - place additional content here-->
+            <Grid x:Name="ContentPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <StackPanel Margin="18 24 0 0" Visibility="Collapsed" x:Name="NoCachedVideoPanel" Grid.Row="0">
-                        <TextBlock Foreground="Gray">没有本地视频</TextBlock>
-                    </StackPanel>
+                <StackPanel Margin="18 24 0 0" Visibility="Collapsed" x:Name="NoCachedVideoPanel" Grid.Row="0">
+                    <TextBlock Foreground="Gray">没有本地视频</TextBlock>
+                </StackPanel>
 
-                    <StackPanel Margin="18 24 0 0" Visibility="Collapsed" x:Name="CachedVideoLoadingBar" Grid.Row="1" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    </StackPanel>
+                <StackPanel Margin="18 24 0 0" Visibility="Collapsed" x:Name="CachedVideoLoadingBar" Grid.Row="1" Orientation="Vertical">
+                    <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-                    <ListBox Margin="0 2 0 0" Grid.Row="2" Name="TransferListBox"  Tap="TransferListBox_OnTap">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6 6 6 6">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
+                <ListBox Margin="0 2 0 0" Grid.Row="2" Name="TransferListBox"  Tap="TransferListBox_OnTap">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="6 6 6 6">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
 
-                                        <Canvas Grid.Column="0" Width="120">
-                                            <Image Source="{Binding DisplayUrl}" Width="120" Height="95" Stretch="UniformToFill"></Image>
-                                            <StackPanel Width="120" Canvas.Top="68" Background="{StaticResource PhoneSemitransparentBrush}">
-                                                <TextBlock HorizontalAlignment="Right" Text="{Binding DisplayLength}" VerticalAlignment="Center" Foreground="White" Margin="0 0 4 0"></TextBlock>
-                                            </StackPanel>
-                                        </Canvas>
+                                    <Canvas Grid.Column="0" Width="120">
+                                        <Image Source="{Binding DisplayUrl}" Width="120" Height="95" Stretch="UniformToFill"></Image>
+                                        <StackPanel Width="120" Canvas.Top="68" Background="{StaticResource PhoneSemitransparentBrush}">
+                                            <TextBlock HorizontalAlignment="Right" Text="{Binding DisplayLength}" VerticalAlignment="Center" Foreground="White" Margin="0 0 4 0"></TextBlock>
+                                        </StackPanel>
+                                    </Canvas>
 
-                                        <Grid  MinWidth="348" MinHeight="95" Grid.Column="1" Margin="8 0 0 0" >
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"></RowDefinition>
-                                                <RowDefinition Height="16"></RowDefinition>
-                                                <RowDefinition Height="24"></RowDefinition>
-                                            </Grid.RowDefinitions>
+                                    <Grid  MinWidth="348" MinHeight="95" Grid.Column="1" Margin="8 0 0 0" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                            <RowDefinition Height="16"></RowDefinition>
+                                            <RowDefinition Height="24"></RowDefinition>
+                                        </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Row="0" Text="{Binding FileName}" Margin="0 0 4 0" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black" />
+                                        <TextBlock Grid.Row="0" Text="{Binding FileName}" Margin="0 0 4 0" FontSize="{StaticResource PhoneFontSizeNormal}" TextWrapping="Wrap" Foreground="Black" />
 
-                                            <ProgressBar MinWidth="344" Grid.Row="1" IsIndeterminate="False" HorizontalAlignment="Left" Margin="-10 4 0 4" x:Name="CachingProgressBar" 
+                                        <ProgressBar MinWidth="344" Grid.Row="1" IsIndeterminate="False" HorizontalAlignment="Left" Margin="-10 4 0 4" x:Name="CachingProgressBar" 
                                                          Style="{StaticResource MyProgressBarStyle}" 
                                                          Height="8" 
                                                          Value="{Binding PercentDisplay}"
                                                          Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}"></ProgressBar>
 
-                                            <Grid Grid.Row="2">
-                                                <!-- 下载中时可见 -->
-                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                        <Grid Grid.Row="2">
+                                            <!-- 下载中时可见 -->
+                                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
                                                            Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <Run Text="{Binding TransferStatus, Converter={StaticResource TransferStatusConverter}}" ></Run>
                                                         <Run Text="{Binding SpeedDisplay}"></Run>
-                                                </TextBlock>
-                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                            </TextBlock>
+                                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
                                                            Margin="0 0 12 0"
                                                            Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
                                                         <Run Text="{Binding PercentDisplay}"></Run>
                                                         <Run Text="% "></Run>
-                                                </TextBlock>
+                                            </TextBlock>
 
-                                                <!-- 下载完毕时可见 -->
-                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}"
+                                            <!-- 下载完毕时可见 -->
+                                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}"
                                                            Visibility="{Binding IsDone,Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <Run Text="大小: " ></Run>
                                                         <Run Text="{Binding SizeDisplay}"></Run>
                                                      <Run Text= " MB" ></Run>
-                                                </TextBlock>
-                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                            </TextBlock>
+                                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}" 
                                                            Margin="0 0 18 0"
                                                            Visibility="{Binding IsDone,Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
                                                         <Run Text="时长："></Run>
                                                         <Run Text="{Binding DisplayLength}"></Run>
-                                                </TextBlock>
-                                            </Grid>
+                                            </TextBlock>
                                         </Grid>
-
                                     </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-            </phone:PivotItem>
 
-        </phone:Pivot>
-    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </phone:PivotItem>
+
+    </phone:Pivot>
 
 </phone:PhoneApplicationPage>

@@ -13,96 +13,96 @@
     Foreground="Black"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
 
-    <Grid x:Name="LayoutRoot" Margin="0 -1 0 0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
 
-        <Border x:Name="PivotTitlContainer" Height="50" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
-            <TextBlock Text="英雄联盟助手" x:Name="TitleTextBlock" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
-        </Border>
+    <phone:Pivot x:Name="LayoutPivot" Foreground="White"
+                 Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
 
-        <Grid Grid.Row="1" Name="ContentPanel" Margin="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="220"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
+        <!--Pivot item one-->
+        <phone:PivotItem Header="{Binding TitleText}">
+            <Grid Name="ContentPanel" Margin="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="220"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
 
-            <StackPanel Margin="0 12 0 0" Orientation="Vertical" Grid.Row="0">
-                <TextBlock FontSize="{StaticResource PhoneFontSizeMedium}" Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
-                <TextBox x:Name="PlayerNameTextBox" Padding="6 0 0 0"  Text="" Background="White" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
-                <toolkit:PickerBox x:Name="ServerListPicker" 
+                <StackPanel Margin="0 12 0 0" Orientation="Vertical" Grid.Row="0" >
+                    <TextBlock FontSize="{StaticResource PhoneFontSizeMedium}" Foreground="Black" Text="召唤师名称:" Margin="12 0 12 0"></TextBlock>
+                    <TextBox x:Name="PlayerNameTextBox" Padding="6 0 0 0"  Text="" Background="White" BorderThickness="0,0,0,1.5" BorderBrush="#BF000000"></TextBox>
+                    <toolkit:PickerBox x:Name="ServerListPicker" 
                                    Header="服务器名称:" BorderThickness="0 0 0 1.5" 
+                                       Foreground="Black"
                                    FontSize="{StaticResource PhoneFontSizeMedium}"
                                    FullModeHeader="请选择服务器：">
-                    <toolkit:PickerBox.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" Foreground="Black"></TextBlock>
-                        </DataTemplate>
-                    </toolkit:PickerBox.HeaderTemplate>
+                        <toolkit:PickerBox.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="Black"></TextBlock>
+                            </DataTemplate>
+                        </toolkit:PickerBox.HeaderTemplate>
 
-                    <toolkit:PickerBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding DisplayName}"></TextBlock>
-                        </DataTemplate>
-                    </toolkit:PickerBox.ItemTemplate>
+                        <toolkit:PickerBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayName}"></TextBlock>
+                            </DataTemplate>
+                        </toolkit:PickerBox.ItemTemplate>
 
-                    <toolkit:PickerBox.FullModeItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource PhoneTextLowContrastBrush}" Margin="18 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
-                        </DataTemplate>
-                    </toolkit:PickerBox.FullModeItemTemplate>
+                        <toolkit:PickerBox.FullModeItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource PhoneTextLowContrastBrush}" Margin="18 24 24 24" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" />
+                            </DataTemplate>
+                        </toolkit:PickerBox.FullModeItemTemplate>
 
-                </toolkit:PickerBox>
-            </StackPanel>
+                    </toolkit:PickerBox>
+                </StackPanel>
 
-            <TextBlock Grid.Row="1" x:Name="NotFoundTextBlock" Visibility="Collapsed" TextWrapping="Wrap" Text="没有该召唤师信息" Foreground="{StaticResource PhoneSubtleBrush}" Margin="12 12 0 0"></TextBlock>
+                <TextBlock Grid.Row="1" x:Name="NotFoundTextBlock" Visibility="Collapsed" TextWrapping="Wrap" Text="没有该召唤师信息" Foreground="{StaticResource PhoneSubtleBrush}" Margin="12 12 0 0"></TextBlock>
 
-            <StackPanel Grid.Row="1" Visibility="Collapsed" Margin="12 0 0 0" x:Name="SearchLoadingBar" Orientation="Vertical">
-                <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
-                <TextBlock Text="搜索中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-            </StackPanel>
+                <StackPanel Grid.Row="1" Visibility="Collapsed" Margin="12 0 0 0" x:Name="SearchLoadingBar" Orientation="Vertical">
+                    <ProgressBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <TextBlock Text="搜索中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                </StackPanel>
 
-            <ScrollViewer Grid.Row="1" x:Name="PlayerInfoViewer" Visibility="Collapsed">
+                <ScrollViewer Grid.Row="1" x:Name="PlayerInfoViewer" Visibility="Collapsed">
 
-                <StackPanel  Margin="12 0 12 0" Orientation="Vertical">
-                    <TextBlock Text="找到召唤师：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                    <Border BorderBrush="DarkGray" BorderThickness="1" Padding="12">
-                        <StackPanel Tap="UIElement_OnTap" Margin="0" Height="100" VerticalAlignment="Top" Orientation="Horizontal">
-                            <Image Height="100" Source="{Binding PhotoUrl}"></Image>
-                            <StackPanel Margin="12 0 0 0">
-                                <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                    <StackPanel  Margin="12 0 12 0" Orientation="Vertical">
+                        <TextBlock Text="找到召唤师：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                        <Border BorderBrush="DarkGray" BorderThickness="1" Padding="12">
+                            <StackPanel Tap="UIElement_OnTap" Margin="0" Height="100" VerticalAlignment="Top" Orientation="Horizontal">
+                                <Image Height="100" Source="{Binding PhotoUrl}"></Image>
+                                <StackPanel Margin="12 0 0 0">
+                                    <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="Black">
                                             <Run Text="{Binding Name}"></Run>
                                             <Run Text="{Binding Level}"></Run>
                                             <Run Text="级"></Run>
-                                </TextBlock>
-                                <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}">
+                                    </TextBlock>
+                                    <TextBlock FontSize="{StaticResource PhoneFontSizeMediumLarge}" Foreground="Black">
                                             <Run Text="{Binding ServerInfo.DisplayName}"></Run>
-                                </TextBlock>
-                                <TextBlock>
-                                            <Run Text="战斗力："></Run>
+                                    </TextBlock>
+                                    <TextBlock Foreground="Black">
+                                            <Run Text="战斗力：" ></Run>
                                             <Run Text="{Binding Power}"></Run>
-                                </TextBlock>
+                                    </TextBlock>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Border>
+                        </Border>
 
-                </StackPanel>
+                    </StackPanel>
 
-            </ScrollViewer>
+                </ScrollViewer>
+            </Grid>
 
-        </Grid>
-    </Grid>
+        </phone:PivotItem>
 
+        <phone:PivotItem Header="搜索历史">
+            <TextBlock Text="TBD" Foreground="Black" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        </phone:PivotItem>
+    </phone:Pivot>
 
 
 </phone:PhoneApplicationPage>

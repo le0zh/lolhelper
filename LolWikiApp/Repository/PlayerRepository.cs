@@ -17,12 +17,11 @@ using Newtonsoft.Json.Linq;
 
 namespace LolWikiApp.Repository
 {
-   public class PlayerRepository : Repository
+    public class PlayerRepository : Repository
     {
         private const string PlayerSettingsKey = "_playerSettings";
 
-        private const string CurrentMatchUrlForamt =
-            "http://lolbox.duowan.com/phone/apiCurrentMatch.php?action=getCurrentMatch&serverName={0}&OSType=iOS7.1.1&target={1}";
+        private const string CurrentMatchUrlForamt = "http://lolbox.duowan.com/phone/apiCurrentMatch.php?action=getCurrentMatch&serverName={0}&OSType=iOS7.1.1&target={1}";
 
         public async Task<CurrentGameInfo> GetCurrentGameInfoAsync(string serverName, string userName)
         {
@@ -39,7 +38,7 @@ namespace LolWikiApp.Repository
             //{
             //    json = await sr.ReadToEndAsync();
             //}
-            
+
             var jObject = JObject.Parse(json);
             var gameInfo = JsonConvert.DeserializeObject<CurrentGameInfo>(jObject["gameInfo"].ToString());
 
@@ -70,7 +69,7 @@ namespace LolWikiApp.Repository
 
             return gameInfo;
         }
-        
+
         public void SavePlayerInfo(string userName, ServerInfo serverInfo)
         {
             var settings = IsolatedStorageSettings.ApplicationSettings;
@@ -92,7 +91,7 @@ namespace LolWikiApp.Repository
 
             settings.Save();
         }
-        
+
         public Player ReadPlayerInfoSettings()
         {
             if (!IsolatedStorageSettings.ApplicationSettings.Contains(PlayerSettingsKey))
@@ -104,7 +103,7 @@ namespace LolWikiApp.Repository
                 IsolatedStorageSettings.ApplicationSettings[PlayerSettingsKey] as PlayerInfoSettingWrapper;
             if (wrapper != null)
             {
-                var p = new Player {Name = wrapper.Name, ServerInfo = wrapper.ServerInfo, IsDataLoaded = false};
+                var p = new Player { Name = wrapper.Name, ServerInfo = wrapper.ServerInfo, IsDataLoaded = false };
 
                 return p;
             }
@@ -206,14 +205,15 @@ namespace LolWikiApp.Repository
             HtmlNodeCollection scoreNodes = mainContentSectionNode.SelectNodes("div[1]/ul[1]/li");
             if (scoreNodes != null)
             {
-                foreach (HtmlNode scoreNode in scoreNodes)
+                foreach (var scoreNode in scoreNodes)
                 {
-                    MatchGameInfo gameInfo = new MatchGameInfo();
-
-                    gameInfo.Mode = scoreNode.SelectSingleNode("span[1]").InnerText;
-                    gameInfo.WinRate = scoreNode.SelectSingleNode("span[2]").InnerText;
-                    gameInfo.WinNumber = scoreNode.SelectSingleNode("span[3]").InnerText;
-                    gameInfo.LoseNumber = scoreNode.SelectSingleNode("span[4]").InnerText;
+                    var gameInfo = new MatchGameInfo
+                    {
+                        Mode = scoreNode.SelectSingleNode("span[1]").InnerText,
+                        WinRate = scoreNode.SelectSingleNode("span[2]").InnerText,
+                        WinNumber = scoreNode.SelectSingleNode("span[3]").InnerText,
+                        LoseNumber = scoreNode.SelectSingleNode("span[4]").InnerText
+                    };
 
                     player.MatchGameInfos.Add(gameInfo);
                 }
@@ -266,7 +266,7 @@ namespace LolWikiApp.Repository
             return player;
         }
 
-       public async Task<HttpActionResult> GameDetailTest()
+        public async Task<HttpActionResult> GameDetailTest()
         {
             const string notFoundTitle = "召唤师搜索";
             var httpActionResult = new HttpActionResult();
@@ -290,8 +290,8 @@ namespace LolWikiApp.Repository
             httpActionResult.Result = ActionResult.Success;
             httpActionResult.Value = content;
             return httpActionResult;
-       }
-        
+        }
+
         public async Task<HttpActionResult> PharsePlayerInfo(string sn, string pn)
         {
             const string notFoundTitle = "召唤师搜索";
@@ -300,7 +300,7 @@ namespace LolWikiApp.Repository
             var client = new HttpClient();
             const string urlFormat = @"http://lolbox.duowan.com/phone/playerDetail_ios.php?sn={0}&target={1}";
             string url = string.Format(urlFormat, sn, pn);
-         
+
             string content;
 
             try
@@ -351,5 +351,198 @@ namespace LolWikiApp.Repository
             return value;
         }
 
+        public GameDetailInfo ParseGameDetailTest(string htmlContent)
+        {
+            var gameDeatil = new GameDetailInfo();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(htmlContent);
+
+            var gameTypeNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[1]/div[1]/div/span[1]");
+            var gameDurationNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[1]/div[1]/div/span[2]");
+            var uploadedTimeNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[1]/div[1]/div/span[3]");
+
+            gameDeatil.GameType = gameTypeNode.InnerText.Trim();
+            gameDeatil.GameDuration = gameDurationNode.InnerText.Trim();
+            gameDeatil.UploadedTime = uploadedTimeNode.InnerText.Trim();
+
+            var winTeamMemberNodes = doc.DocumentNode.SelectNodes("/html/body/section/div[1]/div[2]/ul/li");
+            var loseTeamMemberNodes = doc.DocumentNode.SelectNodes("/html/body/section/div[2]/div[2]/ul/li");
+
+            foreach (var winTeamMemberNode in winTeamMemberNodes)
+            {
+                gameDeatil.WonTeam.Add(ParsePlayerInfo(winTeamMemberNode));
+            }
+
+            foreach (var loseTeamMemberNode in loseTeamMemberNodes)
+            {
+                gameDeatil.LoseTeam.Add(ParsePlayerInfo(loseTeamMemberNode));
+            }
+
+            var scoreNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[2]/div[1]/div/span[1]");
+            var moneyNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[2]/div[1]/div/span[2]");
+
+            gameDeatil.ScoreInfo = scoreNode.InnerHtml.Trim();
+            gameDeatil.MoneyInfo = moneyNode.InnerHtml.Trim();
+            
+            return gameDeatil;
+        }
+
+        private TeamMember ParsePlayerInfo(HtmlNode playerNode)
+        {
+            var member = new TeamMember();
+
+            #region 基本信息
+            var playerNameNode = playerNode.SelectSingleNode("div[1]/a/div/p/span[1]");
+            var heroIconNode = playerNode.SelectSingleNode("div[1]/a/span/img");
+            var scoreNode = playerNode.SelectSingleNode("div[1]/a/div/p/span[2]");
+
+            var masterIconsNodes = playerNode.SelectNodes("div[1]/a/div/p/img");
+            if (masterIconsNodes != null)
+            {
+                foreach (var masterIconNode in masterIconsNodes)
+                {
+                    member.MasterIconList.Add(masterIconNode.Attributes["src"].Value);                    
+                }
+            }
+
+            var zbIconsNodes = playerNode.SelectNodes("div[1]/a/div/img");
+            if (zbIconsNodes != null)
+            {
+                foreach (var zbIconNode in zbIconsNodes)
+                {
+                    member.ZbIconList.Add(zbIconNode.Attributes["src"].Value);                    
+                }
+            }
+
+            //TODO: change the defualt value
+            member.Name = playerNameNode.InnerHtml.Trim();
+            member.HeroIcon = heroIconNode != null ? heroIconNode.Attributes["src"].Value : "notfound"; 
+            
+            var scoreAll = scoreNode != null ? scoreNode.InnerHtml.Trim() : "0/0/0";
+            var scoreParts = scoreAll.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+            if (scoreParts.Length == 3)
+            {
+                member.Kill = scoreParts[0];
+                member.Dead = scoreParts[1];
+                member.Assistant = scoreParts[2];
+            }
+            #endregion
+
+            #region 详细信息
+            var skillIconsNodes = playerNode.SelectNodes("div[2]/div/img");
+            if (skillIconsNodes != null)
+            {
+                foreach (var skillIconNode in skillIconsNodes)
+                {
+                    member.SkillIconList.Add(skillIconNode.Attributes["src"].Value);                    
+                }
+            }
+
+            //补兵
+            var killUnitNode = playerNode.SelectSingleNode("div[2]/p[1]/em[1]/span[1]");
+            member.KillUnitDesc = killUnitNode.InnerHtml.Trim();
+
+            //推塔
+            var killTowerNode = playerNode.SelectSingleNode("div[2]/p[1]/em[1]/span[2]");
+            member.KillTowerDesc = killTowerNode.InnerHtml.Trim();
+
+            //金钱
+            var moneyNode = playerNode.SelectSingleNode("div[2]/p[1]/em[2]/span[1]");
+            member.MoneyDesc = moneyNode.InnerHtml.Trim();
+
+            //对英雄伤害
+            var demageNode = playerNode.SelectSingleNode("div[2]/p[1]/em[2]/span[2]");
+            member.DemageDesc = demageNode.InnerHtml.Trim();
+
+            //连杀
+            var serialKillNode = playerNode.SelectSingleNode("div[2]/p[2]/span[1]");
+            member.SerialKillDesc = serialKillNode.InnerHtml.Trim();
+
+            //多杀
+            var multiKillNode = playerNode.SelectSingleNode("div[2]/p[2]/span[2]");
+            member.MultiKillDesc = multiKillNode.InnerHtml.Trim();
+
+            //暴击
+            var criticalNode = playerNode.SelectSingleNode("div[2]/p[2]/span[3]");
+            member.CriticalDesc = criticalNode.InnerHtml.Trim();
+
+            //放眼数
+            var putEyeNode = playerNode.SelectSingleNode("div[2]/p[3]/span[1]");
+            member.PutEyeDesc = putEyeNode.InnerHtml.Trim();
+
+            //排眼数
+            var clearEyeNode = playerNode.SelectSingleNode("div[2]/p[3]/span[2]");
+            member.ClearEyeDesc = clearEyeNode.InnerHtml.Trim();
+            #endregion           
+
+            return member;
+        }
+    }
+
+    public class TeamMember
+    {
+        public TeamMember()
+        {
+            ZbIconList = new List<string>();
+            SkillIconList = new List<string>();
+            MasterIconList = new List<string>();
+        }
+
+        public string Name { get; set; }
+
+        public string Kill { get; set; }
+
+        public string Dead { get; set; }
+
+        public string Assistant { get; set; }
+
+        public string HeroIcon { get; set; }
+
+        public List<string> ZbIconList { get; private set; }
+
+        public List<string> SkillIconList { get; private set; }
+
+        public List<string> MasterIconList { get; private set; }
+
+        public string KillUnitDesc { get; set; }
+
+        public string KillTowerDesc { get; set; }
+
+        public string MoneyDesc { get; set; }
+
+        public string DemageDesc { get; set; }
+
+        public string SerialKillDesc { get; set; }
+
+        public string MultiKillDesc { get; set; }
+
+        public string CriticalDesc { get; set; }
+
+        public string PutEyeDesc { get; set; }
+
+        public string ClearEyeDesc { get; set; }
+    }
+
+    public class GameDetailInfo
+    {
+        public GameDetailInfo()
+        {
+            WonTeam = new List<TeamMember>();
+            LoseTeam = new List<TeamMember>();
+        }
+
+        public string GameType { get; set; }
+
+        public string GameDuration { get; set; }
+
+        public string UploadedTime { get; set; }
+
+        public string ScoreInfo { get; set; }
+
+        public string MoneyInfo { get; set; }
+
+        public List<TeamMember> WonTeam { get; private set; }
+
+        public List<TeamMember> LoseTeam { get; private set; }
     }
 }

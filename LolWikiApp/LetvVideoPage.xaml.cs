@@ -589,55 +589,5 @@ namespace LolWikiApp
 
             return menuItem;
         }
-
-        private void ContextMenu_OnLoaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void GestureListener_OnTap(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
-        {
-            Debug.WriteLine("GestureListener_OnTap");
-            var border = sender as Border;
-            var contextMenu = ContextMenuService.GetContextMenu(border);
-            if (contextMenu.Parent == null)
-            {
-                contextMenu.IsOpen = true;
-            }
-        }
-
-        private AnimatonHelper _adAnimatonHelper = new AnimatonHelper();
-        private bool _isHideing = false;
-        private void VideoLongListSelector_OnListScrollingUp(object sender, EventArgs e)
-        {
-            if (_isHideing == false && _isShowing == false)
-            {
-                _isHideing = true;
-                //if (PivotTitlContainer.Height > 0)
-                //{
-                //    Debug.WriteLine("visible:false");
-                //    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(1));
-                //}
-                _isHideing = false;
-            }
-        }
-
-        private bool _isShowing = false;
-        private void VideoLongListSelector_OnListScrollingDown(object sender, EventArgs e)
-        {
-            if (_isShowing == false && _isHideing == false)
-            {
-                _isShowing = true;
-                if (PivotTitlContainer.Height > 0)
-                {
-
-                }
-                else
-                {
-                    //_adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(1));
-                }
-                _isShowing = false;
-            }
-        }
     }
 }

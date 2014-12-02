@@ -12,82 +12,65 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True">
 
-    <shell:SystemTray.ProgressIndicator>
-        <shell:ProgressIndicator x:Name="indicator" Text="加载中..."  IsIndeterminate="True"></shell:ProgressIndicator>
-    </shell:SystemTray.ProgressIndicator>
 
-    <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="#29282e" Margin="0 -1 0 0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
+    <phone:Pivot x:Name="HeroPivot" SelectionChanged="HeroPivot_OnSelectionChanged" Foreground="White"
+                 Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
 
-        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
-            <TextBlock Text="英雄数据" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
-        </Border>
+        <!--Pivot item one-->
+        <phone:PivotItem Header="所有英雄">
 
-        <!--Pivot Control-->
-        <phone:Pivot Grid.Row="1" x:Name="HeroPivot" SelectionChanged="HeroPivot_OnSelectionChanged" Foreground="White"
-                   Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
+            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                <toolkit:WrapPanel x:Name="AllHeroWrapPanel" Orientation="Horizontal" >
+                </toolkit:WrapPanel>
+            </ScrollViewer>
 
-            <!--Pivot item one-->
-            <phone:PivotItem Header="所有英雄">
+        </phone:PivotItem>
 
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" Grid.Row="1">
-                        <toolkit:WrapPanel x:Name="AllHeroWrapPanel" Orientation="Horizontal" >
-                        </toolkit:WrapPanel>
-                    </ScrollViewer>
-                
-            </phone:PivotItem>
+        <!--Pivot item two-->
+        <phone:PivotItem Header="战士">
+            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
+                <toolkit:WrapPanel x:Name="FighterHeroWrapPanel" Orientation="Horizontal" />
+            </ScrollViewer>
+        </phone:PivotItem>
 
-            <!--Pivot item two-->
-            <phone:PivotItem Header="战士">
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                    <toolkit:WrapPanel x:Name="FighterHeroWrapPanel" Orientation="Horizontal" />
-                </ScrollViewer>
-            </phone:PivotItem>
-
-            <phone:PivotItem Header="法师">
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                    <toolkit:WrapPanel x:Name="MageHeroWrapPanel" Orientation="Horizontal" />
-                </ScrollViewer>
-            </phone:PivotItem>
+        <phone:PivotItem Header="法师">
+            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
+                <toolkit:WrapPanel x:Name="MageHeroWrapPanel" Orientation="Horizontal" />
+            </ScrollViewer>
+        </phone:PivotItem>
 
 
-            <phone:PivotItem Header="刺客">
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                    <toolkit:WrapPanel x:Name="AssassinHeroWrapPanel" Orientation="Horizontal" />
-                </ScrollViewer>
-            </phone:PivotItem>
+        <phone:PivotItem Header="刺客">
+            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
+                <toolkit:WrapPanel x:Name="AssassinHeroWrapPanel" Orientation="Horizontal" />
+            </ScrollViewer>
+        </phone:PivotItem>
 
 
-            <phone:PivotItem Header="坦克">
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                    <toolkit:WrapPanel x:Name="TankHeroWrapPanel" Orientation="Horizontal" />
-                </ScrollViewer>
-            </phone:PivotItem>
+        <phone:PivotItem Header="坦克">
+            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
+                <toolkit:WrapPanel x:Name="TankHeroWrapPanel" Orientation="Horizontal" />
+            </ScrollViewer>
+        </phone:PivotItem>
 
 
-            <phone:PivotItem Header="射手">
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                    <toolkit:WrapPanel x:Name="MarksmanHeroWrapPanel" Orientation="Horizontal" />
-                </ScrollViewer>
-            </phone:PivotItem>
+        <phone:PivotItem Header="射手">
+            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
+                <toolkit:WrapPanel x:Name="MarksmanHeroWrapPanel" Orientation="Horizontal" />
+            </ScrollViewer>
+        </phone:PivotItem>
 
 
-            <phone:PivotItem Header="辅助">
-                <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                    <toolkit:WrapPanel x:Name="SupportHeroWrapPanel" Orientation="Horizontal" />
-                </ScrollViewer>
-            </phone:PivotItem>
-        </phone:Pivot>
-    </Grid>
+        <phone:PivotItem Header="辅助">
+            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
+                <toolkit:WrapPanel x:Name="SupportHeroWrapPanel" Orientation="Horizontal" />
+            </ScrollViewer>
+        </phone:PivotItem>
+    </phone:Pivot>
 
 </phone:PhoneApplicationPage>

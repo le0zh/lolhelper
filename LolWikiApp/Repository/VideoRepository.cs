@@ -372,8 +372,6 @@ namespace LolWikiApp.Repository
 
         private Button GetVideoPlayButton(string text, string src, FullScreenPopup actionPopup)
         {
-
-
             const string template = @"<Button xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Width='100' Margin='0' BorderThickness='0' HorizontalAlignment='Center'>
                             <Grid>
                                 <Grid.RowDefinitions>

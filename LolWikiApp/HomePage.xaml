@@ -39,7 +39,8 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <StackPanel x:Name="NewsLoadingBar" Grid.Row="0" Orientation="Horizontal" Margin="18,24,0,0">
+                    <StackPanel x:Name="NewsLoadingBar" Grid.Row="0" Orientation="Vertical" Margin="18,24,0,0">
+                        <ProgressBar HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}" VerticalAlignment="Center"></TextBlock>
                     </StackPanel>
 
@@ -102,7 +103,7 @@
 
                                                     <Image Grid.Column="0"
                                                                Margin="0 0 8 0"
-                                                               VerticalAlignment="Top" Width="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
+                                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="UniformToFill" Source="{Binding Img, Converter={StaticResource ImageSourceConverter}}"></Image>
 
                                                     <StackPanel Grid.Column="1" Orientation="Vertical">
                                                         <TextBlock  Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
@@ -112,8 +113,6 @@
                                                         <!--<TextBlock  Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Center"  FontSize="{StaticResource PhoneFontSizeSmall}">
                                                                     <Run Text="{Binding PostTime}"></Run></TextBlock>-->
                                                     </StackPanel>
-
-
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -124,7 +123,7 @@
                                             <toolkit:FlipView x:Name="HorizontalFlipView"
                                                       ItemsSource="{Binding BannerListInfos}"
                                                       UseTouchAnimationsForAllNavigation="True"
-                                                      
+                                                      Tap="HorizontalFlipView_Tap"
                                                       MinWidth="468"
                                                       Margin="0" >
                                                 <toolkit:FlipView.ItemTemplate>
@@ -158,8 +157,6 @@
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto"></RowDefinition>
                                                         <RowDefinition Height="Auto"></RowDefinition>
-
-
                                                     </Grid.RowDefinitions>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="128"></ColumnDefinition>
@@ -171,10 +168,11 @@
                                                VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
 
                                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
-                                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SummaryDisplay}"
+                                                    <Border Grid.Column="1" Grid.Row="1" Padding="0 0 8 0">
+                                                        <TextBlock Text="{Binding SummaryDisplay}"
 								                                   Foreground="Gray"
 								                                   FontSize="{StaticResource PhoneFontSizeSmall}" TextWrapping="Wrap"></TextBlock>
-
+                                                    </Border>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -183,8 +181,6 @@
                             </DataTemplate>
                         </local:RefreshableListBox.ItemTemplate>
                     </local:RefreshableListBox>
-
-
                 </Grid>
             </phone:PivotItem>
 
@@ -193,7 +189,7 @@
                 <!--<ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">-->
             <StackPanel  Margin="0 0 0 0" >
                 <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical" Margin="18,24,0,0">
-                    <ProgressBar HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                    <ProgressBar HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
                     <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                 </StackPanel>
 
@@ -201,7 +197,6 @@
                                     x:Name="FreeHeroRetryNetPanel" Message="加载周免英雄失败。"/>
 
                 <toolkit:WrapPanel Margin="12 0 -24 0" x:Name="HeroWrapPanel" Orientation="Horizontal" />
-
             </StackPanel>
 
             <!--</ScrollViewer>-->

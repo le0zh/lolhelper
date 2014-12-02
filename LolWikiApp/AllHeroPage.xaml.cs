@@ -25,8 +25,6 @@ namespace LolWikiApp
         {
             InitializeComponent();
 
-            SystemTray.ProgressIndicator = indicator;
-
             heroPanels = new WrapPanel[] { 
                 this.AllHeroWrapPanel, 
                 this.FighterHeroWrapPanel, this.MageHeroWrapPanel, 

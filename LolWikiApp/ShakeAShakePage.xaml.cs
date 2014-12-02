@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -24,6 +25,21 @@ namespace LolWikiApp
             ShakeGesturesHelper.Instance.Active = true;
         }
 
+        //backup: 备份切换动画
+        //private bool isBackAnimated;
+        //protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        //{
+        //    if (!isBackAnimated)
+        //    {
+        //        var animatonHelper = new AnimatonHelper();
+        //        animatonHelper.RunShowStoryboard(LayoutPivot, AnimationTypes.SlideRightOutFade, TimeSpan.FromSeconds(0), (s, o) =>
+        //        {
+        //            isBackAnimated = true;
+        //            NavigationService.GoBack();
+        //        });
+        //        e.Cancel = true;
+        //    }
+        //}
 
         private void InstanceOnShakeGesture(object sender, ShakeGestureEventArgs e)
         {
@@ -157,5 +173,6 @@ namespace LolWikiApp
 
             NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml?sn=" + sn + "&pn=" + pn, UriKind.Relative));
         }
+      
     }
 }

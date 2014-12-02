@@ -16,19 +16,15 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" 
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White"   
     toolkit:TiltEffect.IsTiltEnabled="True"  
     BackKeyPress="DetailsPage_OnBackKeyPress">
 
-    <shell:SystemTray.ProgressIndicator>
-        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="视频地址解析中..." />
-    </shell:SystemTray.ProgressIndicator>
-
     <!--Data context is set to sample data above and first item in sample data collection below and LayoutRoot contains the root grid where all other page content is placed-->
 
-    <Grid x:Name="LayoutRoot" Margin="0 -12 0 0" Background="#29282e">
+    <Grid x:Name="LayoutRoot" Margin="0 0 0 0" Background="#29282e">
 
         <phone:Pivot Title="{Binding}" x:Name="HeroDetailMainPivot" SelectionChanged="HeroDetailMainPivot_OnSelectionChanged"  
                      Style="{StaticResource PivotStyle2}"
