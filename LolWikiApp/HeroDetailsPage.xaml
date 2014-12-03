@@ -143,7 +143,7 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel x:Name="HeroVideoLoadingBar" Grid.Row="0" Orientation="Vertical">
-                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
+                        <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="12,24,0,0"  VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
@@ -302,10 +302,9 @@
             <phone:PivotItem Header="排行">
                 <ScrollViewer>
                     <StackPanel Margin="0">
+                        <ProgressBar x:Name="TopPlayerLoadingBar" Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="12,24,0,0"  VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
 
-                        <ProgressBar x:Name="TopPlayerLoadingBar" Visibility="Visible" HorizontalAlignment="Left" Height="18" Margin="0,0,0,0"  VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
-
-                        <TextBlock Margin="0 24 0 24"  x:Name="rank404TextBlock" Visibility="Collapsed" FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneSubtleBrush}">
+                        <TextBlock Margin="0 24 0 24"  x:Name="Rank404TextBlock" Visibility="Collapsed" FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneSubtleBrush}">
                             <Run Text="貌似网络不太稳定..."></Run>
                             <LineBreak></LineBreak>
                             <Run Text="加载排行列表失败。"></Run>
@@ -403,8 +402,7 @@
                                                EndScaleY="0"/>
                         </telerikPrimitives:RadWindow.CloseAnimation>
                         <!--<Grid Height="800" Width="480" Background="{StaticResource PhoneSemitransparentBrush}">-->
-                        <Grid Height="800" Width="481" Background="#29282e" Margin="0 24 0 0">
-                            
+                        <Grid Height="800" Width="480" Background="#29282e" Margin="0 0 0 0">
                             <toolkit:FlipView x:Name="HorizontalFlipView"
                                               VerticalAlignment="Center"
                                               Height="800" Width="481"

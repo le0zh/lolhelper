@@ -105,6 +105,7 @@
     <Compile Include="Controls\RefreshableListBox\RefreshableListBoxX.cs" />
     <Compile Include="Controls\ToastPromt.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converter\ForegroundConverter.cs" />
     <Compile Include="Converter\ImageSourceConverter.cs" />
     <Compile Include="Converter\LetvSourceConverter.cs" />
     <Compile Include="Converter\TransferStatusConverter.cs" />

@@ -182,7 +182,7 @@ namespace LolWikiApp
             {
                 ApplicationBar = null;
                 TopPlayerLoadingBar.Visibility = Visibility.Visible;
-                rank404TextBlock.Visibility = Visibility.Collapsed;
+                Rank404TextBlock.Visibility = Visibility.Collapsed;
 
                 HttpClient client = new HttpClient();
                 string content =
@@ -197,7 +197,7 @@ namespace LolWikiApp
             }
             catch (Exception exception404)
             {
-                rank404TextBlock.Visibility = Visibility.Visible;
+                Rank404TextBlock.Visibility = Visibility.Visible;
                 ShowRetryPanelAppBar(LoadRankList);
             }
             finally
@@ -337,11 +337,11 @@ namespace LolWikiApp
         {
             if (HeroRanListBox.SelectedItem != null)
             {
-                HeroRankWrapper heroRankWrapper = HeroRanListBox.SelectedItem as HeroRankWrapper;
+                var heroRankWrapper = HeroRanListBox.SelectedItem as HeroRankWrapper;
                 if (heroRankWrapper != null)
                 {
                     HeroRanListBox.SelectedItem = null; //reset selected item.
-                    string url = string.Format("/PlayerDetailPage.xaml?sn={0}&pn={1}", heroRankWrapper.ServerName, heroRankWrapper.PlayerName);
+                    var url = string.Format("/PlayerDetailPage.xaml?sn={0}&pn={1}", heroRankWrapper.ServerName, heroRankWrapper.PlayerName);
                     NavigationService.Navigate(new Uri(url, UriKind.Relative));
                 }
             }

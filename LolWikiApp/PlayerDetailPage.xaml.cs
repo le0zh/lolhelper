@@ -43,7 +43,7 @@ namespace LolWikiApp
                 if (App.ViewModel.SelectedPlayer != null)
                 {
                     DataContext = App.ViewModel.SelectedPlayer;
-                    LayoutRoot.Visibility = Visibility.Visible;
+                    LayoutPivot.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -57,13 +57,10 @@ namespace LolWikiApp
 
         private async void LoadAndBindPlayerInfo(string sn, string pn)
         {
-            SystemTray.ProgressIndicator.IsVisible = true;
-            SystemTray.Opacity = 1;
+            LoadingGrid.Visibility = Visibility.Visible;
+            LayoutPivot.Visibility = Visibility.Collapsed;
 
             var actionResult = await App.ViewModel.GetPlayerDetailInfo(sn, pn);
-
-            SystemTray.Opacity = 0;
-            SystemTray.ProgressIndicator.IsVisible = false;
 
             switch (actionResult.Result)
             {
@@ -89,7 +86,8 @@ namespace LolWikiApp
                     else
                     {
                         DataContext = detailPlayerInfo;
-                        LayoutRoot.Visibility = Visibility.Visible;
+                        LoadingGrid.Visibility = Visibility.Collapsed;
+                        LayoutPivot.Visibility = Visibility.Visible;
                     }
                     break;
             }
@@ -99,9 +97,10 @@ namespace LolWikiApp
         {
             if (this.RecentGameLongListSelector.SelectedItem != null)
             {
-                GameInfo game = this.RecentGameLongListSelector.SelectedItem as GameInfo;
+                var game = this.RecentGameLongListSelector.SelectedItem as GameInfo;
                 if (game != null)
                 {
+                    RecentGameLongListSelector.SelectedItem = null;
                     App.ViewModel.SelectedDetailGameInfoUrl = game.GameDetailUrl;
                     NavigationService.Navigate(new Uri("/GameDetailPage.xaml", UriKind.Relative));
                 }

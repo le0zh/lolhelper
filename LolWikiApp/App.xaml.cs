@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Resources;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Navigation;
@@ -13,6 +14,8 @@ using LolWikiApp.Resources;
 using LolWikiApp.ViewModels;
 using Microsoft.Phone.Notification;
 using Microsoft.WindowsAzure.Messaging;
+using Telerik.Windows.Controls;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace LolWikiApp
 {
@@ -52,7 +55,7 @@ namespace LolWikiApp
         {
             // Global handler for uncaught exceptions.
             UnhandledException += Application_UnhandledException;
-            
+
             // Standard XAML initialization
             InitializeComponent();
 
@@ -177,7 +180,7 @@ namespace LolWikiApp
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-           
+
         }
 
         // Code to execute if a navigation fails
@@ -324,5 +327,25 @@ namespace LolWikiApp
             }
         }
 
+        private void TeamMemberGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            var grid = sender as Grid;
+            if (grid != null)
+            {
+                var animationHelper = new AnimatonHelper();
+                
+                if (Math.Abs(grid.Height - 190) < 0.1)
+                {
+                    //hide
+                    animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoHide, TimeSpan.FromSeconds(0), null);
+                }
+                else
+                {
+                    animationHelper.RunShowStoryboard(grid, AnimationTypes.SwivelForwardIn, TimeSpan.FromSeconds(0), null);
+                    //show
+                    animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoShow, TimeSpan.FromSeconds(0), null);
+                }
+            }
+        }
     }
 }
