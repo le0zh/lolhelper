@@ -27,7 +27,6 @@
         <phone:Pivot SelectionChanged="MainPivot_OnSelectionChanged" 
                      x:Name="MainPivot" 
                      Foreground="White"
-                     Margin="0 0 0 -90"
                      Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
             <!--PivotItem item 1-->
             <phone:PivotItem Header="资讯中心">
@@ -120,18 +119,28 @@
 
                                     <local:NewsListItemDataTemplateSelector.FlipViewNewsDataTemplate>
                                         <DataTemplate>
-                                            <toolkit:FlipView x:Name="HorizontalFlipView"
+                                            <Grid>
+                                                <toolkit:FlipView x:Name="HorizontalFlipView"
                                                       ItemsSource="{Binding BannerListInfos}"
                                                       UseTouchAnimationsForAllNavigation="True"
                                                       Tap="HorizontalFlipView_Tap"
                                                       MinWidth="468"
                                                       Margin="0" >
-                                                <toolkit:FlipView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Image Source="{Binding Img}" Stretch="Fill" ></Image>
-                                                    </DataTemplate>
-                                                </toolkit:FlipView.ItemTemplate>
-                                            </toolkit:FlipView>
+                                                    <toolkit:FlipView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Image Source="{Binding Img}" Stretch="Fill" ></Image>
+                                                        </DataTemplate>
+                                                    </toolkit:FlipView.ItemTemplate>
+                                                </toolkit:FlipView>
+
+                                                <Border Height="30" VerticalAlignment="Bottom">
+                                                    <TextBlock HorizontalAlignment="Center" Foreground="White" FontWeight="Bold">
+                                                        <Run Text="{Binding ElementName = HorizontalFlipView, Path=SelectedIndex, Converter={StaticResource SelectedItemConverter}}"></Run>
+                                                        <Run Text="/"></Run>
+                                                        <Run Text="{Binding ElementName = HorizontalFlipView, Path=Items.Count}"></Run>
+                                                    </TextBlock>
+                                                </Border>
+                                            </Grid>
                                         </DataTemplate>
                                     </local:NewsListItemDataTemplateSelector.FlipViewNewsDataTemplate>
 
@@ -164,8 +173,8 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                               Margin="0 0 8 0"
-                                               VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
+                                                           Margin="0 0 8 0"
+                                                           VerticalAlignment="Top" Width="120" Height="120" HorizontalAlignment="Left" Stretch="Uniform" Source="{Binding image_url_small, Converter={StaticResource ImageSourceConverter}}"></Image>
 
                                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding title}" FontSize="{StaticResource PhoneFontSizeNormal}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="Black"></TextBlock>
                                                     <Border Grid.Column="1" Grid.Row="1" Padding="0 0 8 0">
@@ -187,188 +196,114 @@
             <!--PivotItem item 2-->
             <phone:PivotItem Header="周免英雄">
                 <!--<ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">-->
-            <StackPanel  Margin="0 0 0 0" >
-                <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical" Margin="18,24,0,0">
-                    <ProgressBar HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
-                    <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                </StackPanel>
+                <StackPanel  Margin="0 0 0 0" >
+                    <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical" Margin="18,24,0,0">
+                        <ProgressBar HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="400" IsIndeterminate="True"/>
+                        <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
+                    </StackPanel>
 
-                <local:HttpRequest404Control Margin="18 24 0 0" Visibility="Collapsed"
+                    <local:HttpRequest404Control Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="FreeHeroRetryNetPanel" Message="加载周免英雄失败。"/>
 
-                <toolkit:WrapPanel Margin="12 0 -24 0" x:Name="HeroWrapPanel" Orientation="Horizontal" />
-            </StackPanel>
+                    <toolkit:WrapPanel Margin="12 0 -24 0" x:Name="HeroWrapPanel" Orientation="Horizontal" />
+                </StackPanel>
 
-            <!--</ScrollViewer>-->
+                <!--</ScrollViewer>-->
             </phone:PivotItem>
 
             <!--PivotItem item 3-->
             <phone:PivotItem Header="我的关注" Foreground="Black">
                 <!--<ScrollViewer Margin="0">-->
-                <StackPanel Margin="0" Orientation="Vertical">
-                    <StackPanel x:Name="MyDataLoadingBar" Visibility="Collapsed" Margin="18 24 0 0" Orientation="Vertical">
+                <Grid Margin="0 0 0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="MyDataLoadingBar" Grid.Row="0" Visibility="Collapsed" Margin="18 24 0 0" Orientation="Vertical">
                         <ProgressBar Visibility="Visible" HorizontalAlignment="Left" Height="18"   VerticalAlignment="Top" Width="383" IsIndeterminate="True"/>
                         <TextBlock Text="加载中" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                     </StackPanel>
 
-                    <StackPanel Visibility="Collapsed" x:Name="NeedBindPlayerInfoPanel" Margin="18 24 0 0">
+                    <StackPanel Visibility="Collapsed" Grid.Row="1" x:Name="NeedBindPlayerInfoPanel" Margin="18 24 0 0">
                         <TextBlock Text="您还没有关绑定唤师信息。" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
                         <!--<Button Width="150" HorizontalAlignment="Left" Content="绑定" Margin="-12 12 0 0" x:Name="AddFollowButton" Click="AddFollowButton_OnClick"></Button>-->
                     </StackPanel>
 
-                    <local:HttpRequest404Control Margin="18 24 0 0" Visibility="Collapsed"
+                    <local:HttpRequest404Control Grid.Row="2" Margin="18 24 0 0" Visibility="Collapsed"
                                     x:Name="MyInfomationRetryNetPanel" Message="加载召唤师信息失败。"/>
 
-                    <Grid x:Name="PlayerRecordPanel" Visibility="Collapsed" Margin="12 12 12 0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="100"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                        </Grid.RowDefinitions>
+                    <phone:LongListSelector Grid.Row="3" x:Name="PlayerRecordPanel" Visibility="Collapsed" Tap="PlayerRecordPanel_OnTap" >
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Border MinWidth="480" Padding="12" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}">
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu IsZoomEnabled="False" IsFadeEnabled="False" Foreground="White" Background="Black">
+                                            <toolkit:MenuItem Header="取消关注" Tag="{Binding}" Click="MenuItem_OnClick" />
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="100"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-
-                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding PhotoUrl}" Height="100"></Image>
-                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="12 0 0 0" VerticalAlignment="Center" Orientation="Vertical">
-                            <TextBlock Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
-                            <TextBlock>
-                                    <Run Text="{Binding ServerInfo.DisplayName}"></Run>
-                                    <Run Text="{Binding Level}"></Run>
-                                    <Run Text="级"></Run>
-                            </TextBlock>
-                            <TextBlock>
-                                    <Run Text="被赞"></Run>
-                                    <Run Text="{Binding Good}"></Run>
-                                    <Run Text="被拉黑"></Run>
-                                    <Run Text="{Binding Bad}"></Run>
-                            </TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="2" 
-                                    Background="{StaticResource PhoneAccentBrush}" 
-                                    Margin="0 0 0 0" Width="100">
-                            <TextBlock Foreground="White" FontSize="{StaticResource PhoneFontSizeMediumLarge}" Margin="0 12 0 0" Text="战斗力" HorizontalAlignment="Center"></TextBlock>
-                            <TextBlock Foreground="White" FontSize="{StaticResource PhoneFontSizeMediumLarge}" Margin="0 0 0 0" Text="{Binding Power}" HorizontalAlignment="Center"></TextBlock>
-                        </StackPanel>
-
-                        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
-                                    Margin="0 24 0 12"
-                                    BorderBrush="{StaticResource PhoneBorderBrush}"
-                                    BorderThickness="0 2 0 1">
-                            <TextBlock Text="匹配赛战绩：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                        </Border>
-
-                        <phone:LongListSelector Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-                                                    ItemsSource="{Binding MatchGameInfos}">
-                            <phone:LongListSelector.ListHeaderTemplate>
-                                <DataTemplate>
                                     <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"></RowDefinition>
+                                            <RowDefinition Height="60"></RowDefinition>
+                                        </Grid.RowDefinitions>
+
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="100"></ColumnDefinition>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock FontWeight="ExtraBold" Grid.Column="0" Text="模式"></TextBlock>
-                                        <TextBlock FontWeight="ExtraBold" Grid.Column="1" Text="胜率"></TextBlock>
-                                        <TextBlock FontWeight="ExtraBold" Grid.Column="2" Text="胜场"></TextBlock>
-                                        <TextBlock FontWeight="ExtraBold" Grid.Column="3" Text="负场"></TextBlock>
+                                        <Canvas Grid.Column="0" Width="100" Height="100">
+                                            <Image Source="{Binding PhotoUrl}" Width="100" Height="100" Stretch="UniformToFill"></Image>
+                                            <StackPanel Height="30" Canvas.Top="70" Background="{StaticResource PhoneAccentBrush}">
+                                                <TextBlock HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeSmall}"  VerticalAlignment="Center" Foreground="White" Margin="0 0 0 0">
+                                                    <Run Text="Lv"></Run>
+                                                    <Run Text="{Binding Level}"></Run>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Canvas>
+
+                                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="12 0 0 0" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeLarge}" VerticalAlignment="Bottom"></TextBlock>
+                                            <TextBlock Margin="12 0 0 0"  VerticalAlignment="Center">
+                                                <Run Text="("></Run>
+                                                <Run Text="{Binding ServerInfo.DisplayName}"></Run>
+                                                <Run Text=")"></Run>
+                                            </TextBlock>
+                                            <Image  Height="30" Stretch="UniformToFill" Source="{Binding Range, Converter={StaticResource LevelImageSourceConverter}}" VerticalAlignment="Center"></Image>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="12 0 0 0" Orientation="Horizontal">
+                                            <Border Background="Gray" Padding="4"  Margin="0 0 12 0">
+                                                <StackPanel  Height="60">
+                                                    <TextBlock Foreground="White" Text="{Binding Power}" HorizontalAlignment="Center"></TextBlock>
+                                                    <TextBlock Foreground="White" Margin="0 0 0 0" Text="战斗力" FontSize="{StaticResource PhoneFontSizeSmall}" HorizontalAlignment="Center"></TextBlock>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Background="Gray" Padding="4"  Margin="0 0 12 0">
+                                                <StackPanel Height="60">
+                                                    <TextBlock Foreground="White" Text="{Binding TotalGamesNumber}" HorizontalAlignment="Center"></TextBlock>
+                                                    <TextBlock Foreground="White" Margin="0 0 0 0" Text="匹配总场次" FontSize="{StaticResource PhoneFontSizeSmall}" HorizontalAlignment="Center"></TextBlock>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Background="Gray" Padding="4"  Margin="0 0 12 0">
+                                                <StackPanel Height="60">
+                                                    <TextBlock Foreground="White" Text="{Binding RankGmeInfo.WinNumber}" HorizontalAlignment="Center"></TextBlock>
+                                                    <TextBlock Foreground="White" Margin="0 0 0 0" Text="排位胜场次" FontSize="{StaticResource PhoneFontSizeSmall}" HorizontalAlignment="Center"></TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
                                     </Grid>
-                                </DataTemplate>
-                            </phone:LongListSelector.ListHeaderTemplate>
-
-                            <phone:LongListSelector.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock Grid.Column="0" Text="{Binding Mode}"></TextBlock>
-                                        <TextBlock Grid.Column="1" Text="{Binding WinRate}"></TextBlock>
-                                        <TextBlock Grid.Column="2" Text="{Binding WinNumber}"></TextBlock>
-                                        <TextBlock Grid.Column="3" Text="{Binding LoseNumber}"></TextBlock>
-                                    </Grid>
-                                </DataTemplate>
-                            </phone:LongListSelector.ItemTemplate>
-                        </phone:LongListSelector>
-
-                        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
-                                    Margin="0 12 0 12"
-                                    BorderBrush="{StaticResource PhoneBorderBrush}"
-                                    BorderThickness="0 1 0 1">
-                            <TextBlock Text="排位赛战绩：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                        </Border>
-
-                        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding RankGmeInfo}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"></RowDefinition>
-                                <RowDefinition Height="*"></RowDefinition>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="0" Text="类型"></TextBlock>
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="1" Text="胜率"></TextBlock>
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="2" Text="胜场"></TextBlock>
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="3" Text="段位/胜点"></TextBlock>
-
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Type}"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding WinRate}"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding WinNumber}"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding RangeAndWinPoint}"></TextBlock>
-
-                        </Grid>
-
-                        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"
-                                    Margin="0 12 0 12"
-                                    BorderBrush="{StaticResource PhoneBorderBrush}"
-                                    BorderThickness="0 1 0 1">
-                            <TextBlock Text="战斗力：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                        </Border>
-
-                        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding PowerDetailInfo}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"></RowDefinition>
-                                <RowDefinition Height="*"></RowDefinition>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="0" Text="总分"></TextBlock>
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="1" Text="基础分"></TextBlock>
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="2" Text="胜率加分"></TextBlock>
-                            <TextBlock FontWeight="ExtraBold" Grid.Row="0" Grid.Column="3" Text="胜场加分"></TextBlock>
-
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding TotaScore}"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding BaseScore}"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding WinRateScore}"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding WinNumberScore}"></TextBlock>
-                        </Grid>
-
-
-                    </Grid>
-
-                </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
                 <!--</ScrollViewer>-->
             </phone:PivotItem>
 

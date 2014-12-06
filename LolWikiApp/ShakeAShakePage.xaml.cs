@@ -45,7 +45,7 @@ namespace LolWikiApp
         {
             this.Dispatcher.BeginInvoke(() =>
             {
-                if (App.ViewModel.BindedPlayer != null)
+                if (App.ViewModel.BindedPlayers.Count != 0)
                 {
                     GetCurrentGameInfo();
                 }
@@ -54,19 +54,19 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (App.ViewModel.BindedPlayer == null)
-            {
-                this.BindPlayerPanel.Visibility = Visibility.Visible;
-                this.PlayerNameTextBlock.Visibility = Visibility.Collapsed;
+            //if (App.ViewModel.BindedPlayer == null)
+            //{
+            //    this.BindPlayerPanel.Visibility = Visibility.Visible;
+            //    this.PlayerNameTextBlock.Visibility = Visibility.Collapsed;
 
-            }
-            else
-            {
-                this.BindPlayerPanel.Visibility = Visibility.Collapsed;
-                this.PlayerNameTextBlock.Text =
-                    string.Format("{0}  {1}", App.ViewModel.BindedPlayer.Name, App.ViewModel.BindedPlayer.ServerInfo.DisplayName);
-                this.PlayerNameTextBlock.Visibility = Visibility.Visible;
-            }
+            //}
+            //else
+            //{
+            //    this.BindPlayerPanel.Visibility = Visibility.Collapsed;
+            //    this.PlayerNameTextBlock.Text =
+            //        string.Format("{0}  {1}", App.ViewModel.BindedPlayer.Name, App.ViewModel.BindedPlayer.ServerInfo.DisplayName);
+            //    this.PlayerNameTextBlock.Visibility = Visibility.Visible;
+            //}
 
             base.OnNavigatedTo(e);
         }
@@ -165,13 +165,13 @@ namespace LolWikiApp
 
         private void navigateToPlayerDetailInfo(PlayerInfo p)
         {
-            if (p == null)
-                return;
+            //if (p == null)
+            //    return;
 
-            string pn = p.Name;
-            string sn = App.ViewModel.BindedPlayer.ServerInfo.Value;
+            //string pn = p.Name;
+            //string sn = App.ViewModel.BindedPlayer.ServerInfo.Value;
 
-            NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml?sn=" + sn + "&pn=" + pn, UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml?sn=" + sn + "&pn=" + pn, UriKind.Relative));
         }
       
     }

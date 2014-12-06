@@ -184,9 +184,8 @@ namespace LolWikiApp
                 TopPlayerLoadingBar.Visibility = Visibility.Visible;
                 Rank404TextBlock.Visibility = Visibility.Collapsed;
 
-                HttpClient client = new HttpClient();
-                string content =
-                    await client.GetStringAsync(new Uri("http://lolbox.duowan.com/phone/heroTop10Players_ios.php?hero=" + _hero.Name));
+                var client = new HttpClient();
+                var content = await client.GetStringAsync(new Uri("http://lolbox.duowan.com/phone/heroTop10Players_ios.php?hero=" + _hero.Name));
 
                 foreach (HeroRankWrapper wrapper in LoadHeroRankData(content))
                 {
@@ -229,12 +228,12 @@ namespace LolWikiApp
 
         private static List<HeroRankWrapper> LoadHeroRankData(string content)
         {
-            List<HeroRankWrapper> list = new List<HeroRankWrapper>();
+            var list = new List<HeroRankWrapper>();
 
-            HtmlDocument doc = new HtmlDocument();
+            var doc = new HtmlDocument();
             doc.LoadHtml(content);
 
-            HtmlNodeCollection liNodeCollection = doc.DocumentNode.SelectNodes("/html[1]/body[1]/section[1]/div[1]/ul[1]/li");
+            var liNodeCollection = doc.DocumentNode.SelectNodes("/html[1]/body[1]/section[1]/div[1]/ul[1]/li");
 
             if (liNodeCollection == null)
             {
@@ -324,9 +323,7 @@ namespace LolWikiApp
                 return;
 
             var bitmap = img.Source as BitmapImage;
-
             
-
             //wb.LoadCompleted += (s3, e3) =>
             //{
             //    _imagePopUp.IsOpen = true;

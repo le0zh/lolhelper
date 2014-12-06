@@ -390,6 +390,10 @@
 
         <local:GameResultToForgroundConverter x:Key="GameResultToForgroundConverter" />
 
+        <local:SelectedItemConverter x:Key="SelectedItemConverter" />
+        
+        <local:LevelImageSourceConverter x:Key="LevelImageSourceConverter" />
+       
         <!--下载状态转换类-->
         <local:TransferStatusConverter x:Key="TransferStatusConverter" />
 

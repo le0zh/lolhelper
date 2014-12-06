@@ -14,7 +14,7 @@ using LolWikiApp.Repository;
 
 namespace LolWikiApp
 {
-    public class ImageSourceConverter:IValueConverter
+    public class ImageSourceConverter : IValueConverter
     {
         private const string DefaultImagePath = "/Data/default@2x.png";
 
@@ -31,7 +31,7 @@ namespace LolWikiApp
                 var fileName = imgUri.Substring(5);
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    localFileRepository.SetBitmapSource(imgUri.Substring(5),bitmap);
+                    localFileRepository.SetBitmapSource(imgUri.Substring(5), bitmap);
                 }
                 else
                 {
@@ -52,4 +52,61 @@ namespace LolWikiApp
             throw new NotImplementedException();
         }
     }
+
+    public class LevelImageSourceConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            var title = value as string ?? "无";
+            BitmapImage bitmap;
+            try
+            {
+                if (title.Contains("黄铜"))
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\黄铜.png", UriKind.Relative));
+                }
+                else if (title.Contains("黄金"))
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\黄金.png", UriKind.Relative));
+                }
+
+                else if (title.Contains("超凡大师"))
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\超凡大师.png", UriKind.Relative));
+                }
+                else if (title.Contains("铂金"))
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\铂金.png", UriKind.Relative));
+                }
+                else if (title.Contains("钻石"))
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\钻石.png", UriKind.Relative));
+                }
+                else if (title.Contains("白银"))
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\白银.png", UriKind.Relative));
+                }
+                else if (title.Contains("最强王者"))
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\最强王者.png", UriKind.Relative));
+                }
+                else
+                {
+                    bitmap = new BitmapImage(new Uri(@"data\level\无.png", UriKind.Relative));
+                }
+            }
+            catch (Exception)
+            {
+                bitmap = new BitmapImage(new Uri(@"data\level\无.png", UriKind.Relative));
+            }
+
+            return bitmap;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+   
 }

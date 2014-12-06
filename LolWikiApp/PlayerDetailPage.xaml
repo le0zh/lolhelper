@@ -36,12 +36,19 @@
                                     <ColumnDefinition Width="92"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                     <ColumnDefinition Width="92"></ColumnDefinition>
+                                    <ColumnDefinition Width="92"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
 
                                 <Image Grid.Column="0" Source="{Binding PhotoUrl}" Width="80" Margin="12 0 0 0"></Image>
 
                                 <StackPanel Grid.Column="1" Margin="12 0 12 0" VerticalAlignment="Center" Orientation="Vertical">
-                                    <TextBlock Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" Margin="0 0 8 0" FontSize="{StaticResource PhoneFontSizeMedium}" VerticalAlignment="Center"></TextBlock>
+                                        <Border Padding="4" Background="{StaticResource PhoneAccentBrush}" Visibility="{Binding IsBinded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}"  VerticalAlignment="Center" Foreground="White" Margin="0 0 0 0"><Run Text="已关注"></Run></TextBlock>
+                                        </Border>
+                                    </StackPanel>
+                                    
                                     <TextBlock FontSize="{StaticResource PhoneFontSizeNormal}"
                                        Foreground="{StaticResource PhoneSubtleBrush}">
                                     <Run Text="{Binding ServerInfo.DisplayName}"></Run>
@@ -57,7 +64,10 @@
                                     </TextBlock>
                                 </StackPanel>
 
-                                <StackPanel Grid.Column="2" 
+                                <StackPanel Grid.Column="2" Width="80">
+                                    <Image Margin="0 12 0 0" Source="{Binding Range, Converter={StaticResource LevelImageSourceConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" 
                                     Background="{StaticResource PhoneAccentBrush}" 
                                     Margin="0 0 12 0" Width="80">
                                     <TextBlock Foreground="White" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 12 0 0" Text="战斗力" HorizontalAlignment="Center"></TextBlock>

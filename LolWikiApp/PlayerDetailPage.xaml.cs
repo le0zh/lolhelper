@@ -15,11 +15,17 @@ namespace LolWikiApp
     public partial class PlayerDetailPage : PhoneApplicationPage
     {
         private bool _isPostBack;
+        private Player _currentPlayer;
+
+       
 
         public PlayerDetailPage()
         {
             InitializeComponent();
         }
+
+        private string _sn;
+        private string _pn;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -29,29 +35,30 @@ namespace LolWikiApp
 
             if(DataContext!=null)
                 return;            
-
-            string sn;
-            string pn;
-
-            if (NavigationContext.QueryString.TryGetValue("sn", out sn) &&
-                NavigationContext.QueryString.TryGetValue("pn", out pn))
+            
+            if (NavigationContext.QueryString.TryGetValue("sn", out _sn) &&
+                NavigationContext.QueryString.TryGetValue("pn", out _pn))
             {
-                LoadAndBindPlayerInfo(sn, pn);
+                LoadAndBindPlayerInfo(_sn, _pn);
             }
             else
             {
                 if (App.ViewModel.SelectedPlayer != null)
                 {
-                    DataContext = App.ViewModel.SelectedPlayer;
+                    _currentPlayer = App.ViewModel.SelectedPlayer;
+                    _sn = _currentPlayer.ServerInfo.Value;
+                    _pn = _currentPlayer.Name;
+                    DataContext = _currentPlayer;
                     LayoutPivot.Visibility = Visibility.Visible;
+                    SetBindAppBar();
                 }
                 else
                 {
                     //TODO:处理异常
                 }
             }
-
-
+            
+            
             base.OnNavigatedTo(e);
         }
 
@@ -85,9 +92,11 @@ namespace LolWikiApp
                     }
                     else
                     {
-                        DataContext = detailPlayerInfo;
+                        _currentPlayer = detailPlayerInfo;
+                        DataContext = _currentPlayer;
                         LoadingGrid.Visibility = Visibility.Collapsed;
                         LayoutPivot.Visibility = Visibility.Visible;
+                        SetBindAppBar();
                     }
                     break;
             }
@@ -113,6 +122,40 @@ namespace LolWikiApp
             {
                 Debug.WriteLine("selected item is null");
             }
+        }
+
+        private void SetBindAppBar()
+        {
+            ApplicationBar = new ApplicationBar { Opacity = 1, Mode = ApplicationBarMode.Minimized};
+
+            if (_currentPlayer.IsBinded == false)
+            {
+                var pinButton = new ApplicationBarIconButton
+                {
+                    IconUri = new Uri("/Data/appbar.add.png", UriKind.Relative),
+                    Text = "加关注"
+                };
+
+                pinButton.Click += (s, e) =>
+                {
+                    App.ViewModel.AddBindedPlayer(_currentPlayer);
+
+                    var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("添加关注成功!");
+                    confirmQuiToastPromt.Show();    
+                    LoadAndBindPlayerInfo(_sn, _pn);
+                };
+                ApplicationBar.Buttons.Add(pinButton);
+            }
+            
+            var refreshButton = new ApplicationBarIconButton
+            {
+                IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
+                Text = "刷新"
+            };
+
+            refreshButton.Click += (s, e) => LoadAndBindPlayerInfo(_sn, _pn);
+
+            ApplicationBar.Buttons.Add(refreshButton);
         }
     }
 }

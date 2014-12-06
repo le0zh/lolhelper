@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,7 +27,13 @@ namespace LolWikiApp.ViewModels
      
         public VideoDownloadService VideoDownloadService { get; private set; }
 
-        public Player BindedPlayer { get; set; }
+        public bool IsBindedPlayerInfoDataLoaded
+        {
+            get { return BindedPlayerInfoWrappers.All(info => info.IsDataLoaded); }
+        }
+        public List<PlayerInfoSettingWrapper> BindedPlayerInfoWrappers { get; private set; } 
+        public ObservableCollection<Player> BindedPlayers { get; set; }
+
         public Player SelectedPlayer { get; set; }
 
         public readonly VideoRepository VideoRepository;
@@ -40,7 +47,6 @@ namespace LolWikiApp.ViewModels
 
         public EquipmentRecommend EquipmentRecommendSelected { get; set; }
         
-
         public MainViewModel()
         {
             HeroBasicInfoCollection = new ObservableCollection<Hero>();
@@ -50,7 +56,8 @@ namespace LolWikiApp.ViewModels
             _playerRepository = new PlayerRepository();
             _localFileRepository =new LocalFileRepository();
 
-            BindedPlayer = GetPlayerInfoFromSettings();
+            BindedPlayerInfoWrappers = GetPlayerInfoFromSettings();
+            BindedPlayers = new ObservableCollection<Player>();
 
             VideoRepository = new VideoRepository();
             VideoDownloadService =new VideoDownloadService();
@@ -81,34 +88,73 @@ namespace LolWikiApp.ViewModels
 
         #region 召唤师相关
 
+        //todo: change here
         public async Task<CurrentGameInfo> GetCurentGameInfo()
         {
-            if (BindedPlayer == null)
+            if (BindedPlayers == null)
                 return null;
 
             CurrentGameInfo currentGameInfo =
-                await _playerRepository.GetCurrentGameInfoAsync(BindedPlayer.ServerInfo.Value, BindedPlayer.Name);
+                await _playerRepository.GetCurrentGameInfoAsync(BindedPlayers[0].ServerInfo.Value, BindedPlayers[0].Name);
 
             return currentGameInfo;
         }
 
         public async Task<HttpActionResult> GetPlayerDetailInfo(string sn,string pn)
         {
-            HttpActionResult result = await _playerRepository.PharsePlayerInfo(sn,pn);//sn: server name, pn: player name
+            var result = await _playerRepository.PharsePlayerInfo(sn,pn);//sn: server name, pn: player name
             return result;
         }
 
-        public Player GetPlayerInfoFromSettings()
+        public List<PlayerInfoSettingWrapper> GetPlayerInfoFromSettings()
         {
             return _playerRepository.ReadPlayerInfoSettings();
         }
 
-        public void SavePlayerInfoToAppSettings(Player player)
+        public void AddBindedPlayer(Player player)
         {
             if (player != null)
             {
-                _playerRepository.SavePlayerInfo(player.Name, player.ServerInfo);
+                if (App.ViewModel.BindedPlayerInfoWrappers == null)
+                {
+                    App.ViewModel.BindedPlayerInfoWrappers = new List<PlayerInfoSettingWrapper>();
+                }
+
+                if (!App.ViewModel.BindedPlayerInfoWrappers.Any(
+                        p => p.Name == player.Name && p.ServerInfo.DisplayName == player.ServerInfo.DisplayName))
+                {
+                    App.ViewModel.BindedPlayerInfoWrappers.Add(new PlayerInfoSettingWrapper() { IsDataLoaded = true, Name = player.Name, ServerInfo = player.ServerInfo });
+                    App.ViewModel.BindedPlayers.Add(player);
+                    SavePlayerListToSettings();
+                }
             }
+        }
+
+        public void DeleteBindedPlayer(Player player)
+        {
+            App.ViewModel.BindedPlayers.Remove(player);
+
+            PlayerInfoSettingWrapper foundWrapper = null;
+
+            foreach (var playerInfoSettingWrapper in App.ViewModel.BindedPlayerInfoWrappers)
+            {
+                if (playerInfoSettingWrapper.Name == player.Name &&
+                    playerInfoSettingWrapper.ServerInfo.DisplayName == player.ServerInfo.DisplayName)
+                {
+                    foundWrapper = playerInfoSettingWrapper;
+                }
+            }
+
+            if (foundWrapper != null)
+            {
+                App.ViewModel.BindedPlayerInfoWrappers.Remove(foundWrapper);
+                App.ViewModel.SavePlayerListToSettings();
+            }
+        }
+
+        public void SavePlayerListToSettings()
+        {
+            _playerRepository.SavePlayerInfo(App.ViewModel.BindedPlayerInfoWrappers);
         }
 
         public void RemovePlayerBind()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -165,6 +166,20 @@ namespace LolWikiApp
         /// </summary>
         public bool IsDataLoaded { get; set; }
 
+        public bool IsBinded
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Name) || ServerInfo == null || string.IsNullOrEmpty(ServerInfo.DisplayName))
+                    return false;
+
+                return App.ViewModel.BindedPlayerInfoWrappers.Any(
+                                    p =>
+                                        p.Name == this.Name &&
+                                        p.ServerInfo.DisplayName == this.ServerInfo.DisplayName);
+            }
+        }
+
         public string Name { get; set; }
 
         public ServerInfo ServerInfo { get; set; }
@@ -200,12 +215,49 @@ namespace LolWikiApp
                 return rankGmeInfo ?? (rankGmeInfo = new RankGameInfo()
                 {
                     Type = "无",
-                    RangeAndWinPoint = "无",
+                    RangeAndWinPoint = "无/无",
                     WinNumber = "无",
                     WinRate = "无"
                 });
             }
             set { rankGmeInfo = value; }
+        }
+
+        public string Range
+        {
+            get
+            {
+                var range = RankGmeInfo.RangeAndWinPoint.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries)[0];
+                return range;
+            }
+        }
+
+        public int TotalGamesNumber
+        {
+            get
+            {
+                var number = 0;
+                foreach (var gameInfo in MatchGameInfos)
+                {
+                    number += ConvertoInt(gameInfo.WinNumber);
+                    number += ConvertoInt(gameInfo.LoseNumber);
+                }
+                return number;
+            }
+        }
+
+        private int ConvertoInt(string strInt)
+        {
+            var result = 0;
+            try
+            {
+                result = int.Parse(strInt);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return result;
         }
 
         public PowerDetailInfo PowerDetailInfo { get; set; }
@@ -224,10 +276,90 @@ namespace LolWikiApp
         }
     }
 
+    public class PlayerSummary
+    {
+        public string PhotoUrl { get; set; }
+        public string Level { get; set; }
+        public string Name { get; set; }
+        public string Range { get; set; }
+        public string ServerName { get; set; }
+        public string Power { get; set; }
+        public string TotalGamesNumber { get; set; }
+        public string RankGameWinNumber { get; set; }
+    }
+
     public class PlayerInfoSettingWrapper
     {
+        public bool IsDataLoaded { get; set; }
         public string Name { get; set; }
 
         public ServerInfo ServerInfo { get; set; }
+    }
+
+    public class TeamMember
+    {
+        public TeamMember()
+        {
+            ZbIconList = new List<string>();
+            SkillIconList = new List<string>();
+            MasterIconList = new List<string>();
+        }
+
+        public string Name { get; set; }
+
+        public string Kill { get; set; }
+
+        public string Dead { get; set; }
+
+        public string Assistant { get; set; }
+
+        public string HeroIcon { get; set; }
+
+        public List<string> ZbIconList { get; private set; }
+
+        public List<string> SkillIconList { get; private set; }
+
+        public List<string> MasterIconList { get; private set; }
+
+        public string KillUnitDesc { get; set; }
+
+        public string KillTowerDesc { get; set; }
+
+        public string MoneyDesc { get; set; }
+
+        public string DemageDesc { get; set; }
+
+        public string SerialKillDesc { get; set; }
+
+        public string MultiKillDesc { get; set; }
+
+        public string CriticalDesc { get; set; }
+
+        public string PutEyeDesc { get; set; }
+
+        public string ClearEyeDesc { get; set; }
+    }
+
+    public class GameDetailInfo
+    {
+        public GameDetailInfo()
+        {
+            WonTeam = new List<TeamMember>();
+            LoseTeam = new List<TeamMember>();
+        }
+
+        public string GameType { get; set; }
+
+        public string GameDuration { get; set; }
+
+        public string UploadedTime { get; set; }
+
+        public string ScoreInfo { get; set; }
+
+        public string MoneyInfo { get; set; }
+
+        public List<TeamMember> WonTeam { get; private set; }
+
+        public List<TeamMember> LoseTeam { get; private set; }
     }
 }

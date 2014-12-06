@@ -96,7 +96,7 @@ namespace LolWikiApp
 
         public string ServerName
         {
-            get { return ServerRepository.instance.GetServerDisplayName(Server); }
+            get { return ServerRepository.Instance.GetServerDisplayName(Server); }
         }
 
         public string Server { get; set; }

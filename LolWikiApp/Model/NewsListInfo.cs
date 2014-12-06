@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,7 @@ namespace LolWikiApp
             get { return _bannerListInfos ?? (_bannerListInfos = new List<NewsListInfo>()); }
         }
     }
+
     public class NewsTypeWrapper
     {
         public NewsType Type { get; set; }

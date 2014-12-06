@@ -20,6 +20,7 @@ namespace LolWikiApp.Repository
     public class PlayerRepository : Repository
     {
         private const string PlayerSettingsKey = "_playerSettings";
+        private const string PlayerHistoryKey = "_playerSearchHistory";
 
         private const string CurrentMatchUrlForamt = "http://lolbox.duowan.com/phone/apiCurrentMatch.php?action=getCurrentMatch&serverName={0}&OSType=iOS7.1.1&target={1}";
 
@@ -70,47 +71,62 @@ namespace LolWikiApp.Repository
             return gameInfo;
         }
 
-        public void SavePlayerInfo(string userName, ServerInfo serverInfo)
+        public void SavePlayerSearchHistory(List<PlayerInfoSettingWrapper> searchList)
         {
             var settings = IsolatedStorageSettings.ApplicationSettings;
 
-            var wrapper = new PlayerInfoSettingWrapper()
+            if (settings.Contains(PlayerHistoryKey))
             {
-                Name = userName,
-                ServerInfo = serverInfo
-            };
-
-            if (settings.Contains(PlayerSettingsKey))
-            {
-                settings[PlayerSettingsKey] = wrapper;
+                settings[PlayerHistoryKey] = searchList;
             }
             else
             {
-                settings.Add(PlayerSettingsKey, wrapper);
+                settings.Add(PlayerHistoryKey, searchList);
             }
 
             settings.Save();
         }
 
-        public Player ReadPlayerInfoSettings()
+        public List<PlayerInfoSettingWrapper> ReadPlayerSearchHistory()
         {
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(PlayerSettingsKey))
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(PlayerHistoryKey))
             {
                 return null;
             }
 
-            var wrapper =
-                IsolatedStorageSettings.ApplicationSettings[PlayerSettingsKey] as PlayerInfoSettingWrapper;
-            if (wrapper != null)
-            {
-                var p = new Player { Name = wrapper.Name, ServerInfo = wrapper.ServerInfo, IsDataLoaded = false };
+            var list = IsolatedStorageSettings.ApplicationSettings[PlayerHistoryKey] as List<PlayerInfoSettingWrapper>;
+            return list;
+        }
 
-                return p;
+        public void SavePlayerInfo(List<PlayerInfoSettingWrapper> wrappers)
+        {
+            var settings = IsolatedStorageSettings.ApplicationSettings;
+
+            if (settings.Contains(PlayerSettingsKey))
+            {
+                settings[PlayerSettingsKey] = wrappers;
             }
             else
             {
-                return null;
+                settings.Add(PlayerSettingsKey, wrappers);
             }
+
+            settings.Save();
+        }
+
+        public List<PlayerInfoSettingWrapper> ReadPlayerInfoSettings()
+        {
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(PlayerSettingsKey))
+            {
+                return new List<PlayerInfoSettingWrapper>();
+            }
+
+            var list = IsolatedStorageSettings.ApplicationSettings[PlayerSettingsKey] as List<PlayerInfoSettingWrapper>;
+            if (list != null)
+            {
+                list.ForEach(info => info.IsDataLoaded = false);    
+            } 
+            return list;
         }
 
         private Player PharsePlayerInfo(HtmlDocument doc)
@@ -329,7 +345,10 @@ namespace LolWikiApp.Repository
             }
 
             httpActionResult.Result = ActionResult.Success;
-            httpActionResult.Value = PharsePlayerInfo(doc);
+            var p = PharsePlayerInfo(doc);
+            p.ServerInfo = new ServerInfo(){Value = sn, DisplayName = ServerRepository.Instance.GetServerDisplayName(sn)};
+            httpActionResult.Value = p;
+
             return httpActionResult;
         }
 
@@ -383,7 +402,7 @@ namespace LolWikiApp.Repository
 
             gameDeatil.ScoreInfo = scoreNode.InnerHtml.Trim();
             gameDeatil.MoneyInfo = moneyNode.InnerHtml.Trim();
-            
+
             return gameDeatil;
         }
 
@@ -401,7 +420,7 @@ namespace LolWikiApp.Repository
             {
                 foreach (var masterIconNode in masterIconsNodes)
                 {
-                    member.MasterIconList.Add(masterIconNode.Attributes["src"].Value);                    
+                    member.MasterIconList.Add(masterIconNode.Attributes["src"].Value);
                 }
             }
 
@@ -410,16 +429,16 @@ namespace LolWikiApp.Repository
             {
                 foreach (var zbIconNode in zbIconsNodes)
                 {
-                    member.ZbIconList.Add(zbIconNode.Attributes["src"].Value);                    
+                    member.ZbIconList.Add(zbIconNode.Attributes["src"].Value);
                 }
             }
 
             //TODO: change the defualt value
             member.Name = playerNameNode.InnerHtml.Trim();
-            member.HeroIcon = heroIconNode != null ? heroIconNode.Attributes["src"].Value : "notfound"; 
-            
+            member.HeroIcon = heroIconNode != null ? heroIconNode.Attributes["src"].Value : "notfound";
+
             var scoreAll = scoreNode != null ? scoreNode.InnerHtml.Trim() : "0/0/0";
-            var scoreParts = scoreAll.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+            var scoreParts = scoreAll.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             if (scoreParts.Length == 3)
             {
                 member.Kill = scoreParts[0];
@@ -434,7 +453,7 @@ namespace LolWikiApp.Repository
             {
                 foreach (var skillIconNode in skillIconsNodes)
                 {
-                    member.SkillIconList.Add(skillIconNode.Attributes["src"].Value);                    
+                    member.SkillIconList.Add(skillIconNode.Attributes["src"].Value);
                 }
             }
 
@@ -473,76 +492,13 @@ namespace LolWikiApp.Repository
             //排眼数
             var clearEyeNode = playerNode.SelectSingleNode("div[2]/p[3]/span[2]");
             member.ClearEyeDesc = clearEyeNode.InnerHtml.Trim();
-            #endregion           
+            #endregion
 
             return member;
         }
+
+
     }
 
-    public class TeamMember
-    {
-        public TeamMember()
-        {
-            ZbIconList = new List<string>();
-            SkillIconList = new List<string>();
-            MasterIconList = new List<string>();
-        }
 
-        public string Name { get; set; }
-
-        public string Kill { get; set; }
-
-        public string Dead { get; set; }
-
-        public string Assistant { get; set; }
-
-        public string HeroIcon { get; set; }
-
-        public List<string> ZbIconList { get; private set; }
-
-        public List<string> SkillIconList { get; private set; }
-
-        public List<string> MasterIconList { get; private set; }
-
-        public string KillUnitDesc { get; set; }
-
-        public string KillTowerDesc { get; set; }
-
-        public string MoneyDesc { get; set; }
-
-        public string DemageDesc { get; set; }
-
-        public string SerialKillDesc { get; set; }
-
-        public string MultiKillDesc { get; set; }
-
-        public string CriticalDesc { get; set; }
-
-        public string PutEyeDesc { get; set; }
-
-        public string ClearEyeDesc { get; set; }
-    }
-
-    public class GameDetailInfo
-    {
-        public GameDetailInfo()
-        {
-            WonTeam = new List<TeamMember>();
-            LoseTeam = new List<TeamMember>();
-        }
-
-        public string GameType { get; set; }
-
-        public string GameDuration { get; set; }
-
-        public string UploadedTime { get; set; }
-
-        public string ScoreInfo { get; set; }
-
-        public string MoneyInfo { get; set; }
-
-        public List<TeamMember> WonTeam { get; private set; }
-
-        public List<TeamMember> LoseTeam { get; private set; }
-    }
 }

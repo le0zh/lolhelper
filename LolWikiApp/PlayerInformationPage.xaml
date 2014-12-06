@@ -20,8 +20,7 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
 
-
-    <phone:Pivot x:Name="LayoutPivot" Foreground="White"
+    <phone:Pivot x:Name="LayoutPivot" Foreground="White" SelectionChanged="LayoutPivot_OnSelectionChanged"
                  Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
 
         <!--Pivot item one-->
@@ -69,10 +68,9 @@
                 </StackPanel>
 
                 <ScrollViewer Grid.Row="1" x:Name="PlayerInfoViewer" Visibility="Collapsed">
-
                     <StackPanel  Margin="12 0 12 0" Orientation="Vertical">
                         <TextBlock Text="找到召唤师：" Foreground="{StaticResource PhoneSubtleBrush}"></TextBlock>
-                        <Border BorderBrush="DarkGray" BorderThickness="1" Padding="12">
+                        <Border BorderBrush="DarkGray" BorderThickness="0 1 0 0" Padding="12" Background="#F0EFF5">
                             <StackPanel Tap="UIElement_OnTap" Margin="0" Height="100" VerticalAlignment="Top" Orientation="Horizontal">
                                 <Image Height="100" Source="{Binding PhotoUrl}"></Image>
                                 <StackPanel Margin="12 0 0 0">
@@ -91,16 +89,44 @@
                                 </StackPanel>
                             </StackPanel>
                         </Border>
-
                     </StackPanel>
-
                 </ScrollViewer>
             </Grid>
-
         </phone:PivotItem>
 
         <phone:PivotItem Header="搜索历史">
-            <TextBlock Text="TBD" Foreground="Black" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+            <ScrollViewer>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Border x:Name="NoDataBorder" Grid.Row="0" Padding="12" Background="LightGray">
+                        <TextBlock Text="暂无搜索记录" HorizontalAlignment="Center"></TextBlock>
+                    </Border>
+
+                    <phone:LongListSelector Grid.Row="1" x:Name="HistoryLongListSelector" Tap="HistoryLongListSelector_OnTap">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="18" Background="#F0EFF5" Margin="0 0 0 4">
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu IsZoomEnabled="False" IsFadeEnabled="False" Foreground="White" Background="Black">
+                                            <toolkit:MenuItem Header="删除记录" Tag="{Binding}" x:Name="DeleteMenuItem" Click="DeleteMenuItem_OnClick" />
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 0 12 0"></TextBlock>
+                                        <TextBlock Text="{Binding ServerInfo.DisplayName}" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
+            </ScrollViewer>
+           
         </phone:PivotItem>
     </phone:Pivot>
 

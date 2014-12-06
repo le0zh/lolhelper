@@ -26,7 +26,7 @@
                 </Grid.RowDefinitions>
 
                 <Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="0 0 0 1">
-                    <Grid Margin="12 0 0 0" Grid.Row="0">
+                    <Grid Margin="12 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="90"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -34,7 +34,7 @@
 
                         <Image HorizontalAlignment="Left" Grid.Column="0" Height="80" Width="80" Source="{Binding ImageUrl, Converter={StaticResource ImageSourceConverter}}"></Image>
                         <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                            <TextBlock Text="{Binding Title}"></TextBlock>
+                            <TextBlock Text="{Binding Title}" Foreground="Black"></TextBlock>
                             <TextBlock Foreground="{StaticResource PhoneSubtleBrush}">
                         <Run Text="作   者："></Run>
                         <Run Text="{Binding User_name}"></Run>
@@ -48,7 +48,7 @@
 
                 </Border>
 
-                <ScrollViewer Grid.Row="1" Margin="0 2 0 0"  VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="1" Margin="0 2 0 0" Foreground="Black" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Border BorderBrush="{StaticResource PhoneSubtleBrush}" Margin="0" BorderThickness="0,0,0,1">
                             <StackPanel Orientation="Vertical" Margin="12 0 0 0">

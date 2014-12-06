@@ -9,6 +9,20 @@ using Microsoft.Phone.Reactive;
 
 namespace LolWikiApp
 {
+    public class SelectedItemConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var oldVal = (int)value;
+            return oldVal + 1;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class TransferStatusConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

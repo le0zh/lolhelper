@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,7 @@ using LolWikiApp.Repository;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework.Input;
+using SM.Media.Utility;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using Keyboard = System.Windows.Input.Keyboard;
 
@@ -26,8 +28,12 @@ namespace LolWikiApp
 {
     public partial class PlayerInformationPage : PhoneApplicationPage
     {
+        private bool _isPostBack;
         private Player _selectedPlayer;
         private bool _isToBind;
+        private PlayerRepository _playerRepository;
+
+        public ObservableCollection<PlayerInfoSettingWrapper> PlayerSearchHistory { get; set; }
 
         public string TitleText { get; set; }
 
@@ -35,17 +41,28 @@ namespace LolWikiApp
         {
             InitializeComponent();
 
-            ServerRepository serverRepository = ServerRepository.instance;
+            _playerRepository = new PlayerRepository();
 
-            this.ServerListPicker.ItemsSource = serverRepository.GetServerInfos();
+            var serverRepository = ServerRepository.Instance;
 
-            this.ServerListPicker.SelectionChanged += ServerListPicker_SelectionChanged;
+            ServerListPicker.ItemsSource = serverRepository.GetServerInfos();
+
+            ServerListPicker.SelectionChanged += ServerListPicker_SelectionChanged;
 
             SetApplicationBarToSearch();
         }
 
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            _playerRepository.SavePlayerSearchHistory(PlayerSearchHistory.ToList());
+
+            base.OnNavigatingFrom(e);
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (_isPostBack) return;
+
             string mode;
             if (NavigationContext.QueryString.TryGetValue("mode", out mode))
             {
@@ -53,8 +70,20 @@ namespace LolWikiApp
                     _isToBind = true;
             }
 
-            TitleText = _isToBind ? "绑定召唤师信息" : "搜索召唤师";
+            TitleText = _isToBind ? "关注召唤师" : "搜索召唤师";
             DataContext = this;
+
+            var list = _playerRepository.ReadPlayerSearchHistory();
+            PlayerSearchHistory = new ObservableCollection<PlayerInfoSettingWrapper>();
+            if (list != null)
+            {
+                foreach (var playerSearchInfo in list)
+                {
+                    PlayerSearchHistory.Add(playerSearchInfo);
+                }
+            }
+
+            _isPostBack = true;
 
             base.OnNavigatedTo(e);
         }
@@ -62,6 +91,28 @@ namespace LolWikiApp
         private void ServerListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //MessageBox.Show( ((ServerInfo)this.ServerListPicker.SelectedItem).Value);
+        }
+
+        private void AddToHistoryList(PlayerInfoSettingWrapper info)
+        {
+            if (!PlayerSearchHistory.Any(p => p.Name == info.Name && p.ServerInfo.DisplayName == info.ServerInfo.DisplayName))
+            {
+                PlayerSearchHistory.Add(info);
+            }
+        }
+
+        private void DeleteFromHistoryList(PlayerInfoSettingWrapper info)
+        {
+            var found = PlayerSearchHistory.First(p => p.Name == info.Name && p.ServerInfo.DisplayName == info.ServerInfo.DisplayName);
+            if (found != null)
+            {
+                PlayerSearchHistory.Remove(found);
+                if (PlayerSearchHistory.Count == 0)
+                {
+                    NoDataBorder.Visibility = Visibility.Visible;
+                    HistoryLongListSelector.Visibility = Visibility.Collapsed;
+                }
+            }
         }
 
         private async void SearchBarIconButton_OnClick(object sender, EventArgs e)
@@ -79,13 +130,16 @@ namespace LolWikiApp
             var serverName = serverInfo.Value;
             var searchButton = this.ApplicationBar.Buttons[0] as ApplicationBarIconButton;
 
+
+            AddToHistoryList(new PlayerInfoSettingWrapper() { Name = userName, ServerInfo = serverInfo });
+
             NotFoundTextBlock.Visibility = Visibility.Collapsed;
             SearchLoadingBar.Visibility = Visibility.Visible;
 
             if (searchButton != null) searchButton.IsEnabled = false;
-       
+
             var actionResult = await App.ViewModel.GetPlayerDetailInfo(serverName, userName);
-           
+
             SearchLoadingBar.Visibility = Visibility.Collapsed;
             if (searchButton != null) searchButton.IsEnabled = true;
 
@@ -95,6 +149,7 @@ namespace LolWikiApp
                     ToastPromts.GetToastWithImgAndTitle("貌似网络不稳定，稍后重试.").Show();
                     break;
                 case ActionResult.NotFound:
+                    PlayerInfoViewer.Visibility = Visibility.Collapsed;
                     NotFoundTextBlock.Visibility = Visibility.Visible;
                     break;
                 case ActionResult.Success:
@@ -117,7 +172,7 @@ namespace LolWikiApp
 
         private void SetApplicationBarToSearch()
         {
-            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
             var searchButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("/Assets/AppBar/feature.search.png", UriKind.Relative),
@@ -131,7 +186,7 @@ namespace LolWikiApp
 
         private void SetApplicationBarToAcceptOrCancel()
         {
-            ApplicationBar = new ApplicationBar {Opacity = 1.0};
+            ApplicationBar = new ApplicationBar { Opacity = 1.0 };
             var acceptButton = new ApplicationBarIconButton();
             var cancelButton = new ApplicationBarIconButton();
 
@@ -151,8 +206,11 @@ namespace LolWikiApp
         private void acceptButton_Click(object sender, EventArgs e)
         {
             //保存关注
-            App.ViewModel.BindedPlayer = _selectedPlayer;
-            App.ViewModel.SavePlayerInfoToAppSettings(_selectedPlayer);
+            App.ViewModel.AddBindedPlayer(_selectedPlayer);
+
+            var promt = ToastPromts.GetToastWithImgAndTitle("添加关注成功!");
+            promt.Height = 60;
+            promt.Show();
 
             //返回上一页面
             if (NavigationService.CanGoBack)
@@ -169,6 +227,48 @@ namespace LolWikiApp
         {
             App.ViewModel.SelectedPlayer = _selectedPlayer;
             NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml", UriKind.Relative));
+        }
+
+        private void LayoutPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LayoutPivot.SelectedIndex == 1)
+            {
+                //search hisotry
+                if (PlayerSearchHistory.Count > 0)
+                {
+                    HistoryLongListSelector.ItemsSource = PlayerSearchHistory;
+                    HistoryLongListSelector.Visibility = Visibility.Visible;
+                    NoDataBorder.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    HistoryLongListSelector.Visibility = Visibility.Collapsed;
+                    NoDataBorder.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void HistoryLongListSelector_OnTap(object sender, GestureEventArgs e)
+        {
+            var playerWrapperInfo = HistoryLongListSelector.SelectedItem as PlayerInfoSettingWrapper;
+            if (playerWrapperInfo != null)
+            {
+                var url = string.Format("/PlayerDetailPage.xaml?sn={0}&pn={1}", playerWrapperInfo.ServerInfo.Value, playerWrapperInfo.Name);
+                NavigationService.Navigate(new Uri(url, UriKind.Relative));
+            }
+        }
+     
+        private void DeleteMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                var wrapper = menuItem.Tag as PlayerInfoSettingWrapper;
+                if (wrapper != null)
+                {
+                    DeleteFromHistoryList(wrapper);
+                }
+            }
         }
     }
 }

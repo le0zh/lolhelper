@@ -28,8 +28,7 @@ namespace LolWikiApp.Repository
 
         private const string NewsContentRequestUrl = "http://lolbox.oss.aliyuncs.com/json/v3/news/content/{0}.json?r={1}"; //{0}: artId, {1}: random
         private readonly LocalFileRepository _localFileRepository = new LocalFileRepository();
-
-
+        
         #region Tecent News
         private const string TcNewsFunnyListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c18_list_{0}.shtml"; //{0}: page
         private const string TcNewsStoryListtRequestUrl = "http://qt.qq.com/static/pages/news/phone/c16_list_{0}.shtml"; //{0}: page
@@ -59,7 +58,6 @@ namespace LolWikiApp.Repository
 
         }
         #endregion
-
 
         public async Task<string> SaveHtmlToTempIsoFile(string html)
         {
