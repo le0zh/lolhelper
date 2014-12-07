@@ -63,36 +63,36 @@ namespace LolWikiApp
             {
                 if (title.Contains("黄铜"))
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\黄铜.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\huangtong.png", UriKind.Relative));
                 }
                 else if (title.Contains("黄金"))
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\黄金.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\huangjing.png", UriKind.Relative));
                 }
 
                 else if (title.Contains("超凡大师"))
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\超凡大师.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\master.png", UriKind.Relative));
                 }
                 else if (title.Contains("铂金"))
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\铂金.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\bojin.png", UriKind.Relative));
                 }
                 else if (title.Contains("钻石"))
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\钻石.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\zhuanshi.png", UriKind.Relative));
                 }
                 else if (title.Contains("白银"))
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\白银.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\baiyin.png", UriKind.Relative));
                 }
                 else if (title.Contains("最强王者"))
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\最强王者.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\zuiqiangwangzhe.png", UriKind.Relative));
                 }
                 else
                 {
-                    bitmap = new BitmapImage(new Uri(@"data\level\无.png", UriKind.Relative));
+                    bitmap = new BitmapImage(new Uri(@"data\level\none.png", UriKind.Relative));
                 }
             }
             catch (Exception)

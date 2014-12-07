@@ -89,13 +89,13 @@ namespace LolWikiApp.ViewModels
         #region 召唤师相关
 
         //todo: change here
-        public async Task<CurrentGameInfo> GetCurentGameInfo()
+        public async Task<CurrentGameInfo> GetCurentGameInfo(PlayerInfoSettingWrapper playerInfo)
         {
             if (BindedPlayers == null)
                 return null;
 
-            CurrentGameInfo currentGameInfo =
-                await _playerRepository.GetCurrentGameInfoAsync(BindedPlayers[0].ServerInfo.Value, BindedPlayers[0].Name);
+            var currentGameInfo =
+                await _playerRepository.GetCurrentGameInfoAsync(playerInfo.ServerInfo.Value, playerInfo.Name);
 
             return currentGameInfo;
         }

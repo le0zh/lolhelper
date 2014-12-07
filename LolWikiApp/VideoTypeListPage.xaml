@@ -11,32 +11,35 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait"
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True"
     mc:Ignorable="d"
     BackKeyPress="VideoTypeListPage_OnBackKeyPress">
 
-    <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="0 -1 0 0">
+
+    <!--<phone:Pivot x:Name="LayoutPivot" Foreground="White"
+                 Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
+        <phone:PivotItem Header="视频中心">
+        
+        </phone:PivotItem>
+    </phone:Pivot>-->
+
+    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="0 0 0 0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border x:Name="PivotTitlContainer" Height="40" Margin="0" Padding="0 0 0 4" Grid.Row="0" Background="#29282e">
-            <TextBlock Text="视频中心" Foreground="White"  HorizontalAlignment="Center" Margin="0"                         
-                           VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMediumLarge}"></TextBlock>
+        <Border Grid.Row="0"  Margin="0"  Background="#29282e" Padding="12 4 0 4">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding Img}" Height="60" Width="60"></Image>
+                <TextBlock Margin="12 0 0 0" Text="{Binding Name}" Foreground="White" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+            </StackPanel>
         </Border>
 
-        <StackPanel Grid.Row="1"  Margin="12 8 12 8" Orientation="Horizontal">
-            <Image Source="{Binding Img}" Height="60" Width="60"></Image>
-            <TextBlock Margin="12 0 0 0" Text="{Binding Name}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
-        </StackPanel>
-
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1" Margin="0 1 0 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
@@ -49,6 +52,7 @@
             </StackPanel>
 
             <local:HttpRequest404Control Grid.Row="1" Margin="12 8 0 0" Visibility="Collapsed"
+                                               Foreground="Black"
                                     x:Name="RetryNetPanel" Message="加载视频列表失败。"/>
 
             <local:RefreshableListBox x:Name="VideoLongListSelector" 
@@ -61,6 +65,8 @@
                                           ItemTemplate="{StaticResource LetvVideoListDataTemplate}"/>
         </Grid>
 
-      </Grid>
+    </Grid>
+
+
 
 </phone:PhoneApplicationPage>

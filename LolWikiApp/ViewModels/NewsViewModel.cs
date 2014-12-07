@@ -97,15 +97,16 @@ namespace LolWikiApp.ViewModels
                             Debug.WriteLine("banner news got failed.");
                         }
                     }
-                    else
-                    {
-                        var bannerNewsInfo = new NewsListInfo() { IsFlipNews = true };
-                        bannerNewsInfo.BannerListInfos.Add(new NewsListInfo()
-                        {
-                            Img = "/Data/banner3.png"
-                        });
-                        NewsListInfObservableCollection.Add(bannerNewsInfo);
-                    }
+                    //隐藏其他类型资讯的banner图片
+                    //else
+                    //{
+                    //    var bannerNewsInfo = new NewsListInfo() { IsFlipNews = true };
+                    //    bannerNewsInfo.BannerListInfos.Add(new NewsListInfo()
+                    //    {
+                    //        Img = "/Data/banner3.png"
+                    //    });
+                    //    NewsListInfObservableCollection.Add(bannerNewsInfo);
+                    //}
                 }
 
                 foreach (var n in newsList)

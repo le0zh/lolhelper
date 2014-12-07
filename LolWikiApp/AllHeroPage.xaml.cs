@@ -103,7 +103,7 @@ namespace LolWikiApp
                 Width = 90,
                 Stretch = Stretch.UniformToFill
             };
-            img.Tap += (s, e) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative));
+            //img.Tap += (s, e) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative));
 
             var textBlock = new TextBlock();
             var tmpTitle = hero.Title.Length > 4 ? hero.Title.Substring(0, 4) + ".." : hero.Title;
@@ -122,6 +122,12 @@ namespace LolWikiApp
             stackPanel.Children.Add(img);
             stackPanel.Children.Add(textBlock);
             stackPanel.Children.Add(textBlock2);
+
+            stackPanel.Tap += (s, e) =>
+            {
+                var helper = new AnimatonHelper();
+                helper.RunShowStoryboard(stackPanel, AnimationTypes.Flash, TimeSpan.FromSeconds(0), (s1,e1)=> NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative)));
+            };
 
             wrapPanel.Children.Add(stackPanel);
         }

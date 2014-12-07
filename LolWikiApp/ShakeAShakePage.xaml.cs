@@ -16,6 +16,8 @@ namespace LolWikiApp
 {
     public partial class ShakeAShakePage : PhoneApplicationPage
     {
+        private bool _isPostback;
+
         public ShakeAShakePage()
         {
             InitializeComponent();
@@ -45,7 +47,7 @@ namespace LolWikiApp
         {
             this.Dispatcher.BeginInvoke(() =>
             {
-                if (App.ViewModel.BindedPlayers.Count != 0)
+                if (PlayerPickBox.SelectedIndex >= 0)
                 {
                     GetCurrentGameInfo();
                 }
@@ -54,52 +56,56 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //if (App.ViewModel.BindedPlayer == null)
-            //{
-            //    this.BindPlayerPanel.Visibility = Visibility.Visible;
-            //    this.PlayerNameTextBlock.Visibility = Visibility.Collapsed;
+            if (_isPostback) return;
 
-            //}
-            //else
-            //{
-            //    this.BindPlayerPanel.Visibility = Visibility.Collapsed;
-            //    this.PlayerNameTextBlock.Text =
-            //        string.Format("{0}  {1}", App.ViewModel.BindedPlayer.Name, App.ViewModel.BindedPlayer.ServerInfo.DisplayName);
-            //    this.PlayerNameTextBlock.Visibility = Visibility.Visible;
-            //}
+            if (App.ViewModel.BindedPlayerInfoWrappers == null || App.ViewModel.BindedPlayerInfoWrappers.Count == 0)
+            {
+                BindPlayerPanel.Visibility = Visibility.Visible;
+                PlayerPickBox.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                BindPlayerPanel.Visibility = Visibility.Collapsed;
+
+                PlayerPickBox.ItemsSource = App.ViewModel.BindedPlayerInfoWrappers;
+                PlayerPickBox.SelectedIndex = 0;
+                PlayerPickBox.Visibility = Visibility.Visible;
+            }
+
+            _isPostback = true;
 
             base.OnNavigatedTo(e);
         }
 
-        private CurrentGameInfo mockingData()
-        {
-            CurrentGameInfo gameInfo = new CurrentGameInfo();
+        //private CurrentGameInfo mockingData()
+        //{
+        //    CurrentGameInfo gameInfo = new CurrentGameInfo();
 
-            for (int i = 0; i < 5; i++)
-            {
-                PlayerInfo p = new PlayerInfo();
-                p.Name = "浪潮之巅";
-                p.HeroName = "Aatrox";
-                p.Total = "120";
-                p.WinRate = "51%";
-                p.TierDesc = "无平级";
-                gameInfo.Sort100PlayerInfos.Add(p);
-            }
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        PlayerInfo p = new PlayerInfo();
+        //        p.Name = "浪潮之巅";
+        //        p.HeroName = "Aatrox";
+        //        p.Total = "120";
+        //        p.WinRate = "51%";
+        //        p.TierDesc = "无平级";
+        //        gameInfo.Sort100PlayerInfos.Add(p);
+        //    }
 
-            for (int i = 0; i < 5; i++)
-            {
-                PlayerInfo p = new PlayerInfo();
-                p.Name = "浪潮之巅";
-                p.HeroName = "Annie";
-                p.Total = "120";
-                p.WinRate = "52%";
-                p.TierDesc = "无平级";
-                gameInfo.Sort200PlayerInfos.Add(p);
-            }
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        PlayerInfo p = new PlayerInfo();
+        //        p.Name = "浪潮之巅";
+        //        p.HeroName = "Annie";
+        //        p.Total = "120";
+        //        p.WinRate = "52%";
+        //        p.TierDesc = "无平级";
+        //        gameInfo.Sort200PlayerInfos.Add(p);
+        //    }
 
-            gameInfo.QueueTypeCn = "匹配赛";
-            return gameInfo;
-        }
+        //    gameInfo.QueueTypeCn = "匹配赛";
+        //    return gameInfo;
+        //}
 
         private async void GetCurrentGameInfo()
         {
@@ -107,11 +113,15 @@ namespace LolWikiApp
             RetrayShakeTextBlock.Visibility = Visibility.Collapsed;
             NoGamingPanel.Visibility = Visibility.Collapsed;
             LoadingPanel.Visibility = Visibility.Visible;
-            CurrentGameInfo gameInfo;
+            CurrentGameInfo gameInfo = null;
 
             try
             {
-                gameInfo = await App.ViewModel.GetCurentGameInfo();
+                var playerInfo = PlayerPickBox.SelectedItem as PlayerInfoSettingWrapper;
+                if (playerInfo != null)
+                {
+                    gameInfo = await App.ViewModel.GetCurentGameInfo(playerInfo);
+                }
 
                 //TEST, MOCKING DATA
                 //gameInfo = mockingData();
@@ -149,7 +159,7 @@ namespace LolWikiApp
         {
             if (this.BlueGroupListSelector.SelectedItem != null)
             {
-                PlayerInfo p = this.BlueGroupListSelector.SelectedItem as PlayerInfo;
+                var p = this.BlueGroupListSelector.SelectedItem as PlayerInfo;
                 navigateToPlayerDetailInfo(p);
             }
         }
@@ -158,7 +168,7 @@ namespace LolWikiApp
         {
             if (this.PurpleListSelector.SelectedItem != null)
             {
-                PlayerInfo p = this.PurpleListSelector.SelectedItem as PlayerInfo;
+                var p = this.PurpleListSelector.SelectedItem as PlayerInfo;
                 navigateToPlayerDetailInfo(p);
             }
         }
@@ -173,6 +183,6 @@ namespace LolWikiApp
 
             //NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml?sn=" + sn + "&pn=" + pn, UriKind.Relative));
         }
-      
+
     }
 }

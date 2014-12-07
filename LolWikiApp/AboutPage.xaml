@@ -28,11 +28,11 @@
 
                 <StackPanel Grid.Row="1" Margin="12 8 0 0"  >
                     <TextBlock Foreground="Black" Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
-				                <Run Text="软件版本： v2.0.0"/>
+				                <Run Text="软件版本： v2.1.0"/>
                     </TextBlock>
                     <TextBlock Foreground="Black" Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				            <Run Text="官方数据版本："/>
-				            <Run Text="v4.18.1"/>
+				            <Run Text="v4.20.1"/>
                     </TextBlock>
                     <TextBlock Foreground="Black" Margin="0 8 0 0" FontSize="{StaticResource PhoneFontSizeMediumLarge}">
 				            <Run Text="意见反馈："/>
