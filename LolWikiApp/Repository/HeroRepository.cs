@@ -18,11 +18,10 @@ namespace LolWikiApp.Repository
 {
     public class HeroRepository : Repository
     {
-        private const string equipmentRecommendRequestUrl = "http://db.duowan.com/lolcz/img/ku11/api/lolcz.php?limit=7&championName={0}"; //读取英雄出装列表，参数为英雄的英文名称
-        private const string freeHeroListRequestUrl = "http://lolbox.duowan.com/phone/apiHeroes.php?v=25&type=free"; //每周免费英雄列表请求地址
+        private const string EquipmentRecommendRequestUrl = "http://db.duowan.com/lolcz/img/ku11/api/lolcz.php?limit=7&championName={0}"; //读取英雄出装列表，参数为英雄的英文名称
+        private const string FreeHeroListRequestUrl = "http://lolbox.duowan.com/phone/apiHeroes.php?v=25&type=free"; //每周免费英雄列表请求地址
 
-        private const string skinListRequestUrl =
-            "http://box.dwstatic.com/apiHeroSkin.php?hero={0}"; //英雄皮肤列表请求地址
+        private const string SkinListRequestUrl = "http://box.dwstatic.com/apiHeroSkin.php?hero={0}"; //英雄皮肤列表请求地址
 
         /// <summary>
         /// 获取推荐出装列表
@@ -31,10 +30,10 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public async Task<List<EquipmentRecommend>> GetEquipmentRecommendListAsync(string heroEnName)
         {
-            string url = string.Format(equipmentRecommendRequestUrl, heroEnName);
-            string json = await GetJsonStringViaHttpAsync(url);
+            var url = string.Format(EquipmentRecommendRequestUrl, heroEnName);
+            var json = await GetJsonStringViaHttpAsync(url);
 
-            List<EquipmentRecommend> equipmentRecommendList = JsonConvert.DeserializeObject<List<EquipmentRecommend>>(json);
+            var equipmentRecommendList = JsonConvert.DeserializeObject<List<EquipmentRecommend>>(json);
             return equipmentRecommendList;
         }
 
@@ -45,37 +44,36 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public async Task<List<HeroSkin>> GetHeroSkinListAsync(string heroEnName)
         {
-            string url = string.Format(skinListRequestUrl, heroEnName);
-            string json = await GetJsonStringViaHttpAsync(url);
+            var url = string.Format(SkinListRequestUrl, heroEnName);
+            var json = await GetJsonStringViaHttpAsync(url);
 
-            List<HeroSkin> equipmentRecommendList = JsonConvert.DeserializeObject<List<HeroSkin>>(json);
+            var equipmentRecommendList = JsonConvert.DeserializeObject<List<HeroSkin>>(json);
             return equipmentRecommendList;
         }
 
-        private const string freeHeroCacheKey = "_free_hero_cache";
+        private const string FreeHeroCacheKey = "_free_hero_cache";
 
         public FreeHeroCache GetFreeHeroCache()
         {
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(freeHeroCacheKey))
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(FreeHeroCacheKey))
             {
                 return null;
             }
 
-            return IsolatedStorageSettings.ApplicationSettings[freeHeroCacheKey] as FreeHeroCache;
-
+            return IsolatedStorageSettings.ApplicationSettings[FreeHeroCacheKey] as FreeHeroCache;
         }
 
         public void SaveFreeHeroCache(FreeHeroCache cache)
         {
             var settings = IsolatedStorageSettings.ApplicationSettings;
-            
-            if (settings.Contains(freeHeroCacheKey))
+
+            if (settings.Contains(FreeHeroCacheKey))
             {
-                settings[freeHeroCacheKey] = cache;
+                settings[FreeHeroCacheKey] = cache;
             }
             else
             {
-                settings.Add(freeHeroCacheKey, cache);
+                settings.Add(FreeHeroCacheKey, cache);
             }
 
             settings.Save();
@@ -94,10 +92,10 @@ namespace LolWikiApp.Repository
 
                 if (cache != null)
                 {
-                    if ( (DateTime.Now - cache.LastUpdated).Days > 7 
-                            || ( DateTime.Now.DayOfWeek == DayOfWeek.Friday
+                    if ((DateTime.Now - cache.LastUpdated).Days > 7
+                            || (DateTime.Now.DayOfWeek == DayOfWeek.Friday
                                     && DateTime.Now.Hour >= 10
-                                    && cache.LastUpdated.DayOfWeek!=DayOfWeek.Friday) )
+                                    && cache.LastUpdated.DayOfWeek != DayOfWeek.Friday))
                     {
                         //need update
                     }
@@ -108,14 +106,14 @@ namespace LolWikiApp.Repository
                 }
             }
             #endregion
-            
-            string json = await GetJsonStringViaHttpAsync(freeHeroListRequestUrl);
+
+            var json = await GetJsonStringViaHttpAsync(FreeHeroListRequestUrl);
             Debug.WriteLine("free hero HTTP requested.");
 
-            JObject jObject = JObject.Parse(json);
-            List<FreeHeroInfo> freeHeroInfos = JsonConvert.DeserializeObject<List<FreeHeroInfo>>(jObject["free"].ToString());
+            var jObject = JObject.Parse(json);
+            var freeHeroInfos = JsonConvert.DeserializeObject<List<FreeHeroInfo>>(jObject["free"].ToString());
 
-            List<Hero> heroes = freeHeroInfos.Select(freeHeroInfo => new Hero()
+            var heroes = freeHeroInfos.Select(freeHeroInfo => new Hero()
             {
                 Id = freeHeroInfo.EnName,
                 Title = freeHeroInfo.Title,
@@ -123,10 +121,8 @@ namespace LolWikiApp.Repository
             }).ToList();
 
             //update cache
-            FreeHeroCache neweCache = new FreeHeroCache();
-            neweCache.LastUpdated = DateTime.Now;
-            neweCache.Cache = heroes;
-            
+            var neweCache = new FreeHeroCache { LastUpdated = DateTime.Now, Cache = heroes };
+
             SaveFreeHeroCache(neweCache);
 
             return heroes;
@@ -141,7 +137,7 @@ namespace LolWikiApp.Repository
         {
             string json;
             using (IRandomAccessStreamWithContentType readStream = await jsonFile.OpenReadAsync())
-            using (StreamReader sr = new StreamReader(readStream.AsStream()))
+            using (var sr = new StreamReader(readStream.AsStream()))
             {
                 json = await sr.ReadToEndAsync();
             }
@@ -186,17 +182,20 @@ namespace LolWikiApp.Repository
         /// <returns></returns>
         public async Task<HeroDetail> GetHeroDetailByKeyAshync(string id)
         {
-            StorageFile heroJsonStorageFile = await GetStorageFileFromInstalledDataFolderAsync("heros", id + ".json");
-            string json = await ReadJsonFileAsync(heroJsonStorageFile);
+            var heroJsonStorageFile = await GetStorageFileFromInstalledDataFolderAsync("heros", id + ".json");
+            var json = await ReadJsonFileAsync(heroJsonStorageFile);
 
-            HeroDetail heroDetail = JsonConvert.DeserializeObject<HeroDetail>(json);
-            List<string> heroAbilitiesKeys = new List<string>();
-            heroAbilitiesKeys.Add(id + "_B");
-            heroAbilitiesKeys.Add(id + "_Q");
-            heroAbilitiesKeys.Add(id + "_W");
-            heroAbilitiesKeys.Add(id + "_E");
-            heroAbilitiesKeys.Add(id + "_R");
-            int i = 0;
+            var heroDetail = JsonConvert.DeserializeObject<HeroDetail>(json);
+            var heroAbilitiesKeys = new List<string>
+            {
+                id + "_B", 
+                id + "_Q", 
+                id + "_W", 
+                id + "_E", 
+                id + "_R"
+            };
+
+            var i = 0;
             string[] abilitiesSuffix = { "（被动）", "（Q）", "（W）", "（E）", "（R）" };
 
             JObject jobj = JObject.Parse(json);
@@ -227,13 +226,13 @@ namespace LolWikiApp.Repository
 
         public async Task<IList<Hero>> GetAllHeroBasicInfosAsync()
         {
-            StorageFile championJsonStorageFile = await GetStorageFileFromInstalledDataFolderAsync("champion.json");
-            string json = await ReadJsonFileAsync(championJsonStorageFile);
+            var championJsonStorageFile = await GetStorageFileFromInstalledDataFolderAsync("champion.json");
+            var json = await ReadJsonFileAsync(championJsonStorageFile);
 
-            List<Hero> heros = new List<Hero>();
+            var heros = new List<Hero>();
 
             //Read the key/id dictionary to get the full list of Hero, then use these ids to get HeroInfo from data[id]
-            JObject jobj = JObject.Parse(json);
+            var jobj = JObject.Parse(json);
 
             //read data version
             DataVersion = jobj["version"].ToString();
@@ -246,13 +245,11 @@ namespace LolWikiApp.Repository
 
             foreach (var id in heroDictionary.Values)
             {
-                Hero hero = JsonConvert.DeserializeObject<Hero>(jobj["data"][id].ToString());
+                var hero = JsonConvert.DeserializeObject<Hero>(jobj["data"][id].ToString());
                 heros.Add(hero);
             }
 
             return heros;
         }
-
-
     }
 }
