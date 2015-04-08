@@ -17,15 +17,15 @@ namespace LolWikiApp
 {
     public partial class AllHeroPage : PhoneApplicationPage
     {
-        private readonly string[] heroTags = { "All", "Fighter", "Mage", "Assassin", "Tank", "Marksman", "Support" };
-        private WrapPanel[] heroPanels;
+        private readonly string[] _heroTags = { "All", "Fighter", "Mage", "Assassin", "Tank", "Marksman", "Support" };
+        private readonly WrapPanel[] _heroPanels;
         private bool _isPostback;
 
         public AllHeroPage()
         {
             InitializeComponent();
 
-            heroPanels = new WrapPanel[] { 
+            _heroPanels = new WrapPanel[] { 
                 this.AllHeroWrapPanel, 
                 this.FighterHeroWrapPanel, this.MageHeroWrapPanel, 
                 this.AssassinHeroWrapPanel, this.TankHeroWrapPanel, 
@@ -38,7 +38,7 @@ namespace LolWikiApp
             if (index < 0 || index > 6)
                 return;
 
-            if (heroPanels[index].Children.Count > 0)
+            if (_heroPanels[index].Children.Count > 0)
                 return;
 
             //SystemTray.ProgressIndicator.IsVisible = true;
@@ -52,9 +52,9 @@ namespace LolWikiApp
             {
                 foreach (Hero hero in (
                                     index == 0 ? App.ViewModel.HeroBasicInfoCollection
-                                               : App.ViewModel.HeroBasicInfoCollection.Where(h => h.Tags.Contains(heroTags[index]))))
+                                               : App.ViewModel.HeroBasicInfoCollection.Where(h => h.Tags.Contains(_heroTags[index]))))
                 {
-                    AddFreeHeroItem(hero, heroPanels[index]);
+                    AddFreeHeroItem(hero, _heroPanels[index]);
                 }
 
                 //SystemTray.ProgressIndicator.IsVisible = false;

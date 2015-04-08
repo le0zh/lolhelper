@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Coding4Fun.Toolkit.Controls;
 using HtmlAgilityPack;
+using LolWikiApp.Repository;
 using LolWikiApp.Resources;
 using LolWikiApp.ViewModels;
 using Microsoft.Phone.Controls;
@@ -31,12 +32,10 @@ namespace LolWikiApp
     {
         private List<Hero> _freeHeros;
         private int _currentPage;
-        private int _currentPageForFunyNews;
-        private int _currentPageForStoryNews;
-        private int _currentPageForMmNews;
-        private NewsType _currentNewsType;
+
+        private NewsTypeWrapper _currentNewsTypeWrapper;
+
         private bool _isPivotFirstLoaded = false;
-        private readonly FullScreenPopup _newsCategoryPopup;
         private bool _isQuitConfirmOpened = false;
 
         private ApplicationBarMenuItem _feedBackApplicationBarMenuItem;
@@ -51,10 +50,7 @@ namespace LolWikiApp
 
             _freeHeros = new List<Hero>();
             _currentPage = 0;
-            _currentPageForFunyNews = 1;
-            _currentNewsType = NewsType.Latest;
-            _newsCategoryPopup = new FullScreenPopup();
-            _newsCategoryPopup.PopUpHided += (s, e) => SetAppbarForNewsList();
+            _currentNewsTypeWrapper = new NewsTypeWrapper() { Type = NewsType.Latest, Source = "HELPER" };
 
             _feedBackApplicationBarMenuItem = new ApplicationBarMenuItem() { Text = "意见反馈" };
             _feedBackApplicationBarMenuItem.Click += (s, e) =>
@@ -76,23 +72,17 @@ namespace LolWikiApp
                 case 0: //资讯
                     NewsDataBindAsync();
                     LoadCachedNews();
+                    MainPivot.Margin = new Thickness(0, 0, 0, -90);
                     break;
-                case 1: //搞笑
-                    FunnyNewsBind();
-                    break;
-                case 2: //连载
-                    StoryNewsBind();
-                    break;
-                case 3: //美图
-                    MmNewsBind();
-                    break;
-                case 4: //周免
+                case 1: //周免
                     BindFreeHeroInfoAsync();
+                    MainPivot.Margin = new Thickness(0);
                     break;
-                case 5: //我的
+                case 2: //我的
                     BindRecords();
+                    MainPivot.Margin = new Thickness(0);
                     break;
-                case 6: //更多
+                case 3: //更多
                     break;
             }
         }
@@ -103,7 +93,7 @@ namespace LolWikiApp
         {
             if (_isPostBack)
             {
-                if (MainPivot.SelectedIndex == 5)
+                if (MainPivot.SelectedIndex == 2)
                 {
                     BindRecords();
                 }
@@ -136,9 +126,14 @@ namespace LolWikiApp
 
         private void HomePage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
-            if (_newsCategoryPopup.IsOpen)
+            if (SlideMenuPopup.IsOpen)
             {
-                _newsCategoryPopup.Hide();
+                HideNewsCategoryPopup();
+                e.Cancel = true;
+            }
+            else if (_isHidden)
+            {
+                ShowPivotHeader();
                 e.Cancel = true;
             }
             else
@@ -150,6 +145,7 @@ namespace LolWikiApp
                 }
 
                 var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("再按一次退出英雄联盟助手!");
+                confirmQuiToastPromt.Height = 60;
                 _isQuitConfirmOpened = true;
                 confirmQuiToastPromt.Show();
                 e.Cancel = true;
@@ -176,308 +172,13 @@ namespace LolWikiApp
             else
             {
                 Debug.WriteLine("HOME PAGE LOAD MainPivot_OnSelectionChanged");
+                ShowPivotHeader();
                 HomePageMain();
             }
         }
         #endregion
 
-        #region 美女
-        private void MmNewsBind()
-        {
-            if (this.TcMmNewsLongListSelector.ItemsSource == null)
-            {
-                this.TcMmNewsLongListSelector.ItemsSource = App.NewsViewModel.TcMmListInfObservableCollection;
-                LoadTcMmNewsData();
-            }
-
-            SetAppbarForMmNews();
-        }
-
-        private async void LoadTcMmNewsData()
-        {
-            this.TcMmNewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.TcMmNewsLoadingBar.Visibility = Visibility.Visible;
-            SystemTray.ProgressIndicator.IsVisible = true;
-
-            try
-            {
-                await App.NewsViewModel.LoadTecentMmListInfosByPageAsync(1, true);
-            }
-            catch (Exception exception404)
-            {
-                this.TcMmNewsRetryNetPanel.Visibility = Visibility.Visible;
-                return;
-            }
-            finally
-            {
-                _currentPageForMmNews = 1;
-                this.TcMmNewsLoadingBar.Visibility = Visibility.Collapsed;
-                SystemTray.ProgressIndicator.IsVisible = false;
-            }
-
-            this.TcMmNewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.TcMmNewsLongListSelector.Visibility = Visibility.Visible;
-        }
-
-        private void SetAppbarForMmNews()
-        {
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
-
-            var refreshButton = new ApplicationBarIconButton
-            {
-                IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
-                Text = "刷新"
-            };
-
-            refreshButton.Click += (s, e) => LoadTcMmNewsData();
-
-            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
-            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
-
-            ApplicationBar.Buttons.Add(refreshButton);
-        }
-
-        private async void TcMmNewsLongListSelector_OnGettingMoreTriggered(object sender, EventArgs e)
-        {
-            TcNewsListInfo lastNews = null;
-            var nextPage = _currentPageForMmNews + 1;
-            try
-            {
-                lastNews = App.NewsViewModel.TcMmListInfObservableCollection.Last();
-                await App.NewsViewModel.LoadTecentMmListInfosByPageAsync(nextPage);
-            }
-            catch (Exception exception404)
-            {
-                ToastPromts.GetToastWithImgAndTitle("网络不太稳定，加载获取失败.").Show();
-                return;
-            }
-            finally
-            {
-                this.TcMmNewsLongListSelector.HideGettingMorePanel();
-            }
-
-            if (lastNews != null)
-            {
-                this.TcMmNewsLongListSelector.ScrollTo(lastNews);
-            }
-
-            _currentPageForMmNews = nextPage;
-        }
-
-        private void TcMmNewsLongListSelector_OnTap(object sender, GestureEventArgs e)
-        {
-            if (this.TcMmNewsLongListSelector.SelectedItem != null)
-            {
-                var newsInfo = this.TcMmNewsLongListSelector.SelectedItem as TcNewsListInfo;
-                if (newsInfo != null)
-                {
-                    this.TcMmNewsLongListSelector.SelectedItem = null; //reset selected item
-                    NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsUrl=" + newsInfo.article_url, UriKind.Relative));
-                }
-            }
-        }
-
-        #endregion
-
-        #region 连载
-
-        private void StoryNewsBind()
-        {
-            if (this.TcStoryNewsLongListSelector.ItemsSource == null)
-            {
-                this.TcStoryNewsLongListSelector.ItemsSource = App.NewsViewModel.TcStoryListInfObservableCollection;
-                LoadTcStoryNewsData();
-            }
-
-            SetAppbarForStoryNews();
-        }
-
-        private async void LoadTcStoryNewsData()
-        {
-            this.TcSotryNewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.TcSotryNewsLoadingBar.Visibility = Visibility.Visible;
-            SystemTray.ProgressIndicator.IsVisible = true;
-
-            try
-            {
-                await App.NewsViewModel.LoadTecentStoryListInfosByPageAsync(1, true);
-            }
-            catch (Exception exception404)
-            {
-                this.TcSotryNewsRetryNetPanel.Visibility = Visibility.Visible;
-                return;
-            }
-            finally
-            {
-                _currentPageForStoryNews = 1;
-                this.TcSotryNewsLoadingBar.Visibility = Visibility.Collapsed;
-                SystemTray.ProgressIndicator.IsVisible = false;
-            }
-
-            this.TcSotryNewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.TcStoryNewsLongListSelector.Visibility = Visibility.Visible;
-        }
-
-        private void SetAppbarForStoryNews()
-        {
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
-
-            var refreshButton = new ApplicationBarIconButton
-            {
-                IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
-                Text = "刷新"
-            };
-
-            refreshButton.Click += (s, e) => LoadTcStoryNewsData();
-
-            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
-            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
-
-            ApplicationBar.Buttons.Add(refreshButton);
-        }
-
-        private async void TcStoryNewsLongListSelector_OnGettingMoreTriggered(object sender, EventArgs e)
-        {
-            TcNewsListInfo lastNews = null;
-            var nextPage = _currentPageForStoryNews + 1;
-            try
-            {
-                lastNews = App.NewsViewModel.TcStoryListInfObservableCollection.Last();
-                await App.NewsViewModel.LoadTecentStoryListInfosByPageAsync(nextPage);
-            }
-            catch (Exception exception404)
-            {
-                ToastPromts.GetToastWithImgAndTitle("网络不太稳定，加载获取失败.").Show();
-                return;
-            }
-            finally
-            {
-                this.TcStoryNewsLongListSelector.HideGettingMorePanel();
-            }
-
-            if (lastNews != null)
-            {
-                this.TcStoryNewsLongListSelector.ScrollTo(lastNews);
-            }
-
-            _currentPageForStoryNews = nextPage;
-        }
-
-        private void TcStoryNewsLongListSelector_OnTap(object sender, GestureEventArgs e)
-        {
-            if (this.TcStoryNewsLongListSelector.SelectedItem != null)
-            {
-                var newsInfo = this.TcStoryNewsLongListSelector.SelectedItem as TcNewsListInfo;
-                if (newsInfo != null)
-                {
-                    this.TcStoryNewsLongListSelector.SelectedItem = null; //reset selected item
-                    NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsUrl=" + newsInfo.article_url, UriKind.Relative));
-                }
-            }
-        }
-
-        #endregion
-
-
-        #region 搞笑
-
-        private void FunnyNewsBind()
-        {
-            //TcFunnyNewsLongListSelector
-            if (this.TcFunnyNewsLongListSelector.ItemsSource == null)
-            {
-                this.TcFunnyNewsLongListSelector.ItemsSource = App.NewsViewModel.TcNewsListInfObservableCollection;
-                LoadTcNewsData();
-            }
-
-            SetAppbarForFunnyNews();
-        }
-
-        private async void LoadTcNewsData()
-        {
-            this.TcFunyNewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.TcFunnyNewsLoadingBar.Visibility = Visibility.Visible;
-            SystemTray.ProgressIndicator.IsVisible = true;
-            try
-            {
-                await App.NewsViewModel.LoadTecentNewsListInfosByTypeAndPageAsync(1, true);
-            }
-            catch (Exception exception404)
-            {
-                this.TcFunyNewsRetryNetPanel.Visibility = Visibility.Visible;
-                return;
-            }
-            finally
-            {
-                _currentPageForFunyNews = 1;
-                this.TcFunnyNewsLoadingBar.Visibility = Visibility.Collapsed;
-                SystemTray.ProgressIndicator.IsVisible = false;
-            }
-
-            this.TcFunyNewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.TcFunnyNewsLongListSelector.Visibility = Visibility.Visible;
-        }
-
-        private void SetAppbarForFunnyNews()
-        {
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
-
-            var refreshButton = new ApplicationBarIconButton
-            {
-                IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
-                Text = "刷新"
-            };
-
-            refreshButton.Click += (s, e) => LoadTcNewsData();
-
-            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
-            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
-
-            ApplicationBar.Buttons.Add(refreshButton);
-        }
-
-        private async void TcFunnyNewsLongListSelector_OnGettingMoreTriggered(object sender, EventArgs e)
-        {
-            TcNewsListInfo lastNews = null;
-            var nextPage = _currentPageForFunyNews + 1;
-            try
-            {
-                lastNews = App.NewsViewModel.TcNewsListInfObservableCollection.Last();
-                await App.NewsViewModel.LoadTecentNewsListInfosByTypeAndPageAsync(nextPage);
-            }
-            catch (Exception exception404)
-            {
-                ToastPromts.GetToastWithImgAndTitle("网络不太稳定，加载获取失败.").Show();
-                return;
-            }
-            finally
-            {
-                this.TcFunnyNewsLongListSelector.HideGettingMorePanel();
-            }
-
-            if (lastNews != null)
-            {
-                this.TcFunnyNewsLongListSelector.ScrollTo(lastNews);
-            }
-
-            _currentPageForFunyNews = nextPage;
-        }
-
-        private void TcFunnyNewsLongListSelector_OnTap(object sender, GestureEventArgs e)
-        {
-            if (this.TcFunnyNewsLongListSelector.SelectedItem != null)
-            {
-                var newsInfo = this.TcFunnyNewsLongListSelector.SelectedItem as TcNewsListInfo;
-                if (newsInfo != null)
-                {
-                    this.TcFunnyNewsLongListSelector.SelectedItem = null; //reset selected item
-                    NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsUrl=" + newsInfo.article_url, UriKind.Relative));
-                }
-            }
-        }
-        #endregion
-
-        #region 资讯列表
+        #region 资讯中心
         private void NewsLongListSelector_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (_cacheId == "NEWS")
@@ -494,23 +195,8 @@ namespace LolWikiApp
         {
             if (this.NewsLongListSelector.ItemsSource == null)
             {
-                this.NewsLongListSelector.ItemsSource = App.NewsViewModel.NewsListInfObservableCollection;
-                if (_cacheId == "NEWS")
-                {
-                    NewsLoadingBar.Visibility = Visibility.Collapsed;
-                    NewsLongListSelector.Visibility = Visibility.Visible;
-                    NewsLongListSelector.ScrollTo(NewsLongListSelector.ItemsSource[10]);
-
-                    //var cachedNewsListInfo = App.ViewModel.CachedObject as NewsListInfo;
-                    //if (cachedNewsListInfo != null)
-                    //{
-                    //    NewsLongListSelector.ScrollTo(App.NewsViewModel.NewsListInfObservableCollection.Last());
-                    //}
-                }
-                else
-                {
-                    LoadNewsData();
-                }
+                LoadNewsData();
+                NewsLongListSelector.ItemsSource = App.NewsViewModel.NewsListInfObservableCollection;
             }
 
             SetAppbarForNewsList();
@@ -518,118 +204,25 @@ namespace LolWikiApp
 
         private void SetAppbarForNewsList()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
+            ApplicationBar = new ApplicationBar { Opacity = 1, Mode = ApplicationBarMode.Minimized };
 
             var refreshButton = new ApplicationBarIconButton();
-            var categoryButton = new ApplicationBarIconButton();
             var cacheButton = new ApplicationBarIconButton();
 
             refreshButton.IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative);
             refreshButton.Text = "刷新";
 
-            categoryButton.IconUri = new Uri("/Assets/AppBar/category.png", UriKind.Relative);
-            categoryButton.Text = "分类";
-
             cacheButton.IconUri = new Uri("/Assets/AppBar/download.png", UriKind.Relative);
             cacheButton.Text = "离线阅读";
 
             refreshButton.Click += (s, e) => LoadNewsData();
-            categoryButton.Click += (s, e) => ShowNewsCategoriesPopup();
             cacheButton.Click += (s, e) => NavigationService.Navigate(new Uri("/NewsCachePage.xaml", UriKind.Relative));
 
             ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
             ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
-            
+
             ApplicationBar.Buttons.Add(refreshButton);
-            ApplicationBar.Buttons.Add(categoryButton);
             ApplicationBar.Buttons.Add(cacheButton);
-        }
-
-        private void ShowNewsCategoriesPopup()
-        {
-            if (_newsCategoryPopup.IsOpen)
-            {
-                _newsCategoryPopup.Hide();
-                return;
-            }
-
-            var mainStackPanel = new StackPanel
-            {
-                Background = Application.Current.Resources["PhoneChromeBrush"] as SolidColorBrush,
-                Orientation = System.Windows.Controls.Orientation.Vertical,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                Margin = new Thickness(0, 0, 0, 72)
-            };
-
-            mainStackPanel.Tap += (s, e) => e.Handled = true;
-
-            var titleTextBlock = new TextBlock()
-            {
-                Text = "请选择资讯类型 ",
-                Foreground = Application.Current.Resources["PhoneTextLowContrastBrush"] as SolidColorBrush,
-                FontSize = (double)Application.Current.Resources["PhoneFontSizeLarge"],
-                Margin = new Thickness(24, 12, 12, 0),
-            };
-
-            var newsTypeListBox = new ListBox
-            {
-                Height = 335,
-                Width = 480,
-                ItemsSource = App.NewsViewModel.NewsTypeList,
-                Margin = new Thickness(0, 12, 0, 0),
-                Padding = new Thickness(0, 4, 0, 0),
-                SelectionMode = SelectionMode.Single,
-                Background = new SolidColorBrush(Colors.DarkGray),
-                ItemTemplate = Application.Current.Resources["NewsTypeListBoxTemplate"] as DataTemplate,
-                ItemContainerStyle = Application.Current.Resources["NewsTypeListBoxItemStyle"] as Style,
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-
-            newsTypeListBox.SetValue(TiltEffect.IsTiltEnabledProperty, true);
-
-            var index = 0;
-            foreach (var item in newsTypeListBox.Items)
-            {
-                var type = item as NewsTypeWrapper;
-                if (type != null && type.Type == _currentNewsType)
-                {
-                    break;
-                }
-                index++;
-            }
-
-            newsTypeListBox.SelectedIndex = index;
-
-            ApplicationBar = new ApplicationBar { Opacity = 1 };
-
-            var selectButton = new ApplicationBarIconButton();
-            var cancelButton = new ApplicationBarIconButton();
-
-            selectButton.IconUri = new Uri("/Assets/AppBar/check.png", UriKind.Relative);
-            selectButton.Text = "选择";
-
-            cancelButton.IconUri = new Uri("/Assets/AppBar/close.png", UriKind.Relative);
-            cancelButton.Text = "取消";
-
-            selectButton.Click += (s, e) =>
-            {
-                if (newsTypeListBox.SelectedItem != null)
-                {
-                    var newsType = newsTypeListBox.SelectedItem as NewsTypeWrapper;
-                    _currentNewsType = newsType == null ? NewsType.Latest : newsType.Type;
-                    LoadNewsData();
-                }
-            };
-            cancelButton.Click += (s, e) => _newsCategoryPopup.Hide();
-
-            ApplicationBar.Buttons.Add(selectButton);
-            ApplicationBar.Buttons.Add(cancelButton);
-
-            mainStackPanel.Children.Add(titleTextBlock);
-            mainStackPanel.Children.Add(newsTypeListBox);
-
-            _newsCategoryPopup.Child = mainStackPanel;
-            _newsCategoryPopup.Show();
         }
 
         private async void LoadCachedNews()
@@ -643,33 +236,32 @@ namespace LolWikiApp
 
         private async void LoadNewsData()
         {
-            if (_newsCategoryPopup.IsOpen)
-            {
-                _newsCategoryPopup.Hide();
-            }
+            CategoryGrid.Projection = new PlaneProjection() { RotationX = 90 };
 
-            this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.NewsLoadingBar.Visibility = Visibility.Visible;
+            NewsRetryNetPanel.Visibility = Visibility.Collapsed;
+            NewsLoadingBar.Visibility = Visibility.Visible;
+            NewsLongListSelector.Visibility = Visibility.Collapsed;
             SystemTray.ProgressIndicator.IsVisible = true;
             try
             {
-                Debug.WriteLine(_currentNewsType);
+                Debug.WriteLine(_currentNewsTypeWrapper);
 
-                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsType, 1, true);
+                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsTypeWrapper, 1, true);
             }
             catch (Exception exception404)
             {
                 var toast = ToastPromts.GetToastWithImgAndTitle("加载失败，读取离线文章。");
                 toast.Show();
 
-                App.NewsViewModel.LoadeNewsListInfoFromCache(_currentNewsType);
+                App.NewsViewModel.LoadeNewsListInfoFromCache(_currentNewsTypeWrapper.Type);
+
                 if (App.NewsViewModel.NewsListInfObservableCollection.Count > 0)
                 {
-                    this.NewsLongListSelector.Visibility = Visibility.Visible;
+                    NewsLongListSelector.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    this.NewsRetryNetPanel.Visibility = Visibility.Visible;
+                    NewsRetryNetPanel.Visibility = Visibility.Visible;
                 }
 
                 return;
@@ -677,46 +269,98 @@ namespace LolWikiApp
             finally
             {
                 _currentPage = 1;
-                this.NewsLoadingBar.Visibility = Visibility.Collapsed;
+                NewsLoadingBar.Visibility = Visibility.Collapsed;
                 SystemTray.ProgressIndicator.IsVisible = false;
             }
 
-            this.NewsRetryNetPanel.Visibility = Visibility.Collapsed;
-            this.NewsLongListSelector.Visibility = Visibility.Visible;
+            NewsRetryNetPanel.Visibility = Visibility.Collapsed;
+            NewsLongListSelector.Visibility = Visibility.Visible;
+            _adAnimatonHelper.RunShowStoryboard(CategoryGrid, AnimationTypes.SwivelForwardIn, TimeSpan.FromSeconds(0.6));
         }
 
         private void NewsLongListSelector_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (this.NewsLongListSelector.SelectedItem != null)
+            if (NewsLongListSelector.SelectedItem != null)
             {
-                var newsInfo = this.NewsLongListSelector.SelectedItem as NewsListInfo;
-                if (newsInfo != null)
+                var newsInfo = NewsLongListSelector.SelectedItem as NewsListBaseInfo;
+                if (newsInfo != null && newsInfo.NewsType != null)
                 {
-                    if (!newsInfo.IsFlipNews)
+                    if (newsInfo.NewsType.Source == "HELPER")
                     {
-                        if (_newsCategoryPopup.IsOpen)
+                        var helperNews = newsInfo as NewsListInfo;
+                        if (helperNews != null && !helperNews.IsFlipNews)
                         {
-                            _newsCategoryPopup.Hide();
+                            NewsLongListSelector.SelectedItem = null; //reset selected item
+                            //App.ViewModel.CachedObject = newsInfo;
+                            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + helperNews.Id, UriKind.Relative));
                         }
+                    }
 
-                        this.NewsLongListSelector.SelectedItem = null; //reset selected item
-                        //App.ViewModel.CachedObject = newsInfo;
-                        NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + newsInfo.Id, UriKind.Relative));
+                    if (newsInfo.NewsType.Source == "TC")
+                    {
+                        var tcNews = newsInfo as TcNewsListInfo;
+                        if (tcNews != null)
+                        {
+                            NewsLongListSelector.SelectedItem = null; //reset selected item
+                            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsUrl=" + tcNews.article_url, UriKind.Relative));
+                        }
                     }
                 }
             }
         }
 
-        private void NewsLongListSelector_OnRefreshTriggered(object sender, EventArgs e)
+
+        //点击分类，显示侧边菜单框
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            NewsDataBindAsync();
-            //LoadNewsData();
-            this.NewsLongListSelector.HideRefreshPanel();
+            NewsCategoryListBox.ItemsSource = App.NewsViewModel.NewsTypeList;
+
+            var index = 0;
+            foreach (var item in NewsCategoryListBox.Items)
+            {
+                var type = item as NewsTypeWrapper;
+                if (type != null && type.Type == _currentNewsTypeWrapper.Type)
+                {
+                    break;
+                }
+                index++;
+            }
+
+            NewsCategoryListBox.SelectedIndex = index;
+            ApplicationBar = null; //隐藏appbar
+            SlideMenuPopup.IsOpen = true;
         }
 
-        private void CancelNewsListGetMoreButton_OnClick(object sender, RoutedEventArgs e)
+        //实现点击空白区域，隐藏侧边框
+        private void PopGrid_OnTap(object sender, GestureEventArgs e)
         {
-            //NewsListGetMoreRetryNetPanel.Visibility = Visibility.Collapsed;
+            if (SlideMenuPopup.IsOpen)
+            {
+                HideNewsCategoryPopup();
+            }
+        }
+
+        //阻止事件下传，实现点击菜单区域，不会激发空白区域的event
+        private void MenuListStackPanel_OnTap(object sender, GestureEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        //点击具体类别
+        private void NewsCategoryListBox_OnTap(object sender, GestureEventArgs e)
+        {
+            var selectedCateogry = NewsCategoryListBox.SelectedItem;
+            if (selectedCateogry != null)
+            {
+                var category = selectedCateogry as NewsTypeWrapper;
+                if (category != null)
+                {
+                    _currentNewsTypeWrapper = category;
+                    CategoryTextBlock.Text = category.DisplayName;
+                    HideNewsCategoryPopup();
+                    LoadNewsData();
+                }
+            }
         }
 
         private void NewsListRetryGetMoreLoadButton_OnClick(object sender, RoutedEventArgs e)
@@ -731,15 +375,17 @@ namespace LolWikiApp
 
         private async void LoadMoreNewsList()
         {
-            NewsListInfo lastNews = null;
+            NewsListBaseInfo lastNews = null;
             try
             {
                 var nextPage = _currentPage + 1;
                 Debug.WriteLine("[news]nextpage: " + nextPage);
 
-                lastNews = App.NewsViewModel.NewsListInfObservableCollection.Last();
-                Debug.WriteLine("load more news : " + _currentNewsType);
-                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsType, nextPage);
+                var count = App.NewsViewModel.NewsListInfObservableCollection.Count;
+                var index = count > 2 ? count - 2 : count - 1;
+                lastNews = App.NewsViewModel.NewsListInfObservableCollection[index];
+                Debug.WriteLine("load more news : " + _currentNewsTypeWrapper.Type);
+                await App.NewsViewModel.LoadNewsListInfosByTypeAndPageAsync(_currentNewsTypeWrapper, nextPage);
             }
             catch (Exception exception404)
             {
@@ -757,29 +403,25 @@ namespace LolWikiApp
                 this.NewsLongListSelector.ScrollTo(lastNews);
             }
 
-            _currentPage = App.NewsViewModel.CurrentPage;
+            _currentPage++;
         }
 
         private void HorizontalFlipView_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var item = ((FlipView)sender).SelectedItem as NewsListInfo;
-            if (item != null)
+            if (item != null && !string.IsNullOrEmpty(item.Id))
             {
-                if (_newsCategoryPopup.IsOpen)
-                {
-                    _newsCategoryPopup.Hide();
-                    //SetAppbarForNewsList();
-                }
-
+                 //((FlipView)sender).SelectedIndex
+                 //((FlipView)sender).Items.Count
                 NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative));
             }
         }
         #endregion
 
-        #region 每周免费英雄
+        #region 周免英雄
         private void BindFreeHeroInfoAsync()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
+            ApplicationBar = new ApplicationBar { Opacity = 1, Mode = ApplicationBarMode.Minimized };
             var refreshButton = new ApplicationBarIconButton();
             var moreButton = new ApplicationBarIconButton();
 
@@ -852,7 +494,7 @@ namespace LolWikiApp
                 Width = 90,
                 Stretch = Stretch.UniformToFill
             };
-            img.Tap += (s, e) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative));
+            //img.Tap += (s, e) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative));
 
             var textBlock = new TextBlock();
 
@@ -873,25 +515,42 @@ namespace LolWikiApp
             stackPanel.Children.Add(textBlock);
             stackPanel.Children.Add(textBlock2);
 
+            stackPanel.Tap += (s, e) =>
+            {
+                var helper = new AnimatonHelper();
+                helper.RunShowStoryboard(stackPanel, AnimationTypes.Flash, TimeSpan.FromSeconds(0), (s1, e1) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative)));
+            };
+
+
+            //stackPanel.Tap += (s, e) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative));
+
             HeroWrapPanel.Children.Add(stackPanel);
         }
         #endregion
 
-        #region 战绩
+        #region 我的关注
         private void SetBindAppBar()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
+            ApplicationBar = new ApplicationBar { Opacity = 1, Mode = ApplicationBarMode.Minimized };
             var pinButton = new ApplicationBarIconButton
             {
-                IconUri = new Uri("/Assets/AppBar/pin-1.png", UriKind.Relative),
-                Text = "绑定"
+                IconUri = new Uri("/Data/appbar.add.png", UriKind.Relative),
+                Text = "加关注"
             };
 
+            var refreshButton = new ApplicationBarIconButton
+            {
+                IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
+                Text = "刷新"
+            };
+
+            refreshButton.Click += (s, e) => BindRecords(); ;
             pinButton.Click += (s, e) => NavigationService.Navigate(new Uri("/PlayerInformationPage.xaml?mode=bind", UriKind.Relative));
 
             ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
             ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
             ApplicationBar.Buttons.Add(pinButton);
+            ApplicationBar.Buttons.Add(refreshButton);
         }
 
         private void SetRetryAppBar()
@@ -911,84 +570,92 @@ namespace LolWikiApp
             ApplicationBar.Buttons.Add(retryButton);
         }
 
-        private void SetMoreUnBindAndSearchAppBar()
-        {
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
-            var moreButton = new ApplicationBarIconButton();
-            var unpinButton = new ApplicationBarIconButton();
-            var searchButton = new ApplicationBarIconButton();
+        //private void SetMoreUnBindAndSearchAppBar()
+        //{
+        //    ApplicationBar = new ApplicationBar { Opacity = 0.8 };
+        //    var moreButton = new ApplicationBarIconButton();
+        //    var unpinButton = new ApplicationBarIconButton();
+        //    var searchButton = new ApplicationBarIconButton();
 
-            moreButton.IconUri = new Uri("/Assets/AppBar/more-1.png", UriKind.Relative);
-            moreButton.Text = "更多信息";
+        //    moreButton.IconUri = new Uri("/Assets/AppBar/more-1.png", UriKind.Relative);
+        //    moreButton.Text = "更多信息";
 
-            unpinButton.IconUri = new Uri("/Assets/AppBar/unpin-1.png", UriKind.Relative);
-            unpinButton.Text = "解除绑定";
+        //    unpinButton.IconUri = new Uri("/Assets/AppBar/unpin-1.png", UriKind.Relative);
+        //    unpinButton.Text = "解除绑定";
 
-            searchButton.IconUri = new Uri("/Assets/AppBar/feature.search.png", UriKind.Relative);
-            searchButton.Text = "搜索召唤师";
+        //    searchButton.IconUri = new Uri("/Assets/AppBar/feature.search.png", UriKind.Relative);
+        //    searchButton.Text = "搜索召唤师";
 
-            moreButton.Click += (s, e) => MoreAboutPlayer();
+        //    moreButton.Click += (s, e) => MoreAboutPlayer();
 
-            unpinButton.Click += (s2, e2) => RemoveBindOfPlayer();
+        //    unpinButton.Click += (s2, e2) => RemoveBindOfPlayer();
 
-            searchButton.Click += (s3, e3) => SearchPlayer();
+        //    searchButton.Click += (s3, e3) => SearchPlayer();
 
-            ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
-            ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
+        //    ApplicationBar.MenuItems.Add(_feedBackApplicationBarMenuItem);
+        //    ApplicationBar.MenuItems.Add(_aboutApplicationBarMenuItem);
 
-            ApplicationBar.Buttons.Add(moreButton);
-            ApplicationBar.Buttons.Add(searchButton);
-            ApplicationBar.Buttons.Add(unpinButton);
-        }
+        //    ApplicationBar.Buttons.Add(moreButton);
+        //    ApplicationBar.Buttons.Add(searchButton);
+        //    ApplicationBar.Buttons.Add(unpinButton);
+        //}
 
         private void BindRecords()
         {
-            if (App.ViewModel.BindedPlayer == null)
+            if (App.ViewModel.BindedPlayerInfoWrappers.Count == 0)
             {
                 NeedBindPlayerInfoPanel.Visibility = Visibility.Visible;
                 PlayerRecordPanel.Visibility = Visibility.Collapsed;
-
-                SetBindAppBar();
             }
             else
             {
                 NeedBindPlayerInfoPanel.Visibility = Visibility.Collapsed;
 
-                if (!App.ViewModel.BindedPlayer.IsDataLoaded)
+                if (!App.ViewModel.IsBindedPlayerInfoDataLoaded)
                 {
-                    LoadPlayerInfo();
+                    LoadPlayersInfo();
                 }
                 else
                 {
                     PlayerRecordPanel.Visibility = Visibility.Visible;
-                    PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
-
+                    PlayerRecordPanel.ItemsSource = App.ViewModel.BindedPlayers;
                     MyInfomationRetryNetPanel.Visibility = Visibility.Collapsed;
-                    SetMoreUnBindAndSearchAppBar();
                 }
+            }
+
+            SetBindAppBar();
+        }
+
+        private void PlayerRecordPanel_OnTap(object sender, GestureEventArgs e)
+        {
+            var player = PlayerRecordPanel.SelectedItem as Player;
+            if (player != null)
+            {
+                PlayerRecordPanel.SelectedItem = null;
+                App.ViewModel.SelectedPlayer = player;
+                NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml", UriKind.Relative));
             }
         }
 
         private void MoreAboutPlayer()
         {
-            App.ViewModel.SelectedPlayer = App.ViewModel.BindedPlayer;
-            NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml", UriKind.Relative));
+
         }
 
         private void RemoveBindOfPlayer()
         {
-            if (App.ViewModel.BindedPlayer == null)
-                return;
+            //if (App.ViewModel.BindedPlayer == null)
+            //    return;
 
-            string message = string.Format("确定解除对召唤师 {0} 的绑定？", App.ViewModel.BindedPlayer.Name);
-            if (MessageBoxResult.OK == MessageBox.Show(message, "确认", MessageBoxButton.OKCancel))
-            {
-                App.ViewModel.RemovePlayerBind();
+            //string message = string.Format("确定解除对召唤师 {0} 的绑定？", App.ViewModel.BindedPlayer.Name);
+            //if (MessageBoxResult.OK == MessageBox.Show(message, "确认", MessageBoxButton.OKCancel))
+            //{
+            //    App.ViewModel.RemovePlayerBind();
 
-                App.ViewModel.BindedPlayer = null;
-                PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
-                BindRecords();
-            }
+            //    App.ViewModel.BindedPlayer = null;
+            //    PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
+            //    BindRecords();
+            //}
         }
 
         private void SearchPlayer()
@@ -996,55 +663,86 @@ namespace LolWikiApp
             NavigationService.Navigate(new Uri("/PlayerInformationPage.xaml?mode=search", UriKind.Relative));
         }
 
-        private async void LoadPlayerInfo()
+        //取消关注
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Player briefPlayerInfo = App.ViewModel.BindedPlayer;
-            MyDataLoadingBar.Visibility = Visibility.Visible;
+            var menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                var player = menuItem.Tag as Player;
+                if (player != null)
+                {
+                    App.ViewModel.DeleteBindedPlayer(player);
+                }
+            }
+        }
 
-            HttpActionResult actionResult =
-                await App.ViewModel.GetPlayerDetailInfo(briefPlayerInfo.ServerInfo.Value, briefPlayerInfo.Name);
+        private async void LoadPlayersInfo()
+        {
+            MyDataLoadingBar.Visibility = Visibility.Visible;
+            foreach (var playerInfoSettingWrapper in App.ViewModel.BindedPlayerInfoWrappers)
+            {
+                if (playerInfoSettingWrapper.IsDataLoaded == false)
+                {
+                    var actionResult = await App.ViewModel.GetPlayerDetailInfo(playerInfoSettingWrapper.ServerInfo.Value, playerInfoSettingWrapper.Name);
+                    if (actionResult.Result == ActionResult.Success)
+                    {
+                        var player = actionResult.Value as Player;
+                        if (player != null)
+                        {
+                            playerInfoSettingWrapper.IsDataLoaded = true;
+                            player.IsDataLoaded = true;
+                            App.ViewModel.BindedPlayers.Add(player);
+                        }
+                    }
+                }
+            }
 
             MyDataLoadingBar.Visibility = Visibility.Collapsed;
 
-            switch (actionResult.Result)
-            {
-                case ActionResult.Exception404:
-                    MyInfomationRetryNetPanel.Visibility = Visibility.Visible;
-                    PlayerRecordPanel.Visibility = Visibility.Collapsed;
-                    SetRetryAppBar();
-                    break;
-                case ActionResult.NotFound:
-                    NeedBindPlayerInfoPanel.Visibility = Visibility.Visible;
-                    PlayerRecordPanel.Visibility = Visibility.Collapsed;
-                    SetBindAppBar();
-                    break;
+            PlayerRecordPanel.Visibility = Visibility.Visible;
+            PlayerRecordPanel.ItemsSource = App.ViewModel.BindedPlayers;
+            MyInfomationRetryNetPanel.Visibility = Visibility.Collapsed;
 
-                case ActionResult.Success:
-                    Player detailPlayerInfo = actionResult.Value as Player;
-                    PlayerRecordPanel.Visibility = Visibility.Visible;
-                    if (detailPlayerInfo == null)
-                    {
-                        NeedBindPlayerInfoPanel.Visibility = Visibility.Visible;
-                        PlayerRecordPanel.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        detailPlayerInfo.ServerInfo = briefPlayerInfo.ServerInfo;
-                        App.ViewModel.BindedPlayer = detailPlayerInfo;
-                        PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
-                    }
+            //switch (actionResult.Result)
+            //{
+            //    case ActionResult.Exception404:
+            //        MyInfomationRetryNetPanel.Visibility = Visibility.Visible;
+            //        PlayerRecordPanel.Visibility = Visibility.Collapsed;
+            //        SetRetryAppBar();
+            //        break;
+            //    case ActionResult.NotFound:
+            //        NeedBindPlayerInfoPanel.Visibility = Visibility.Visible;
+            //        PlayerRecordPanel.Visibility = Visibility.Collapsed;
+            //        SetBindAppBar();
+            //        break;
 
-                    PlayerRecordPanel.Visibility = Visibility.Visible;
-                    PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
+            //    case ActionResult.Success:
+            //        Player detailPlayerInfo = actionResult.Value as Player;
+            //        PlayerRecordPanel.Visibility = Visibility.Visible;
+            //        if (detailPlayerInfo == null)
+            //        {
+            //            NeedBindPlayerInfoPanel.Visibility = Visibility.Visible;
+            //            PlayerRecordPanel.Visibility = Visibility.Collapsed;
+            //        }
+            //        else
+            //        {
+            //            detailPlayerInfo.ServerInfo = briefPlayerInfo.ServerInfo;
+            //            App.ViewModel.BindedPlayer = detailPlayerInfo;
+            //            PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
+            //        }
 
-                    MyInfomationRetryNetPanel.Visibility = Visibility.Collapsed;
-                    SetMoreUnBindAndSearchAppBar();
-                    break;
-            }
+            //        PlayerRecordPanel.Visibility = Visibility.Visible;
+            //        PlayerRecordPanel.DataContext = App.ViewModel.BindedPlayer;
+
+            //        MyInfomationRetryNetPanel.Visibility = Visibility.Collapsed;
+            //        SetMoreUnBindAndSearchAppBar();
+            //        break;
+            //}
         }
         #endregion
 
-        #region 工具
+        #region 更多
         private void ShakeItButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/ShakeAShakePage.xaml", UriKind.Relative));
@@ -1066,7 +764,7 @@ namespace LolWikiApp
             NavigationService.Navigate(new Uri("/LetvVideoPage.xaml", UriKind.Relative));
         }
 
-        private void HuangliButton_OnClick(object sender, RoutedEventArgs e)
+        private async void HuangliButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
         }
@@ -1079,38 +777,53 @@ namespace LolWikiApp
 
         private AnimatonHelper _adAnimatonHelper = new AnimatonHelper();
         private bool _isHideing = false;
+        private bool _isHidden = false;
+
         private void LongListSelector_OnListScrollingUp(object sender, EventArgs e)
         {
-            if (_isHideing == false && _isShowing == false)
-            {
-                _isHideing = true;
-
-                if (PivotTitlContainer.Height > 0)
-                {
-                    Debug.WriteLine("visible:false");
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToZero, TimeSpan.FromSeconds(0.7));
-                }
-                //PivotTitlContainer.Visibility = Visibility.Collapsed;
-                _isHideing = false;
-            }
+            HidePivotHeader();
         }
 
         private bool _isShowing = false;
         private void LongListSelector_OnListScrollingDown(object sender, EventArgs e)
         {
-            if (_isShowing == false && _isHideing == false)
+            ShowPivotHeader();
+        }
+
+        private void ShowPivotHeader()
+        {
+            if (_isShowing == false && _isHideing == false && _isHidden == true)
             {
                 _isShowing = true;
-                if (PivotTitlContainer.Height > 0)
-                {
+                _adAnimatonHelper.RunShowStoryboard(CategoryBackGroundGrid, AnimationTypes.FadeOut, TimeSpan.FromSeconds(0.6), null, "0.8");
+                _adAnimatonHelper.RunShowStoryboard(MainPivot, AnimationTypes.SlideDown, TimeSpan.FromSeconds(0),
+                    (o, args) =>
+                    {
+                        _isShowing = false;
+                        _isHidden = false;
+                    });
+            }
+        }
 
-                }
-                else
-                {
-                    _adAnimatonHelper.RunShowStoryboard(PivotTitlContainer, AnimationTypes.HeightToOriginal, TimeSpan.FromSeconds(0.7));
-                }
-                //PivotTitlContainer.Visibility = Visibility.Visible;
-                _isShowing = false;
+        private void HidePivotHeader()
+        {
+            if (_isHideing == false && _isShowing == false && _isHidden == false)
+            {
+                _isHideing = true;
+                _adAnimatonHelper.RunShowStoryboard(CategoryBackGroundGrid, AnimationTypes.FadeIn,
+                    TimeSpan.FromSeconds(0.6), null, "0.8");
+                _adAnimatonHelper.RunShowStoryboard(MainPivot, AnimationTypes.SlideUp, TimeSpan.FromSeconds(0),
+                    (o, args) =>
+                    {
+                        _isHideing = false;
+                        _isHidden = true;
+
+                        //防止在隐藏过程中切换pivot item导致header不显示
+                        if (MainPivot.SelectedIndex != 0)
+                        {
+                            ShowPivotHeader();
+                        }
+                    });
             }
         }
 
@@ -1118,5 +831,17 @@ namespace LolWikiApp
         {
             Debug.WriteLine("FunnyBorderLoaded: " + DateTime.Now);
         }
+
+        private void HideNewsCategoryPopup()
+        {
+            _adAnimatonHelper.RunShowStoryboard(MenuListStackPanel, AnimationTypes.SlideRightOutFade, TimeSpan.FromSeconds(0),
+                    (o, args) =>
+                    {
+                        SlideMenuPopup.IsOpen = false;
+                        SetAppbarForNewsList();
+                    });
+        }
+
+
     }
 }

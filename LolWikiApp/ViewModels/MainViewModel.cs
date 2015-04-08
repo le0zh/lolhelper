@@ -245,7 +245,7 @@ namespace LolWikiApp.ViewModels
             if (HeroBasicInfoCollection.Count > 0)
                 return;
 
-            IList<Hero> herosList = await _heroRepository.GetAllHeroBasicInfosAsync();
+            var herosList = await _heroRepository.GetAllHeroBasicInfosAsync();
             HeroBasicInfoCollection.Clear();
 
             foreach (var hero in herosList)

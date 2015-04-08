@@ -1,0 +1,34 @@
+﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="LolWikiApp" EntryPointType="LolWikiApp.App" RuntimeVersion="4.7.50308.0">
+  <Deployment.Parts>
+    <AssemblyPart x:Name="LolWikiApp" Source="LolWikiApp.dll" />
+    <AssemblyPart x:Name="Autofac" Source="Autofac.dll" />
+    <AssemblyPart x:Name="Coding4Fun.Toolkit.Controls" Source="Coding4Fun.Toolkit.Controls.dll" />
+    <AssemblyPart x:Name="HtmlAgilityPack" Source="HtmlAgilityPack.dll" />
+    <AssemblyPart x:Name="Microsoft.Expression.Drawing" Source="Microsoft.Expression.Drawing.dll" />
+    <AssemblyPart x:Name="Microsoft.Expression.Interactions" Source="Microsoft.Expression.Interactions.dll" />
+    <AssemblyPart x:Name="Microsoft.Phone.Controls" Source="Microsoft.Phone.Controls.dll" />
+    <AssemblyPart x:Name="Microsoft.Phone.Controls.Toolkit" Source="Microsoft.Phone.Controls.Toolkit.dll" />
+    <AssemblyPart x:Name="Microsoft.PlayerFramework" Source="Microsoft.PlayerFramework.dll" />
+    <AssemblyPart x:Name="Microsoft.WindowsAzure.Messaging" Source="Microsoft.WindowsAzure.Messaging.dll" />
+    <AssemblyPart x:Name="Newtonsoft.Json" Source="Newtonsoft.Json.dll" />
+    <AssemblyPart x:Name="SamplePlayer.WP8" Source="SamplePlayer.WP8.dll" />
+    <AssemblyPart x:Name="ShakeGestures" Source="ShakeGestures.dll" />
+    <AssemblyPart x:Name="SM.Media.Builder" Source="SM.Media.Builder.dll" />
+    <AssemblyPart x:Name="SM.Media" Source="SM.Media.dll" />
+    <AssemblyPart x:Name="SM.Media.MediaPlayer.WP8" Source="SM.Media.MediaPlayer.WP8.dll" />
+    <AssemblyPart x:Name="SM.Media.Platform.WP8" Source="SM.Media.Platform.WP8.dll" />
+    <AssemblyPart x:Name="SM.TsParser" Source="SM.TsParser.dll" />
+    <AssemblyPart x:Name="System.Net.Http" Source="System.Net.Http.dll" />
+    <AssemblyPart x:Name="System.Net.Http.Extensions" Source="System.Net.Http.Extensions.dll" />
+    <AssemblyPart x:Name="System.Net.Http.Primitives" Source="System.Net.Http.Primitives.dll" />
+    <AssemblyPart x:Name="System.Windows.Interactivity" Source="System.Windows.Interactivity.dll" />
+    <AssemblyPart x:Name="System.Xml.XPath" Source="System.Xml.XPath.dll" />
+    <AssemblyPart x:Name="Telerik.Windows.Controls.Primitives" Source="Telerik.Windows.Controls.Primitives.dll" />
+    <AssemblyPart x:Name="Telerik.Windows.Core" Source="Telerik.Windows.Core.dll" />
+    <AssemblyPart x:Name="UmengAnalyticsWP8" Source="UmengAnalyticsWP8.dll" />
+    <AssemblyPart x:Name="XAPADStatistics" Source="XAPADStatistics.dll" />
+    <AssemblyPart Source="zh-Hans/LolWikiApp.resources.dll" />
+    <AssemblyPart Source="zh-Hans/Microsoft.Expression.Interactions.resources.dll" />
+    <AssemblyPart Source="zh-Hans/System.Windows.Interactivity.resources.dll" />
+  </Deployment.Parts>
+</Deployment>

@@ -12,168 +12,231 @@ namespace LolWikiApp
 {
     public enum AnimationTypes
     {
+        Flash,
+        FadeIn,
+        FadeOut,
         SlideUp,
         SlideDown,
-        HeightToZero,
-        HeightToOriginal,
-        Vetical,
-        FadeOut,
-        SwivelIn,
-        Swivelout
+        SlideLeftFadeIn,
+        SwivelForwardIn,
+        TurnstileForwardIn,
+        SlideLeftOutFade,
+        SlideRightOutFade,
+        TeamMemberDetailInfoShow,
+        TeamMemberDetailInfoHide,
     }
+
     public class AnimatonHelper
     {
-        private const string FadeOutStoryboard = @"
-        <Storyboard  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
-            <DoubleAnimation Storyboard.TargetProperty=""(UIElement.Opacity)"" From=""1"" To=""0"" Duration=""0:0:0.350"">
-                <DoubleAnimation.EasingFunction>
-                    <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>";
-
         private const string SlideUpStoryboard = @"
         <Storyboard  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.RenderTransform).(TranslateTransform.Y)"">
-                <EasingDoubleKeyFrame KeyTime=""0"" Value=""150""/>
-                <EasingDoubleKeyFrame KeyTime=""0:0:0.35"" Value=""0"">
+                <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
+                <EasingDoubleKeyFrame KeyTime=""0:0:0.5"" Value=""-90"">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
+                        <ExponentialEase EasingMode=""EaseIn"" Exponent=""8""/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimation Storyboard.TargetProperty=""(UIElement.Opacity)"" From=""0"" To=""1"" Duration=""0:0:0.350"">
-                <DoubleAnimation.EasingFunction>
-                    <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>";
-
-        private const string HeightToZeroStoryboard = @"
-        <Storyboard  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Height)"">
-                <EasingDoubleKeyFrame KeyTime=""0:0:0.35"" Value=""0"">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-           <DoubleAnimation Storyboard.TargetProperty=""(UIElement.Opacity)"" From=""1"" To=""0.9"" Duration=""0:0:0.350"">
-                <DoubleAnimation.EasingFunction>
-                    <ExponentialEase EasingMode=""EaseIn"" Exponent=""6""/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>";
-
-        private const string HeightToOriginalStoryboard = @"
-        <Storyboard  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Height)"">
-                <EasingDoubleKeyFrame KeyTime=""0:0:0.35"" Value=""40"">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimation Storyboard.TargetProperty=""(UIElement.Opacity)"" From=""0.5"" To=""1"" Duration=""0:0:0.350"">
-                <DoubleAnimation.EasingFunction>
-                    <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
+            </DoubleAnimationUsingKeyFrames>           
         </Storyboard>";
 
         private const string SlideDownStoryboard = @"
         <Storyboard  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.RenderTransform).(TranslateTransform.Y)"">
-                <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
-                <EasingDoubleKeyFrame KeyTime=""0:0:0.25"" Value=""150"">
+                <EasingDoubleKeyFrame KeyTime=""0"" Value=""-90""/>
+                <EasingDoubleKeyFrame KeyTime=""0:0:0.3"" Value=""0"">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode=""EaseIn"" Exponent=""6""/>
+                        <ExponentialEase EasingMode=""EaseIn"" Exponent=""8""/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimation Storyboard.TargetProperty=""(UIElement.Opacity)"" From=""1"" To=""0"" Duration=""0:0:0.25"">
-                <DoubleAnimation.EasingFunction>
-                    <ExponentialEase EasingMode=""EaseIn"" Exponent=""6""/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
+            </DoubleAnimationUsingKeyFrames>            
         </Storyboard>";
 
-        private const string SwivelInStoryboard =
-        @"<Storyboard xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
-            <DoubleAnimation 
-				To="".5""
-                Storyboard.TargetProperty=""(UIElement.Projection).(PlaneProjection.CenterOfRotationY)"" />
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Projection).(PlaneProjection.RotationX)"">
-                <EasingDoubleKeyFrame KeyTime=""0"" Value=""-30""/>
-                <EasingDoubleKeyFrame KeyTime=""0:0:0.35"" Value=""0"">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
-                <DiscreteDoubleKeyFrame KeyTime=""0"" Value=""1"" />
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>";
+        private const string SlideLeftFadeInStoryBoard = @"
+<Storyboard
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.RenderTransform).(TranslateTransform.X)"">
+        <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
+        <EasingDoubleKeyFrame KeyTime=""0:0:0.5"" Value=""0"">            
+        </EasingDoubleKeyFrame>
+    </DoubleAnimationUsingKeyFrames>
+    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
+        <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
+        <EasingDoubleKeyFrame KeyTime=""0:0:0.5"" Value=""1""/>
+    </DoubleAnimationUsingKeyFrames>
+</Storyboard>
+    ";
 
-        private const string SwivelOutStoryboard =
-        @"<Storyboard xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
-            <DoubleAnimation BeginTime=""0:0:0"" Duration=""0"" 
-                                Storyboard.TargetProperty=""(UIElement.Projection).(PlaneProjection.CenterOfRotationY)"" 
-                                To="".5""/>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Projection).(PlaneProjection.RotationX)"">
-                <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
-                <EasingDoubleKeyFrame KeyTime=""0:0:0.25"" Value=""45"">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode=""EaseIn"" Exponent=""6""/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
-                <DiscreteDoubleKeyFrame KeyTime=""0"" Value=""1"" />
-                <DiscreteDoubleKeyFrame KeyTime=""0:0:0.267"" Value=""0"" />
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>";
+        private const string SwivelForwardInStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Projection).(PlaneProjection.RotationX)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""60""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.6"" Value=""0"">            
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>     
+                </Storyboard>";
 
+        private const string TurnstileForwardInStoryBoard = @"<Storyboard
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" 
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Projection).(PlaneProjection.RotationY)"">
+        <EasingDoubleKeyFrame KeyTime=""0"" Value=""-80""/>
+        <EasingDoubleKeyFrame KeyTime=""0:0:0.35"" Value=""0"">
+            <EasingDoubleKeyFrame.EasingFunction>
+                <ExponentialEase EasingMode=""EaseOut"" Exponent=""6""/>
+            </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+    </DoubleAnimationUsingKeyFrames>
+    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
+        <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
+        <EasingDoubleKeyFrame KeyTime=""0:0:0.01"" Value=""1""/>
+    </DoubleAnimationUsingKeyFrames>
+    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Visibility)"">
+        <DiscreteObjectKeyFrame KeyTime=""0"">
+            <DiscreteObjectKeyFrame.Value>
+                <Visibility>Visible</Visibility>
+            </DiscreteObjectKeyFrame.Value>
+        </DiscreteObjectKeyFrame>
+    </ObjectAnimationUsingKeyFrames>
+</Storyboard>";
 
-        public void RunShowStoryboard(UIElement grid, AnimationTypes animation, TimeSpan delay)
+        private const string SlideLeftOutFadeStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.RenderTransform).(TranslateTransform.X)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.3"" Value=""-200"">
+                            <EasingDoubleKeyFrame.EasingFunction>
+                                <ExponentialEase EasingMode=""EaseIn"" Exponent=""6""/>
+                            </EasingDoubleKeyFrame.EasingFunction>
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""1""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.29"" Value=""1""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.3"" Value=""0""/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>";
+
+        private const string SlideRightOutFadeStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.RenderTransform).(TranslateTransform.X)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""0""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.4"" Value=""400"">
+                            <EasingDoubleKeyFrame.EasingFunction>
+                                <ExponentialEase EasingMode=""EaseIn"" Exponent=""6""/>
+                            </EasingDoubleKeyFrame.EasingFunction>
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""1""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.3"" Value=""1""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.4"" Value=""0""/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>";
+
+        private const string FadeInStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""&VAL&""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.5"" Value=""1""/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>";
+
+        private const string FadeOutStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""1""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.5"" Value=""&VAL&""/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>";
+
+        private const string FlashStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""1""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.35"" Value=""0""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.5"" Value=""1""/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>";
+
+        private const string TeamMemberDetailInfoShowStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Height)"">
+                        <EasingDoubleKeyFrame KeyTime=""90"" Value=""1""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.25"" Value=""190""/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>";
+
+        private const string TeamMemberDetailInfoHideStoryBoard = @"<Storyboard
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Height)"">
+                        <EasingDoubleKeyFrame KeyTime=""0"" Value=""190""/>
+                        <EasingDoubleKeyFrame KeyTime=""0:0:0.25"" Value=""90""/>                        
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>";
+
+        public void RunShowStoryboard(UIElement grid, AnimationTypes animation, TimeSpan delay, EventHandler sbCompleted = null, string origianVal = "0")
         {
             if (grid == null)
                 return;
 
             Storyboard storyboard;
+           
+
             switch (animation)
             {
+                case AnimationTypes.Flash:
+                    storyboard = XamlReader.Load(FlashStoryBoard) as Storyboard;
+                    break;
                 case AnimationTypes.SlideUp:
-                    storyboard = XamlReader.Load(SlideDownStoryboard) as Storyboard;
-                    grid.RenderTransform = new TranslateTransform();
+                    storyboard = XamlReader.Load(SlideUpStoryboard) as Storyboard;
+                    grid.RenderTransform = new TranslateTransform() { Y = 0 };
                     break;
                 case AnimationTypes.SlideDown:
-                    storyboard = XamlReader.Load(SlideUpStoryboard) as Storyboard;
-                    grid.RenderTransform = new TranslateTransform();
+                    storyboard = XamlReader.Load(SlideDownStoryboard) as Storyboard;
+                    grid.RenderTransform = new TranslateTransform() { Y = -90 };
                     break;
-                case AnimationTypes.HeightToZero:
-                    storyboard = XamlReader.Load(HeightToZeroStoryboard) as Storyboard;
-                    grid.RenderTransform = new TranslateTransform();
+                case AnimationTypes.SlideLeftFadeIn:
+                    storyboard = XamlReader.Load(SlideLeftFadeInStoryBoard) as Storyboard;
                     break;
-                case AnimationTypes.HeightToOriginal:
-                    storyboard = XamlReader.Load(HeightToOriginalStoryboard) as Storyboard;
-                    grid.RenderTransform = new TranslateTransform();
+                case AnimationTypes.TurnstileForwardIn:
+                    storyboard = XamlReader.Load(TurnstileForwardInStoryBoard) as Storyboard;
+                    grid.Projection = new PlaneProjection();
+                    break;
+                case AnimationTypes.SwivelForwardIn:
+                    storyboard = XamlReader.Load(SwivelForwardInStoryBoard) as Storyboard;
+                    grid.Projection = new PlaneProjection() { RotationX = 90 };
+                    break;
+                case AnimationTypes.SlideLeftOutFade:
+                    storyboard = XamlReader.Load(SlideLeftOutFadeStoryBoard) as Storyboard;
+                    break;
+                case AnimationTypes.SlideRightOutFade:
+                    storyboard = XamlReader.Load(SlideRightOutFadeStoryBoard) as Storyboard;
+                    break;
+                case AnimationTypes.FadeIn:
+                    storyboard = XamlReader.Load(FadeInStoryBoard.Replace("&VAL&", origianVal)) as Storyboard;
                     break;
                 case AnimationTypes.FadeOut:
-                    storyboard = XamlReader.Load(FadeOutStoryboard) as Storyboard;
+                    storyboard = XamlReader.Load(FadeOutStoryBoard.Replace("&VAL&", origianVal)) as Storyboard;
+                    grid.Opacity = 1;
                     break;
-                case AnimationTypes.SwivelIn:
-                    storyboard = XamlReader.Load(SwivelInStoryboard) as Storyboard;
-                    grid.Projection = new PlaneProjection();
+                case AnimationTypes.TeamMemberDetailInfoShow:
+                    storyboard = XamlReader.Load(TeamMemberDetailInfoShowStoryBoard.Replace("&VAL&", origianVal)) as Storyboard;
                     break;
-                case AnimationTypes.Swivelout:
-                    storyboard = XamlReader.Load(SwivelOutStoryboard) as Storyboard;
-                    grid.Projection = new PlaneProjection();
+                case AnimationTypes.TeamMemberDetailInfoHide:
+                    storyboard = XamlReader.Load(TeamMemberDetailInfoHideStoryBoard.Replace("&VAL&", origianVal)) as Storyboard;
                     break;
                 default:
-                    storyboard = XamlReader.Load(SlideUpStoryboard) as Storyboard;
-                    grid.RenderTransform = new TranslateTransform();
+                    storyboard = XamlReader.Load(SlideLeftOutFadeStoryBoard) as Storyboard;
                     break;
             }
 
@@ -198,6 +261,10 @@ namespace LolWikiApp
                         Storyboard.SetTarget(t, grid);
 
                     storyboard.Begin();
+                    if (sbCompleted != null)
+                    {
+                        storyboard.Completed += sbCompleted;
+                    }
                 });
             }
         }
