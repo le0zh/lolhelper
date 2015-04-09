@@ -39,7 +39,7 @@ namespace LolWikiApp
         private bool _isNavigated;
 
         private bool _isNeedToModify = true;
-        private AdItem _adItem = null;
+        private readonly AdItem _adItem = null;
 
         public NewsDetailPage()
         {
@@ -145,7 +145,6 @@ namespace LolWikiApp
             base.OnNavigatedTo(e);
         }
 
-
         private void RetryButton_OnClick(object sender, RoutedEventArgs e)
         {
             LoadNewsDetailAsync(_articleId);
@@ -158,98 +157,104 @@ namespace LolWikiApp
             {
                 ContentWebBrowser.InvokeScript("eval",
                @"
-    var srcArray = new Array();
-    var videoLink;
-   
-    window.onLinkPressed = function() {
-        var elem = event.srcElement;
-        if ( elem != null ) {
-            elem.hideFocus=true;
-            window.external.notify('img,' + elem.getAttribute('link')+','+srcArray.join(','));
-        }
-        return false;
+var srcArray = new Array();
+var videoLink;
+
+window.onLinkPressed = function() {
+    var elem = event.srcElement;
+    if (elem != null) {
+        elem.hideFocus = true;
+        window.external.notify('img,' + elem.getAttribute('link') + ',' + srcArray.join(','));
+    }
+    return false;
+}
+
+window.onVideoPressed = function() {
+    var elem = event.srcElement;
+    if (elem != null) {
+        elem.hideFocus = true;
+        window.external.notify('video,' + videoLink);
+    }
+    return false;
+}
+
+window.ChangeStyle = function() {
+
+    var appInfoElement = document.getElementsByClassName('app_info')[0];
+
+    var h1Element = document.getElementsByTagName('h1')[0];
+    //var authorElement = document.getElementsByClassName('article_author')[0];
+    //var metaElement = document.getElementsByClassName('article_meta')[0];
+
+    if(appInfoElement){
+        appInfoElement.setAttribute('style', 'display: none;');
     }
 
-    window.onVideoPressed = function() {
-        var elem = event.srcElement;
-        if ( elem != null ) {
-            elem.hideFocus=true;
-            window.external.notify('video,' + videoLink);
-        }
-        return false;
+    if (h1Element) {
+        h1Element.setAttribute('style', 'background:#29282e;color:#fff');
     }
 
-   window.ChangeStyle = function(){
-        var h1Element = document.getElementsByTagName('h1')[0];
-        var authorElement =  document.getElementsByClassName('article_author')[0];
-        var metaElement =  document.getElementsByClassName('article_meta')[0];
-        
-        if(h1Element){
-            h1Element.setAttribute('style','background:#29282e;color:#fff');
-        }
-        if(authorElement){
-             authorElement.setAttribute('style','background:#29282e;color:#656565;');
-        }        
-        if(metaElement){
-             metaElement.setAttribute('style','background:#29282e;');
-        }
-   }
+    //if (authorElement) {
+        //authorElement.setAttribute('style', 'background:#29282e;color:#656565;');
+    //}
+    //if (metaElement) {
+        //metaElement.setAttribute('style', 'background:#29282e;');
+    //}
+}
 
-   window.ChangeLastSpan = function(){
-        var spans = document.getElementsByTagName('span');
-        if(spans){
-            var lastSpan = spans[spans.length - 1];
-            if(lastSpan.innerHTML.indexOf('掌上英雄联盟反馈QQ群') != -1){
-                lastSpan.innerHTML = '英雄联盟助手WP版反馈QQ群 49573963';
-            }       
-        }
-   }   
-
-    var srcArray = new Array();
-
-    window.InitTcVideo = function(){
-        var iframeObj = document.getElementsByTagName('iframe')[0];
-        if(iframeObj){
-             var link = iframeObj.getAttribute('src');
-             var contentDiv = document.getElementsByClassName('article_content')[0];
-             if(contentDiv){
-                iframeObj.setAttribute('src','');
-                iframeObj.setAttribute('style', 'display: none;');
-                var videoDiv =  document.createElement('div');
-                videoLink = link;   
-                videoDiv.attachEvent('onmouseup', onVideoPressed);
-                videoDiv.setAttribute('style','background:red;margin-top:12px;position : relative; height:200px; width:300px;');
-                videoDiv.innerHTML = '<div > <img  height:200px; width:300px; src=\''+ iframeObj.getAttribute('_img') + '\'  /></div><div style=\'position : absolute;display:block;top:30%;width:40px;margin:0 auto; left:0px;right:0px;z-index:100\'><img src=\'http://ossweb-img.qq.com/images/qqtalk/act/lol_app_bg/playIcon.png\' /> </div>';
-                contentDiv.appendChild(videoDiv);
-             }           
+window.ChangeLastSpan = function() {
+    var spans = document.getElementsByTagName('span');
+    if (spans) {
+        var lastSpan = spans[spans.length - 1];
+        if (lastSpan.innerHTML.indexOf('掌上英雄联盟反馈QQ群') != -1) {
+            lastSpan.innerHTML = '英雄联盟助手WP版反馈QQ群 49573963';
         }
     }
+}
 
-    window.BindLinks = function() {
-        var elems = document.getElementsByTagName('img');
-        for (var i = 0; i < elems.length; i++) {
-            var elem = elems[i];
-            var link = elem.getAttribute('src');
-            if(link.indexOf('hand_lol')>0){
+var srcArray = new Array();
+
+window.InitTcVideo = function() {
+    var iframeObj = document.getElementsByTagName('iframe')[0];
+    if (iframeObj) {
+        var link = iframeObj.getAttribute('src');
+        var contentDiv = document.getElementsByClassName('article_content')[0];
+        if (contentDiv) {
+            iframeObj.setAttribute('src', '');
+            iframeObj.setAttribute('style', 'display: none;');
+            var videoDiv = document.createElement('div');
+            videoLink = link;
+            videoDiv.attachEvent('onmouseup', onVideoPressed);
+            videoDiv.setAttribute('style', 'background:red;margin-top:12px;position : relative; height:200px; width:300px;');
+            videoDiv.innerHTML = '<div > <img  height:200px; width:300px; src=\'' + iframeObj.getAttribute('_img') + '\'  /></div><div style=\'position : absolute;display:block;top:30%;width:40px;margin:0 auto; left:0px;right:0px;z-index:100\'><img src=\'http://ossweb-img.qq.com/images/qqtalk/act/lol_app_bg/playIcon.png\' /> </div>';
+            contentDiv.appendChild(videoDiv);
+        }
+    }
+}
+
+window.BindLinks = function() {
+    var elems = document.getElementsByTagName('img');
+    for (var i = 0; i < elems.length; i++) {
+        var elem = elems[i];
+        var link = elem.getAttribute('src');
+        if (link.indexOf('hand_lol') > 0) {} else {
+            srcArray[i] = link;
+            elem.setAttribute('link', i);
+            if (link.indexOf('.gif') > 0) {
+                elem.parentNode.removeChild(elem);
+            } else {
+                elem.attachEvent('onmouseup', onLinkPressed);
             }
-            else{
-                srcArray[i] = link;
-                elem.setAttribute('link', i);
-                if(link.indexOf('.gif')>0){
-                    elem.parentNode.removeChild(elem);
-                }else{
-                    elem.attachEvent('onmouseup', onLinkPressed);
-                }
-            }           
         }
-    }");
+    }
+}");
                 ContentWebBrowser.InvokeScript("BindLinks");
 
                 if (_isNeedToModify)
                 {
                     ContentWebBrowser.InvokeScript("ChangeStyle");
                     ContentWebBrowser.InvokeScript("ChangeLastSpan");
-                    ContentWebBrowser.InvokeScript("InitTcVideo");                    
+                    ContentWebBrowser.InvokeScript("InitTcVideo");
                 }
 
                 Debug.WriteLine(ContentWebBrowser.SaveToString());
@@ -300,7 +305,7 @@ namespace LolWikiApp
             BigImageWindow.VerticalAlignment = VerticalAlignment.Center;
             BigImageWindow.IsOpen = true;
 
-            ApplicationBar = new ApplicationBar { Opacity = 0.8 };
+            ApplicationBar = new ApplicationBar { Opacity = 1, BackgroundColor = Colors.Black };
 
             var downloadButton = new ApplicationBarIconButton();
             var closeButton = new ApplicationBarIconButton();

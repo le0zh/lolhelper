@@ -65,7 +65,7 @@
 
         </Border>
 
-        <telerikPrimitives:RadWindow Grid.Row="1" IsFullScreen="False"   
+        <telerikPrimitives:RadWindow Grid.Row="0" Grid.RowSpan="3" IsFullScreen="False"   
                                      
                                      x:Name="BigImageWindow">
             <telerikPrimitives:RadWindow.OpenAnimation>

@@ -64,7 +64,7 @@ namespace LolWikiApp.ViewModels
 
         public async Task<List<NewsListInfo>> LoadNewsListInfoListAsync(NewsType type, int page = 1)
         {
-            List<NewsListInfo> newsList = await this.NewsRepository.GetPagedNewsList(type, page);
+            var newsList = await this.NewsRepository.GetPagedNewsList(type, page);
             return newsList;
         }
 

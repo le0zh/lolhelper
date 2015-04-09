@@ -382,7 +382,7 @@
         </phone:Pivot>
 
         <Popup x:Name="SlideMenuPopup">
-            <Grid x:Name="PopGrid" Background="{StaticResource PhoneSemitransparentBrush}"  Width="480" Height="800" Tap="PopGrid_OnTap">
+            <Grid x:Name="PopGrid" Background="{StaticResource PhoneSemitransparentBrush}"  Width="480" Height="1280" Tap="PopGrid_OnTap">
                 <Grid  x:Name="MenuListStackPanel" Tap="MenuListStackPanel_OnTap" Width="220" Background="Black" HorizontalAlignment="Right">
                     <Grid.RenderTransform>
                         <TranslateTransform></TranslateTransform>
