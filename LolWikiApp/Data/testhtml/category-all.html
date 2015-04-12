@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>测试</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		.item{
+			text-align: center;
+			width:46%;
+			height: 100px;			
+			float: left;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			margin: 5px;
+			box-shadow: 0 1px 1px #c5c5c5;
+			transition: 0.3s;
+			-moz-transition: 0.3s;
+			-webkit-transition: 0.3s;
+			-o-transition: 0.3s;
+		}
+
+		.item img{
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
+  </head>
+  <body ms-controller="vm">
+
+    <div class="container-fluid" style="margin-left:5px;">
+		<div class="row">
+	     	<a href="category.html" class="item" ms-repeat="data">
+	     		<img ms-attr-src="'item_img/' + el.id + '.png'">
+	     		<span>{{el.text}}</span>
+	     	</a>
+	    </div>
+	</div>
+
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/avalon.mobile.min.js"></script>
+
+    <script src="data/category-all.js"></script>
+
+    <script>
+    	var vm = avalon.define({
+    		$id: "vm",
+    		data: list
+    	})
+    </script>
+  </body>
+</html>

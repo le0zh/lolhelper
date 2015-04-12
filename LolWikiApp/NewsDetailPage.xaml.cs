@@ -140,6 +140,19 @@ namespace LolWikiApp
                         LoadingIndicator.IsRunning = false;
                     };
                 }
+
+                //for test
+                if (NavigationContext.QueryString.TryGetValue("item", out _fullUrl))
+                {
+                    _isNeedToModify = false;
+                    LoadingIndicator.IsRunning = true;
+                    ContentWebBrowser.Navigate(new Uri("Data/testhtml/category.html", UriKind.Relative));
+                    ContentWebBrowser.LoadCompleted += (s, ee) =>
+                    {
+                        ContentWebBrowser.Visibility = Visibility.Visible;
+                        LoadingIndicator.IsRunning = false;
+                    };
+                }
             }
 
             base.OnNavigatedTo(e);
