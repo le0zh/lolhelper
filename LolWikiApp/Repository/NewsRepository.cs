@@ -507,7 +507,8 @@ namespace LolWikiApp.Repository
 
             var newsList = JsonConvert.DeserializeObject<List<NewsListInfo>>(json);
 
-            return newsList;
+            return newsList.Where(n => n.Site != "超级辅助").ToList();
+            //return newsList;
         }
 
         /// <summary>

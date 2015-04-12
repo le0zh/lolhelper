@@ -765,7 +765,7 @@
     <Content Include="Data\heros\Azir.json" />
     <Content Include="Data\heros\Kalista.json" />
     <Content Include="Data\heros\RekSai.json" />
-    <None Include="Data\heros\Bard.json" />
+    <Content Include="Data\heros\Bard.json" />
     <Content Include="Data\items\category-all.json" />
     <Content Include="Data\items\category-armor.json" />
     <Content Include="Data\items\category-consumable.json" />

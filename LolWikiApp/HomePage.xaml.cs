@@ -270,7 +270,7 @@ namespace LolWikiApp
             {
                 _currentPage = 1;
                 NewsLoadingBar.Visibility = Visibility.Collapsed;
-                SystemTray.ProgressIndicator.IsVisible = false;
+                //SystemTray.ProgressIndicator.IsVisible = false;
             }
 
             NewsRetryNetPanel.Visibility = Visibility.Collapsed;

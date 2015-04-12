@@ -24,52 +24,269 @@
         <!--Pivot item one-->
         <phone:PivotItem Header="所有英雄">
 
-            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
-                <toolkit:WrapPanel x:Name="AllHeroWrapPanel" Orientation="Horizontal" >
-                </toolkit:WrapPanel>
-            </ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Gray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Margin="-5 -10 -10 -10" x:Name="AllKeyWordsTextBox" Padding="0"  Text="" Background="White" BorderThickness="1" BorderBrush="#BF000000" KeyDown="KeyWordsTextBox_OnKeyDown" TextChanged="KeyWordsTextBox_OnTextChanged"></TextBox>
+                    <Button Background="White" Tap="SearchButton_OnTap" Padding="0" Margin="-10 -10 0 -10" Grid.Column="1" BorderThickness="1" Foreground="#FF191818">
+                        <Button.Content>
+                            <Path Width="33.1464" Height="33.1465" Stretch="Fill" Fill="#FF000000" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1"  x:Name="NoDataBlockAll" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+
+                <ScrollViewer Grid.Row="2"  Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <toolkit:WrapPanel x:Name="AllHeroWrapPanel" Orientation="Horizontal" >
+                    </toolkit:WrapPanel>
+                </ScrollViewer>
+
+            </Grid>
+            
+
 
         </phone:PivotItem>
 
         <!--Pivot item two-->
         <phone:PivotItem Header="战士">
-            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                <toolkit:WrapPanel x:Name="FighterHeroWrapPanel" Orientation="Horizontal" />
-            </ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Gray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Margin="-5 -10 -10 -10" x:Name="ZhanshiKeyWordsTextBox" Padding="0"  Text="" Background="White" BorderThickness="1" BorderBrush="#BF000000" KeyDown="KeyWordsTextBox_OnKeyDown" TextChanged="KeyWordsTextBox_OnTextChanged"></TextBox>
+                    <Button Background="White" Tap="SearchButton_OnTap" Padding="0" Margin="-10 -10 0 -10" Grid.Column="1" BorderThickness="1" Foreground="#FF191818">
+                        <Button.Content>
+                            <Path Width="33.1464" Height="33.1465" Stretch="Fill" Fill="#FF000000" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1"  x:Name="NoDataBlockZhanshi" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+
+                <ScrollViewer Grid.Row="2"  Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <toolkit:WrapPanel x:Name="FighterHeroWrapPanel" Orientation="Horizontal" />
+                    </ScrollViewer>
+                </ScrollViewer>
+
+            </Grid>
+         
         </phone:PivotItem>
 
         <phone:PivotItem Header="法师">
-            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                <toolkit:WrapPanel x:Name="MageHeroWrapPanel" Orientation="Horizontal" />
-            </ScrollViewer>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Gray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Margin="-5 -10 -10 -10" x:Name="FashiKeyWordsTextBox" Padding="0"  Text="" Background="White" BorderThickness="1" BorderBrush="#BF000000" KeyDown="KeyWordsTextBox_OnKeyDown" TextChanged="KeyWordsTextBox_OnTextChanged"></TextBox>
+                    <Button Background="White" Tap="SearchButton_OnTap" Padding="0" Margin="-10 -10 0 -10" Grid.Column="1" BorderThickness="1" Foreground="#FF191818">
+                        <Button.Content>
+                            <Path Width="33.1464" Height="33.1465" Stretch="Fill" Fill="#FF000000" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1"  x:Name="NoDataBlockFashi" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+
+                <ScrollViewer Grid.Row="2"  Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <toolkit:WrapPanel x:Name="MageHeroWrapPanel" Orientation="Horizontal" />
+                    </ScrollViewer>
+                </ScrollViewer>
+
+            </Grid>
+
         </phone:PivotItem>
 
 
         <phone:PivotItem Header="刺客">
-            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                <toolkit:WrapPanel x:Name="AssassinHeroWrapPanel" Orientation="Horizontal" />
-            </ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Gray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Margin="-5 -10 -10 -10" x:Name="CikeKeyWordsTextBox" Padding="0"  Text="" Background="White" BorderThickness="1" BorderBrush="#BF000000" KeyDown="KeyWordsTextBox_OnKeyDown" TextChanged="KeyWordsTextBox_OnTextChanged"></TextBox>
+                    <Button Background="White"  Tap="SearchButton_OnTap" Padding="0" Margin="-10 -10 0 -10" Grid.Column="1" BorderThickness="1" Foreground="#FF191818">
+                        <Button.Content>
+                            <Path Width="33.1464" Height="33.1465" Stretch="Fill" Fill="#FF000000" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1"  x:Name="NoDataBlockCike" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+
+                <ScrollViewer Grid.Row="2"  Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <toolkit:WrapPanel x:Name="AssassinHeroWrapPanel" Orientation="Horizontal" />
+                    </ScrollViewer>
+                </ScrollViewer>
+
+            </Grid>
+            
+
         </phone:PivotItem>
 
 
         <phone:PivotItem Header="坦克">
-            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                <toolkit:WrapPanel x:Name="TankHeroWrapPanel" Orientation="Horizontal" />
-            </ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Gray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Margin="-5 -10 -10 -10" x:Name="TangkeKeyWordsTextBox" Padding="0"  Text="" Background="White" BorderThickness="1" BorderBrush="#BF000000" KeyDown="KeyWordsTextBox_OnKeyDown" TextChanged="KeyWordsTextBox_OnTextChanged"></TextBox>
+                    <Button Background="White"  Tap="SearchButton_OnTap" Padding="0" Margin="-10 -10 0 -10" Grid.Column="1" BorderThickness="1" Foreground="#FF191818">
+                        <Button.Content>
+                            <Path Width="33.1464" Height="33.1465" Stretch="Fill" Fill="#FF000000" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1"  x:Name="NoDataBlockTangke" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+
+                <ScrollViewer Grid.Row="2"  Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <toolkit:WrapPanel x:Name="TankHeroWrapPanel" Orientation="Horizontal" />
+                    </ScrollViewer>
+                </ScrollViewer>
+
+            </Grid>
+
         </phone:PivotItem>
 
 
         <phone:PivotItem Header="射手">
-            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                <toolkit:WrapPanel x:Name="MarksmanHeroWrapPanel" Orientation="Horizontal" />
-            </ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Gray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Margin="-5 -10 -10 -10" x:Name="SheshouKeyWordsTextBox" Padding="0"  Text="" Background="White" BorderThickness="1" BorderBrush="#BF000000" KeyDown="KeyWordsTextBox_OnKeyDown" TextChanged="KeyWordsTextBox_OnTextChanged"></TextBox>
+                    <Button Background="White" Tap="SearchButton_OnTap" Padding="0" Margin="-10 -10 0 -10" Grid.Column="1" BorderThickness="1" Foreground="#FF191818">
+                        <Button.Content>
+                            <Path Width="33.1464" Height="33.1465" Stretch="Fill" Fill="#FF000000" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1"  x:Name="NoDataBlockSheshou" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+
+                <ScrollViewer Grid.Row="2"  Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <toolkit:WrapPanel x:Name="MarksmanHeroWrapPanel" Orientation="Horizontal" />
+                    </ScrollViewer>
+                </ScrollViewer>
+
+            </Grid>
+     
         </phone:PivotItem>
 
 
         <phone:PivotItem Header="辅助">
-            <ScrollViewer Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto">
-                <toolkit:WrapPanel x:Name="SupportHeroWrapPanel" Orientation="Horizontal" />
-            </ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Gray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="65"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Margin="-5 -10 -10 -10" x:Name="FuzhuKeyWordsTextBox" Padding="0"  Text="" Background="White" BorderThickness="1" BorderBrush="#BF000000" KeyDown="KeyWordsTextBox_OnKeyDown" TextChanged="KeyWordsTextBox_OnTextChanged"></TextBox>
+                    <Button Background="White" Tap="SearchButton_OnTap" Padding="0" Margin="-10 -10 0 -10" Grid.Column="1" BorderThickness="1" Foreground="#FF191818">
+                        <Button.Content>
+                            <Path Width="33.1464" Height="33.1465" Stretch="Fill" Fill="#FF000000" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1"  x:Name="NoDataBlockFuzhu" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+
+                <ScrollViewer Grid.Row="2"  Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <toolkit:WrapPanel x:Name="SupportHeroWrapPanel" Orientation="Horizontal" />
+                    </ScrollViewer>
+                </ScrollViewer>
+
+            </Grid>
+       
         </phone:PivotItem>
     </phone:Pivot>
 

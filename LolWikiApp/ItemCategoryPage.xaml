@@ -24,7 +24,7 @@
         <!--Pivot item one-->
         <phone:PivotItem Header="装备分类">
 
-            <lolWikiApp:RefreshableListBox x:Name="CategoryLongListSelector" Tap="CategoryLongListSelector_OnTap">
+            <lolWikiApp:RefreshableListBox x:Name="CategoryLongListSelector" IsRefreshEnabled="False" IsGetMoreEnabled="False" Tap="CategoryLongListSelector_OnTap">
                 <lolWikiApp:RefreshableListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="12 15 0 15">

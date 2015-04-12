@@ -31,7 +31,14 @@
 
             <phone:PivotItem Header="物品属性">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
-                    <TextBlock Text="{Binding description}" TextWrapping="Wrap" LineHeight="10" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                    <TextBlock TextWrapping="Wrap" LineHeight="10" FontSize="{StaticResource PhoneFontSizeMedium}">
+                        <Run Text="{Binding description}"></Run>
+                        
+                        <LineBreak></LineBreak>
+                        <!--<LineBreak></LineBreak>-->
+                        
+                        <!--<Run Text="{Binding extDesc}"></Run>-->
+                    </TextBlock>
                 </ScrollViewer>
 
             </phone:PivotItem>

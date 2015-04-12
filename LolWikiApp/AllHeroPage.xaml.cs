@@ -6,12 +6,14 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Windows.Foundation.Metadata;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace LolWikiApp
 {
@@ -21,6 +23,8 @@ namespace LolWikiApp
         private readonly WrapPanel[] _heroPanels;
         private bool _isPostback;
 
+        private readonly Border[] _nodataBorders;
+        private readonly TextBox[] _keyWordsTextBoxs;
         public AllHeroPage()
         {
             InitializeComponent();
@@ -30,6 +34,28 @@ namespace LolWikiApp
                 this.FighterHeroWrapPanel, this.MageHeroWrapPanel, 
                 this.AssassinHeroWrapPanel, this.TankHeroWrapPanel, 
                 this.MarksmanHeroWrapPanel, this.SupportHeroWrapPanel };
+
+            _nodataBorders = new Border[]
+            {
+                NoDataBlockAll,
+                NoDataBlockZhanshi,
+                NoDataBlockFashi,
+                NoDataBlockCike,
+                NoDataBlockTangke,
+                NoDataBlockSheshou,
+                NoDataBlockFuzhu
+            };
+
+            _keyWordsTextBoxs = new TextBox[]
+            {
+                AllKeyWordsTextBox,
+                ZhanshiKeyWordsTextBox,
+                FashiKeyWordsTextBox,
+                CikeKeyWordsTextBox,
+                TangkeKeyWordsTextBox,
+                SheshouKeyWordsTextBox,
+                FuzhuKeyWordsTextBox
+            };
         }
 
 
@@ -45,9 +71,9 @@ namespace LolWikiApp
 
             if (!App.ViewModel.IsDataLoaded)
             {
-               await App.ViewModel.LoadHeroBaiscInfoDataAsync();
+                await App.ViewModel.LoadHeroBaiscInfoDataAsync();
             }
-            
+
             var t = new Task(() => this.Dispatcher.BeginInvoke(() =>
             {
                 foreach (Hero hero in (
@@ -126,7 +152,7 @@ namespace LolWikiApp
             stackPanel.Tap += (s, e) =>
             {
                 var helper = new AnimatonHelper();
-                helper.RunShowStoryboard(stackPanel, AnimationTypes.Flash, TimeSpan.FromSeconds(0), (s1,e1)=> NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative)));
+                helper.RunShowStoryboard(stackPanel, AnimationTypes.Flash, TimeSpan.FromSeconds(0), (s1, e1) => NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + hero.Id, UriKind.Relative)));
             };
 
             wrapPanel.Children.Add(stackPanel);
@@ -135,6 +161,67 @@ namespace LolWikiApp
         private void HeroPivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadHeroList(this.HeroPivot.SelectedIndex);
+        }
+
+        private void Search()
+        {
+            var index = HeroPivot.SelectedIndex;
+
+            var keyWords = _keyWordsTextBoxs[index].Text.Trim().ToLower();
+
+            List<Hero> list;
+
+            if (string.IsNullOrEmpty(keyWords))
+            {
+                list = index == 0 ? App.ViewModel.HeroBasicInfoCollection.ToList() : App.ViewModel.HeroBasicInfoCollection.Where(h => h.Tags.Contains(_heroTags[index])).ToList();
+            }
+            else
+            {
+                list = index == 0 ? App.ViewModel.HeroBasicInfoCollection.Where(
+                        h => h.Name.Contains(keyWords) || h.Title.Contains(keyWords) || h.Id.ToLower().Contains(keyWords))
+                        .ToList() :
+                    App.ViewModel.HeroBasicInfoCollection.Where(h => h.Tags.Contains(_heroTags[index])).Where(
+                        h => h.Name.Contains(keyWords) || h.Title.Contains(keyWords) || h.Id.ToLower().Contains(keyWords))
+                        .ToList();
+            }
+
+            _heroPanels[index].Children.Clear();
+
+            if (list.Count == 0)
+            {
+                _nodataBorders[index].Visibility = Visibility.Visible;
+                _heroPanels[index].Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                _nodataBorders[index].Visibility = Visibility.Collapsed;
+                _heroPanels[index].Visibility = Visibility.Visible;
+
+                foreach (var hero in list)
+                {
+                    AddFreeHeroItem(hero, _heroPanels[index]);
+                }
+            }
+        }
+
+        //搜索按钮的响应事件
+        private void SearchButton_OnTap(object sender, GestureEventArgs e)
+        {
+            Search();
+        }
+
+        private void KeyWordsTextBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Search();
+                HeroPivot.Focus();
+            }
+        }
+
+        private void KeyWordsTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            Search();
         }
     }
 }
