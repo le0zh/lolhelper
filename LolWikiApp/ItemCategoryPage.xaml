@@ -1,0 +1,51 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="LolWikiApp.ItemCategoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:lolWikiApp="clr-namespace:LolWikiApp"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"
+    shell:SystemTray.IsVisible="False"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+
+    <phone:Pivot x:Name="ItemCategoryPivot" Foreground="White"
+                 Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
+
+        <!--Pivot item one-->
+        <phone:PivotItem Header="装备分类">
+
+            <lolWikiApp:RefreshableListBox x:Name="CategoryLongListSelector" Tap="CategoryLongListSelector_OnTap">
+                <lolWikiApp:RefreshableListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="0 0 0 0.5" Padding="12 15 0 15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="30"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding text}" FontSize="{StaticResource PhoneFontSizeMedium}" Grid.Column="0"></TextBlock>
+                                <Path Grid.Column="1" HorizontalAlignment="Left" Width="20" Height="20" Stretch="Fill" Fill="Gray" Data="F1 M 42.3542,38L 26.5208,53.8333L 37.2083,53.8333L 53.8333,38L 37.2083,22.1667L 26.5208,22.1667L 42.3542,38 Z "/>
+                            </Grid>
+                        </Border>
+
+                    </DataTemplate>
+                </lolWikiApp:RefreshableListBox.ItemTemplate>
+            </lolWikiApp:RefreshableListBox>
+
+
+        </phone:PivotItem>
+
+    </phone:Pivot>
+
+</phone:PhoneApplicationPage>

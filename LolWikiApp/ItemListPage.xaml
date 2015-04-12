@@ -1,0 +1,48 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="LolWikiApp.ItemListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"
+    shell:SystemTray.IsVisible="False"
+    shell:SystemTray.BackgroundColor="#29282e"
+    shell:SystemTray.ForegroundColor="White"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+
+    <phone:Pivot x:Name="ItemPivot" Foreground="White"
+                 Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
+
+        <!--Pivot item one-->
+        <phone:PivotItem x:Name="MianPivotItem" Header="装备">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"  x:Name="NoDataBlock" Padding="15" Visibility="Collapsed">
+                    <TextBlock Text="暂无数据"  Foreground="Black" FontSize="{StaticResource PhoneFontSizeMedium}"></TextBlock>
+                </Border>
+                
+                <ScrollViewer Grid.Row ="1"  x:Name="WrapperScrollViewer" Margin="12 0 -24 0" VerticalScrollBarVisibility="Auto" >
+                    <toolkit:WrapPanel x:Name="ItemWrapPanel" Orientation="Horizontal" >
+                    </toolkit:WrapPanel>
+                </ScrollViewer>
+                
+
+            </Grid>
+            
+
+
+        </phone:PivotItem>
+    </phone:Pivot>
+
+</phone:PhoneApplicationPage>

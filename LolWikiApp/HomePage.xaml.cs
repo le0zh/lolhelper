@@ -766,9 +766,12 @@ namespace LolWikiApp
 
         private void HuangliButton_OnClick(object sender, RoutedEventArgs e)
         {
-            //NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
+        }
 
-            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?item=all", UriKind.Relative));
+        private void AllItemButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/ItemCategoryPage.xaml", UriKind.Relative));
         }
 
         private void AllHeroButton_OnClick(object sender, RoutedEventArgs e)
@@ -777,7 +780,7 @@ namespace LolWikiApp
         }
         #endregion
 
-        private AnimatonHelper _adAnimatonHelper = new AnimatonHelper();
+        private readonly AnimatonHelper _adAnimatonHelper = new AnimatonHelper();
         private bool _isHideing = false;
         private bool _isHidden = false;
 
@@ -843,6 +846,7 @@ namespace LolWikiApp
                         SetAppbarForNewsList();
                     });
         }
+
 
 
     }

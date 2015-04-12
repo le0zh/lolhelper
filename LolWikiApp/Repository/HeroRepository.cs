@@ -127,50 +127,7 @@ namespace LolWikiApp.Repository
 
             return heroes;
         }
-
-        /// <summary>
-        /// Read a specified StorageFile in async way
-        /// </summary>
-        /// <param name="jsonFile">StorageFile</param>
-        /// <returns></returns>
-        private async Task<string> ReadJsonFileAsync(IRandomAccessStreamReference jsonFile)
-        {
-            string json;
-            using (IRandomAccessStreamWithContentType readStream = await jsonFile.OpenReadAsync())
-            using (var sr = new StreamReader(readStream.AsStream()))
-            {
-                json = await sr.ReadToEndAsync();
-            }
-
-            return json;
-        }
-
-        /// <summary>
-        /// GetStorageFileFromInstalledDataFolderAsync
-        /// </summary>
-        /// <param name="parts">Path parts to be combined</param>
-        /// <returns></returns>
-        private async Task<StorageFile> GetStorageFileFromInstalledDataFolderAsync(params string[] parts)
-        {
-            string path = parts.Aggregate("ms-appx:///Data/", (current, part) => current + (part + "/"));
-            if (path.EndsWith("/"))
-            {
-                path = path.Substring(0, path.Length - 1);
-            }
-
-            StorageFile storageFile;
-            try
-            {
-                storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(path));
-            }
-            catch (FileNotFoundException ex)
-            {
-                MessageBox.Show(ex.Message + "\n" + path);
-                throw;
-            }
-
-            return storageFile;
-        }
+        
 
         public string DataVersion { get; private set; }
         public string DataLastUpdated { get; private set; }

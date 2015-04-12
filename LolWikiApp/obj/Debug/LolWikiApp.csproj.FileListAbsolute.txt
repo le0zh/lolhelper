@@ -185,3 +185,6 @@ D:\Repos\lolhelper\LolWikiApp\obj\Debug\zh-Hans\LolWikiApp.resources.dll
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\LolWikiApp.dll
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\LolWikiApp.pdb
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\XapCacheFile.xml
+D:\Repos\lolhelper\LolWikiApp\obj\Debug\ItemCategoryPage.g.cs
+D:\Repos\lolhelper\LolWikiApp\obj\Debug\ItemDetailPage.g.cs
+D:\Repos\lolhelper\LolWikiApp\obj\Debug\ItemListPage.g.cs
