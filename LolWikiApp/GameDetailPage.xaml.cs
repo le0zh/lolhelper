@@ -16,6 +16,7 @@ using LolWikiApp.Repository;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace LolWikiApp
 {
@@ -122,5 +123,49 @@ namespace LolWikiApp
 
         //    //MessageBox.Show("页面加载完成");
         //}
+        
+        /// <summary>
+        /// 当点击玩家头像的时候，跳转到该玩家的具体信息页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlayerImage_OnTap(object sender, GestureEventArgs e)
+        {
+            var image = sender as Image;
+            if (image != null)
+            {
+                var name = image.Tag.ToString();
+                Debug.WriteLine("team member name: " + name);
+                e.Handled = true;
+
+                NavigationService.Navigate(new Uri("/PlayerDetailPage.xaml?sn=" + App.ViewModel.SelectedDetailGameServer + "&pn=" + name, UriKind.Relative));
+            }
+        }
+
+        /// <summary>
+        /// 当点击其他地方时候，显示玩家的具体游戏内数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TeamMember_OnTap(object sender, GestureEventArgs e)
+        {
+            var grid = sender as Grid;
+            if (grid != null)
+            {
+                var animationHelper = new AnimatonHelper();
+
+                if (Math.Abs(grid.Height - 190) < 0.1)
+                {
+                    //hide
+                    animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoHide, TimeSpan.FromSeconds(0), null);
+                }
+                else
+                {
+                    animationHelper.RunShowStoryboard(grid, AnimationTypes.SwivelForwardIn, TimeSpan.FromSeconds(0), null);
+                    //show
+                    animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoShow, TimeSpan.FromSeconds(0), null);
+                }
+            }
+        }
     }
 }

@@ -15,6 +15,129 @@
     shell:SystemTray.IsVisible="False"
     shell:SystemTray.BackgroundColor="#29282e"
     shell:SystemTray.ForegroundColor="White">
+    
+    <phone:PhoneApplicationPage.Resources>
+
+        <DataTemplate x:Key="TeamMemberDataTemplate">
+            <Border MinWidth="480" Padding="4" BorderThickness="0 0 0 1" BorderBrush="{StaticResource PhoneBorderBrush}" x:Name="TeamMemberBorder" >
+                <Grid Tap="TeamMember_OnTap"  Height="90">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="45"></RowDefinition>
+                        <RowDefinition Height="45"></RowDefinition>
+                        <RowDefinition Height="100"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Tap="PlayerImage_OnTap"  Tag="{Binding Name}"  Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Height="70" Margin="0 0 4 0" Source="{Binding HeroIcon}"
+                       VerticalAlignment="Center"
+                       Stretch="UniformToFill"></Image>
+
+                    <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" Foreground="#868B8F" FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0 0 0 0"></TextBlock>
+
+                        <ListBox Margin="12 0 0 0"
+                             VerticalAlignment="Center"
+                             ItemsSource="{Binding MasterIconList}"
+                             Style="{StaticResource CommonHorizontalListBoxStyle}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Height="25" Width="25" Margin="0 0 8 0" Source="{Binding}"></Image>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+
+                    <ListBox Grid.Row="1" Grid.Column="1" 
+                         ItemsSource="{Binding ZbIconList}"
+                         Style="{StaticResource CommonHorizontalListBoxStyle}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Image Height="35" Width="35" Margin="0 0 4 0" Source="{Binding}" Stretch="UniformToFill"></Image>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+
+                    <ListBox Margin="0 0 0 0" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                                 VerticalAlignment="Center"
+                                 Style="{StaticResource UnScrollableListBoxStyle}"
+                                 ItemsSource="{Binding SkillIconList}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Image Height="30" Width="30" Margin="4" Source="{Binding}" Stretch="UniformToFill"></Image>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+
+                    <Border Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" BorderThickness="1 0 0 0" BorderBrush="LightGray">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Data/GameDetailIcon/kill-icon.png" Width="25" Height="25"></Image>
+                                <TextBlock Text="{Binding Kill}" Foreground="#868B8F"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Data/GameDetailIcon/dead.png"  Width="25" Height="25"></Image>
+                                <TextBlock Text="{Binding Dead}" Foreground="#868B8F"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Data/GameDetailIcon/assitant.png"  Width="25" Height="25"></Image>
+                                <TextBlock Text="{Binding Assistant}" Foreground="#868B8F"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="0 1 0 0" Padding="0 2 0 0" BorderBrush="{StaticResource PhoneBorderBrush}">
+                        <Grid  Background="DarkGray">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="45"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding KillUnitDesc}"></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding KillTowerDesc}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding MoneyDesc}"></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding CriticalDesc}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding SerialKillDesc}"></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding MultiKillDesc}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Vertical">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding PutEyeDesc}"></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding ClearEyeDesc}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Orientation="Horizontal">
+                                <TextBlock  VerticalAlignment="Center" Text="{Binding DemageDesc}"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+        </DataTemplate>
+
+    </phone:PhoneApplicationPage.Resources>
 
     <phone:Pivot x:Name="LayoutPivot" Foreground="White"
                  Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
@@ -101,9 +224,5 @@
         <!--<phone:PivotItem Header="分享"></phone:PivotItem>-->
     </phone:Pivot>
     <!--LayoutRoot is the root grid where all page content is placed-->
-
-
-
-
 
 </phone:PhoneApplicationPage>

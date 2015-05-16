@@ -767,6 +767,7 @@ namespace LolWikiApp
         private void HuangliButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?test=http://115.28.43.55/lol/html/ygzl/index.html", UriKind.Relative));
         }
 
         private void AllItemButton_OnClick(object sender, RoutedEventArgs e)

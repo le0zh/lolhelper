@@ -43,6 +43,7 @@ namespace LolWikiApp.ViewModels
             get { return _localFileRepository; }
         }
 
+        public string SelectedDetailGameServer { get; set; }
         public string SelectedDetailGameInfoUrl { get; set; }
 
         public EquipmentRecommend EquipmentRecommendSelected { get; set; }
@@ -103,6 +104,7 @@ namespace LolWikiApp.ViewModels
         public async Task<HttpActionResult> GetPlayerDetailInfo(string sn,string pn)
         {
             var result = await _playerRepository.PharsePlayerInfo(sn,pn);//sn: server name, pn: player name
+            
             return result;
         }
 

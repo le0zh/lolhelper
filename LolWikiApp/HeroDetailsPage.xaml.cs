@@ -28,9 +28,9 @@ namespace LolWikiApp
     public partial class DetailsPage : PhoneApplicationPage
     {
         private HeroDetail _hero;
-        private readonly ObservableCollection<EquipmentRecommend> equipmentRecommends;
-        private readonly ObservableCollection<HeroSkin> heroSkins;
-        private readonly ObservableCollection<HeroRankWrapper> heroRankList;
+        private readonly ObservableCollection<EquipmentRecommend> _equipmentRecommends;
+        private readonly ObservableCollection<HeroSkin> _heroSkins;
+        private readonly ObservableCollection<HeroRankWrapper> _heroRankList;
         private readonly FullScreenPopup _actionPopup;
         private bool _isPivotFirstLoaded;
         private int _currentLateastPage = 1;
@@ -43,9 +43,9 @@ namespace LolWikiApp
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
-            equipmentRecommends = new ObservableCollection<EquipmentRecommend>();
-            heroSkins = new ObservableCollection<HeroSkin>();
-            heroRankList = new ObservableCollection<HeroRankWrapper>();
+            _equipmentRecommends = new ObservableCollection<EquipmentRecommend>();
+            _heroSkins = new ObservableCollection<HeroSkin>();
+            _heroRankList = new ObservableCollection<HeroRankWrapper>();
             _actionPopup = new FullScreenPopup();
 
             _letvHeroVideoListInfos = new ObservableCollection<LetvVideoListInfo>();
@@ -62,9 +62,9 @@ namespace LolWikiApp
                     _hero.SetLevel(1);
                     DataContext = _hero;
 
-                    EquipmentLongListSelector.ItemsSource = equipmentRecommends;
-                    SkinLongListSelector.ItemsSource = heroSkins;
-                    HeroRanListBox.ItemsSource = heroRankList;
+                    EquipmentLongListSelector.ItemsSource = _equipmentRecommends;
+                    SkinLongListSelector.ItemsSource = _heroSkins;
+                    HeroRanListBox.ItemsSource = _heroRankList;
                 }
             }
 
@@ -108,7 +108,7 @@ namespace LolWikiApp
 
         private async void LoadEquipList()
         {
-            if (equipmentRecommends.Count != 0)
+            if (_equipmentRecommends.Count != 0)
             {
                 return;
             }
@@ -122,7 +122,7 @@ namespace LolWikiApp
                 List<EquipmentRecommend> list = await App.ViewModel.LoadEquipmentRecommendList(_hero.Name);
                 foreach (EquipmentRecommend recommend in list)
                 {
-                    equipmentRecommends.Add(recommend);
+                    _equipmentRecommends.Add(recommend);
                 }
 
                 EquipmentLongListSelector.Visibility = Visibility.Visible;
@@ -141,7 +141,7 @@ namespace LolWikiApp
 
         private async void LoadSkinList()
         {
-            if (heroSkins.Count != 0)
+            if (_heroSkins.Count != 0)
             {
                 return;
             }
@@ -155,7 +155,7 @@ namespace LolWikiApp
                 List<HeroSkin> list = await App.ViewModel.LoadHeroSkinListAsync(_hero.Name);
                 foreach (HeroSkin skin in list)
                 {
-                    heroSkins.Add(skin);
+                    _heroSkins.Add(skin);
                 }
 
                 SkinLongListSelector.Visibility = Visibility.Visible;
@@ -173,7 +173,7 @@ namespace LolWikiApp
 
         private async void LoadRankList()
         {
-            if (heroRankList.Count != 0)
+            if (_heroRankList.Count != 0)
             {
                 return;
             }
@@ -189,7 +189,7 @@ namespace LolWikiApp
 
                 foreach (HeroRankWrapper wrapper in LoadHeroRankData(content))
                 {
-                    heroRankList.Add(wrapper);
+                    _heroRankList.Add(wrapper);
                 }
 
                 HeroRanListBox.Visibility = Visibility.Visible;
@@ -282,10 +282,10 @@ namespace LolWikiApp
         private async void EquipmentLongListSelector_OnRefreshTriggered(object sender, EventArgs e)
         {
             List<EquipmentRecommend> list = await App.ViewModel.LoadEquipmentRecommendList(_hero.Name);
-            equipmentRecommends.Clear();
+            _equipmentRecommends.Clear();
             foreach (EquipmentRecommend recommend in list)
             {
-                equipmentRecommends.Add(recommend);
+                _equipmentRecommends.Add(recommend);
             }
             this.EquipmentLongListSelector.HideRefreshPanel();
         }
@@ -430,12 +430,12 @@ namespace LolWikiApp
 
         private void HorizontalFlipView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ImageTextBlock.Text = string.Format("{0}/{1}", HorizontalFlipView.SelectedIndex + 1, heroSkins.Count);
+            ImageTextBlock.Text = string.Format("{0}/{1}", HorizontalFlipView.SelectedIndex + 1, _heroSkins.Count);
         }
 
         private void SkinLongListSelector_OnTap(object sender, GestureEventArgs e)
         {
-            HorizontalFlipView.ItemsSource = heroSkins;
+            HorizontalFlipView.ItemsSource = _heroSkins;
             var selectedSkin = SkinLongListSelector.SelectedItem as HeroSkin;
             if (selectedSkin == null)
                 return;

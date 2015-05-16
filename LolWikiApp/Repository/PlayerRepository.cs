@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -23,6 +24,22 @@ namespace LolWikiApp.Repository
         private const string PlayerHistoryKey = "_playerSearchHistory";
 
         private const string CurrentMatchUrlForamt = "http://lolbox.duowan.com/phone/apiCurrentMatch.php?action=getCurrentMatch&serverName={0}&OSType=iOS7.1.1&target={1}";
+
+        private const string MyHeroUrlFormat =
+            "http://lolbox.duowan.com/phone/apiMyHeroes.php?serverName={0}&OSType=iOS8.1.2&target={1}&v=85"; //0:服务器名，1:玩家名称
+
+        public async Task<List<MyHeroItem>> GetMyHeroList(string serverName, string userName)
+        {
+            var url = string.Format(MyHeroUrlFormat, serverName, userName);
+            var json = await GetJsonStringViaHttpAsync(url);
+            if (string.IsNullOrEmpty(json))
+                return null;
+
+            var jObject = JObject.Parse(json);
+            var myHeroList = JsonConvert.DeserializeObject<List<MyHeroItem>>(jObject["myHeroes"].ToString());
+
+            return myHeroList;
+        }
 
         public async Task<CurrentGameInfo> GetCurrentGameInfoAsync(string serverName, string userName)
         {
@@ -346,6 +363,11 @@ namespace LolWikiApp.Repository
 
             httpActionResult.Result = ActionResult.Success;
             var p = PharsePlayerInfo(doc);
+            var heroList = await GetMyHeroList(sn, pn);
+            var heroLitOrd = heroList.OrderByDescending(h => h.PresentTimes);
+            p.HeroList.Clear();
+            p.HeroList.AddRange(heroLitOrd);
+
             p.ServerInfo = new ServerInfo(){Value = sn, DisplayName = ServerRepository.Instance.GetServerDisplayName(sn)};
             httpActionResult.Value = p;
 
@@ -379,6 +401,11 @@ namespace LolWikiApp.Repository
             var gameTypeNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[1]/div[1]/div/span[1]");
             var gameDurationNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[1]/div[1]/div/span[2]");
             var uploadedTimeNode = doc.DocumentNode.SelectSingleNode("/html/body/section/div[1]/div[1]/div/span[3]");
+
+            if (gameTypeNode == null || gameDurationNode == null || uploadedTimeNode == null)
+            {
+                return new GameDetailInfo();
+            }
 
             gameDeatil.GameType = gameTypeNode.InnerText.Trim();
             gameDeatil.GameDuration = gameDurationNode.InnerText.Trim();
@@ -496,9 +523,5 @@ namespace LolWikiApp.Repository
 
             return member;
         }
-
-
     }
-
-
 }

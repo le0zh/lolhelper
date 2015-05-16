@@ -273,7 +273,11 @@ namespace LolWikiApp
             RecentGameInfoList = new List<GameInfo>();
             RecentUsedHeroImageList = new List<string>();
             MatchGameInfos = new List<MatchGameInfo>();
+
+            HeroList = new List<MyHeroItem>();
         }
+
+        public List<MyHeroItem> HeroList { get; private set; } 
     }
 
     public class PlayerSummary

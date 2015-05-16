@@ -1,6 +1,6 @@
-﻿<xapCache source="D:\Repos\lolhelper\LolWikiApp\Bin\Debug\LolWikiApp_Debug_AnyCPU.xap" wasSigned="False" wasTritonized="False" certificateThumbprint="" TimeStampUrl="" signKeyFile="" signKeyPassword="" lastWriteTime="2015/4/12 17:19:47">
-  <file source="D:\Repos\lolhelper\LolWikiApp\obj\Debug\LolWikiApp.dll" archivePath="LolWikiApp.dll" lastWriteTime="2015/4/12 17:19:44" />
-  <file source="D:\Repos\lolhelper\LolWikiApp\obj\Debug\zh-Hans\LolWikiApp.resources.dll" archivePath="zh-Hans\LolWikiApp.resources.dll" lastWriteTime="2015/4/12 17:19:44" />
+﻿<xapCache source="D:\Repos\lolhelper\LolWikiApp\Bin\Debug\LolWikiApp_Debug_AnyCPU.xap" wasSigned="False" wasTritonized="False" certificateThumbprint="" TimeStampUrl="" signKeyFile="" signKeyPassword="" lastWriteTime="2015/5/17 0:31:56">
+  <file source="D:\Repos\lolhelper\LolWikiApp\obj\Debug\LolWikiApp.dll" archivePath="LolWikiApp.dll" lastWriteTime="2015/5/17 0:31:53" />
+  <file source="D:\Repos\lolhelper\LolWikiApp\obj\Debug\zh-Hans\LolWikiApp.resources.dll" archivePath="zh-Hans\LolWikiApp.resources.dll" lastWriteTime="2015/5/17 0:31:53" />
   <file source="C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\Windows Phone\v8.0\Libraries\zh-Hans\Microsoft.Expression.Interactions.resources.dll" archivePath="zh-Hans\Microsoft.Expression.Interactions.resources.dll" lastWriteTime="2012/9/25 2:09:02" />
   <file source="C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\Windows Phone\v8.0\Libraries\zh-Hans\System.Windows.Interactivity.resources.dll" archivePath="zh-Hans\System.Windows.Interactivity.resources.dll" lastWriteTime="2012/9/25 2:09:02" />
   <file source="D:\Repos\lolhelper\LolWikiApp\173x173.png" archivePath="173x173.png" lastWriteTime="2014/11/25 0:46:26" />
@@ -170,6 +170,10 @@
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\html\global_black.css" archivePath="Data\html\global_black.css" lastWriteTime="2014/7/31 12:07:15" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\html\global_light.css" archivePath="Data\html\global_light.css" lastWriteTime="2014/7/31 12:07:15" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\html\reset.css" archivePath="Data\html\reset.css" lastWriteTime="2014/7/31 12:07:15" />
+  <file source="D:\Repos\lolhelper\LolWikiApp\Data\html\yeguaiziliao\js\jquery-1.8.3.min.js" archivePath="Data\html\yeguaiziliao\js\jquery-1.8.3.min.js" lastWriteTime="2015/5/16 18:23:41" />
+  <file source="D:\Repos\lolhelper\LolWikiApp\Data\html\yeguaiziliao\js\jquery.mobile-1.3.2.min.css" archivePath="Data\html\yeguaiziliao\js\jquery.mobile-1.3.2.min.css" lastWriteTime="2015/5/16 18:23:01" />
+  <file source="D:\Repos\lolhelper\LolWikiApp\Data\html\yeguaiziliao\js\jquery.mobile-1.3.2.min.js" archivePath="Data\html\yeguaiziliao\js\jquery.mobile-1.3.2.min.js" lastWriteTime="2015/5/16 18:24:05" />
+  <file source="D:\Repos\lolhelper\LolWikiApp\Data\html\yeguaiziliao\yeguai.html" archivePath="Data\html\yeguaiziliao\yeguai.html" lastWriteTime="2015/5/16 18:27:49" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\images\Azir\Azir.png" archivePath="Data\images\Azir\Azir.png" lastWriteTime="2015/4/11 19:30:21" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\images\Bard\Bard.png" archivePath="Data\images\Bard\Bard.png" lastWriteTime="2015/4/11 19:42:00" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\images\Gnar\Gnar.png" archivePath="Data\images\Gnar\Gnar.png" lastWriteTime="2015/4/11 19:49:12" />
@@ -467,6 +471,7 @@
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\heros\Azir.json" archivePath="Data\heros\Azir.json" lastWriteTime="2015/4/11 19:22:39" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\heros\Kalista.json" archivePath="Data\heros\Kalista.json" lastWriteTime="2015/4/11 19:22:48" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\heros\RekSai.json" archivePath="Data\heros\RekSai.json" lastWriteTime="2015/4/11 19:22:49" />
+  <file source="D:\Repos\lolhelper\LolWikiApp\Data\heros\Bard.json" archivePath="Data\heros\Bard.json" lastWriteTime="2015/4/11 19:22:53" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\items\category-all.json" archivePath="Data\items\category-all.json" lastWriteTime="2015/4/12 12:39:45" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\items\category-armor.json" archivePath="Data\items\category-armor.json" lastWriteTime="2015/4/12 12:39:44" />
   <file source="D:\Repos\lolhelper\LolWikiApp\Data\items\category-consumable.json" archivePath="Data\items\category-consumable.json" lastWriteTime="2015/4/12 12:39:42" />

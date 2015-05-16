@@ -17,11 +17,31 @@ namespace LolWikiApp
         private bool _isPostBack;
         private Player _currentPlayer;
 
-       
+        public TitleWithNumber HeroInfo;
 
         public PlayerDetailPage()
         {
             InitializeComponent();
+
+            HeroInfo = new TitleWithNumber()
+            {
+                Title = "英雄",
+                IsToShow = true
+            };
+
+            BasicInfoItem.Header = new TitleWithNumber()
+            {
+                Title = "基本信息",
+                IsToShow = false
+            };
+
+            RecentGameItem.Header = new TitleWithNumber()
+            {
+                Title = "最近比赛",
+                IsToShow = false
+            };
+
+            HeroItem.Header = HeroInfo;
         }
 
         private string _sn;
@@ -29,13 +49,13 @@ namespace LolWikiApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(_isPostBack) return;
+            if (_isPostBack) return;
 
             _isPostBack = true;
 
-            if(DataContext!=null)
-                return;            
-            
+            if (DataContext != null)
+                return;
+
             if (NavigationContext.QueryString.TryGetValue("sn", out _sn) &&
                 NavigationContext.QueryString.TryGetValue("pn", out _pn))
             {
@@ -49,6 +69,7 @@ namespace LolWikiApp
                     _sn = _currentPlayer.ServerInfo.Value;
                     _pn = _currentPlayer.Name;
                     DataContext = _currentPlayer;
+                    HeroInfo.Number = _currentPlayer.HeroList.Count;
                     LayoutPivot.Visibility = Visibility.Visible;
                     SetBindAppBar();
                 }
@@ -57,8 +78,7 @@ namespace LolWikiApp
                     //TODO:处理异常
                 }
             }
-            
-            
+
             base.OnNavigatedTo(e);
         }
 
@@ -93,6 +113,7 @@ namespace LolWikiApp
                     else
                     {
                         _currentPlayer = detailPlayerInfo;
+                        HeroInfo.Number = _currentPlayer.HeroList.Count;
                         DataContext = _currentPlayer;
                         LoadingGrid.Visibility = Visibility.Collapsed;
                         LayoutPivot.Visibility = Visibility.Visible;
@@ -110,6 +131,7 @@ namespace LolWikiApp
                 if (game != null)
                 {
                     RecentGameLongListSelector.SelectedItem = null;
+                    App.ViewModel.SelectedDetailGameServer = _sn;
                     App.ViewModel.SelectedDetailGameInfoUrl = game.GameDetailUrl;
                     NavigationService.Navigate(new Uri("/GameDetailPage.xaml", UriKind.Relative));
                 }
@@ -126,7 +148,7 @@ namespace LolWikiApp
 
         private void SetBindAppBar()
         {
-            ApplicationBar = new ApplicationBar { Opacity = 1, Mode = ApplicationBarMode.Minimized};
+            ApplicationBar = new ApplicationBar { Opacity = 1, Mode = ApplicationBarMode.Minimized };
 
             if (_currentPlayer.IsBinded == false)
             {
@@ -141,12 +163,12 @@ namespace LolWikiApp
                     App.ViewModel.AddBindedPlayer(_currentPlayer);
 
                     var confirmQuiToastPromt = ToastPromts.GetToastWithImgAndTitle("添加关注成功!");
-                    confirmQuiToastPromt.Show();    
+                    confirmQuiToastPromt.Show();
                     LoadAndBindPlayerInfo(_sn, _pn);
                 };
                 ApplicationBar.Buttons.Add(pinButton);
             }
-            
+
             var refreshButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("/Assets/AppBar/sync.png", UriKind.Relative),
@@ -156,6 +178,19 @@ namespace LolWikiApp
             refreshButton.Click += (s, e) => LoadAndBindPlayerInfo(_sn, _pn);
 
             ApplicationBar.Buttons.Add(refreshButton);
+        }
+
+        private void HeroListSelector_OnTap(object sender, GestureEventArgs e)
+        {
+            var selectedItem = HeroListSelector.SelectedItem;
+            if (selectedItem != null)
+            {
+                var heroItem = selectedItem as MyHeroItem;
+                if (heroItem != null)
+                {
+                    NavigationService.Navigate(new Uri("/HeroDetailsPage.xaml?selectedId=" + heroItem.EnName, UriKind.Relative));
+                }
+            }
         }
     }
 }

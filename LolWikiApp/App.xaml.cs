@@ -327,25 +327,38 @@ namespace LolWikiApp
             }
         }
 
-        private void TeamMemberGrid_OnTap(object sender, GestureEventArgs e)
-        {
-            var grid = sender as Grid;
-            if (grid != null)
-            {
-                var animationHelper = new AnimatonHelper();
+        //private void TeamMemberGrid_OnTap(object sender, GestureEventArgs e)
+        //{
+        //    var grid = sender as Grid;
+        //    if (grid != null)
+        //    {
+        //        var animationHelper = new AnimatonHelper();
                 
-                if (Math.Abs(grid.Height - 190) < 0.1)
-                {
-                    //hide
-                    animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoHide, TimeSpan.FromSeconds(0), null);
-                }
-                else
-                {
-                    animationHelper.RunShowStoryboard(grid, AnimationTypes.SwivelForwardIn, TimeSpan.FromSeconds(0), null);
-                    //show
-                    animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoShow, TimeSpan.FromSeconds(0), null);
-                }
-            }
-        }
+        //        if (Math.Abs(grid.Height - 190) < 0.1)
+        //        {
+        //            //hide
+        //            animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoHide, TimeSpan.FromSeconds(0), null);
+        //        }
+        //        else
+        //        {
+        //            animationHelper.RunShowStoryboard(grid, AnimationTypes.SwivelForwardIn, TimeSpan.FromSeconds(0), null);
+        //            //show
+        //            animationHelper.RunShowStoryboard(grid, AnimationTypes.TeamMemberDetailInfoShow, TimeSpan.FromSeconds(0), null);
+        //        }
+        //    }
+        //}
+
+        //private void UIElement_OnTap(object sender, GestureEventArgs e)
+        //{
+        //    var image = sender as Image;
+        //    if (image != null)
+        //    {
+        //        var name = image.Tag.ToString();
+        //        Debug.WriteLine("team member name: " + name);
+        //        e.Handled = true;
+        //        //App.ViewModel.SelectedDetailGameServer;
+        //        //NavigationService(new Uri("/GameDetailPage.xaml", UriKind.Relative));
+        //    }
+        //}
     }
 }

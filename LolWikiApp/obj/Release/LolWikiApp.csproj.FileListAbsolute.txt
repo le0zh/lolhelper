@@ -184,3 +184,6 @@ D:\Repos\lolhelper\LolWikiApp\obj\Release\zh-Hans\LolWikiApp.resources.dll
 D:\Repos\lolhelper\LolWikiApp\obj\Release\LolWikiApp.dll
 D:\Repos\lolhelper\LolWikiApp\obj\Release\LolWikiApp.pdb
 D:\Repos\lolhelper\LolWikiApp\obj\Release\XapCacheFile.xml
+D:\Repos\lolhelper\LolWikiApp\obj\Release\ItemCategoryPage.g.cs
+D:\Repos\lolhelper\LolWikiApp\obj\Release\ItemDetailPage.g.cs
+D:\Repos\lolhelper\LolWikiApp\obj\Release\ItemListPage.g.cs
