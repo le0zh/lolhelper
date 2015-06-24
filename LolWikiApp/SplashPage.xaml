@@ -16,10 +16,10 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Red">
-        <xapadStatistics:AdItem 
+        <!--<xapadStatistics:AdItem 
                                 ADKey="6488515358dffee2"
                                 AppID="10000655"
-                                Size="Size400X400" />
+                                Size="Size400X400" />-->
     </Grid>
 
 </phone:PhoneApplicationPage>

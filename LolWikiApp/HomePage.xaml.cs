@@ -2,28 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO.IsolatedStorage;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using Coding4Fun.Toolkit.Controls;
-using HtmlAgilityPack;
-using LolWikiApp.Repository;
-using LolWikiApp.Resources;
-using LolWikiApp.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
-using Color = Microsoft.Xna.Framework.Color;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
-using TiltEffect = Microsoft.Phone.Controls.TiltEffect;
 
 
 namespace LolWikiApp
@@ -61,6 +50,31 @@ namespace LolWikiApp
 
             _aboutApplicationBarMenuItem = new ApplicationBarMenuItem() { Text = "关于" };
             _aboutApplicationBarMenuItem.Click += (s, e) => NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+
+            //NewsPivotItem.Header = new TitleWithNumber()
+            //{
+            //    Title = "资讯中心",
+            //    IsToShow = true,
+            //    Number = 10
+            //};
+
+            //FreeHeroPivotItem.Header = new TitleWithNumber()
+            //{
+            //    Title = "周免英雄",
+            //    IsToShow = false
+            //};
+
+            //MyFellowPivotItem.Header = new TitleWithNumber()
+            //{
+            //    Title = "我的关注",
+            //    IsToShow = false
+            //};
+
+            //MorePivotItem.Header = new TitleWithNumber()
+            //{
+            //    Title = "更多",
+            //    IsToShow = false
+            //};
         }
 
         private void HomePageMain()
@@ -766,8 +780,10 @@ namespace LolWikiApp
 
         private void HuangliButton_OnClick(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));
-            //NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?test=http://115.28.43.55/lol/html/ygzl/index.html", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://lol.qq.com/lolApp/news/lolhuangli.htm", UriKind.Relative));       
+            //NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?test=test", UriKind.Relative));
+            //http://zb.v.qq.com:1863/?progid=3956944389&ostype=ios&rid=93e2b91ec4228ace969e628ea7f7ef1c
+            //NavigationService.Navigate(new Uri("/VideoPlay.xaml?source=http://61.240.152.25:1863/3956944389.m3u8?cdncode=%2f18907E7BE0798990%2f&apptype=unknow&pla=unknow&time=1431857714&cdn=zijian&sdtfrom=v40000&vkey=2B74F64F0F91949EDE9D7C6843F1E74607A8D0A8F269B5AC458C454B009A88611DF4907FB64F176F&name=test", UriKind.Relative));         
         }
 
         private void AllItemButton_OnClick(object sender, RoutedEventArgs e)

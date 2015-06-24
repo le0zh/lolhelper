@@ -490,6 +490,7 @@ namespace LolWikiApp.Repository
                                    where n.Site != "超级辅助"
                                    select n;
 
+
             return selectedNewsList.ToList();
         }
 
@@ -507,7 +508,7 @@ namespace LolWikiApp.Repository
 
             var newsList = JsonConvert.DeserializeObject<List<NewsListInfo>>(json);
 
-            return newsList.Where(n => n.Site != "超级辅助").ToList();
+            return newsList.Where(n => n.Site != "超级辅助" || n.Desc.Contains("快来看吧")).ToList();
             //return newsList;
         }
 

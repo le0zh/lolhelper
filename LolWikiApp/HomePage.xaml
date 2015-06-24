@@ -28,8 +28,17 @@
                      x:Name="MainPivot" 
                      Foreground="White"
                      Style="{StaticResource PivotStyle1}" ItemContainerStyle="{StaticResource PivotItemStyle1}" >
+            
+            <!--<phone:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel  Orientation="Horizontal">
+                        <TextBlock Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                        <TextBlock x:Name="TextBlockNumber" Text="{Binding Number}" FontSize="15" Margin="0,2,0,0" Visibility="{Binding IsToShow, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </phone:Pivot.HeaderTemplate>-->
             <!--PivotItem item 1-->
-            <phone:PivotItem Header="资讯中心">
+            <phone:PivotItem x:Name="NewsPivotItem" Header="资讯中心">
                 <Grid Margin="0 0 0 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -194,7 +203,7 @@
             </phone:PivotItem>
 
             <!--PivotItem item 2-->
-            <phone:PivotItem Header="周免英雄">
+            <phone:PivotItem x:Name="FreeHeroPivotItem" Header="周免英雄">
                 <!--<ScrollViewer Margin="0 0 -32 0" VerticalScrollBarVisibility="Auto">-->
                 <StackPanel  Margin="0 0 0 0" >
                     <StackPanel x:Name="FreeHeroLoadingBar" Orientation="Vertical" Margin="18,24,0,0">
@@ -212,7 +221,7 @@
             </phone:PivotItem>
 
             <!--PivotItem item 3-->
-            <phone:PivotItem Header="我的关注" Foreground="Black">
+            <phone:PivotItem x:Name="MyFellowPivotItem" Foreground="Black" Header="我的关注">
                 <!--<ScrollViewer Margin="0">-->
                 <Grid Margin="0 0 0 0">
                     <Grid.RowDefinitions>
@@ -308,7 +317,7 @@
             </phone:PivotItem>
 
             <!--PivotItem item 4-->
-            <phone:PivotItem Header="更多" >
+            <phone:PivotItem x:Name="MorePivotItem" Header="更多" >
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"></RowDefinition>

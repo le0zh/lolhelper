@@ -146,7 +146,7 @@ namespace LolWikiApp
                 {
                     _isNeedToModify = false;
                     LoadingIndicator.IsRunning = true;
-                    ContentWebBrowser.Navigate(new Uri("Data/html/yeguaiziliao/yeguai.html", UriKind.Relative));
+                    ContentWebBrowser.Navigate(new Uri("Data/html/yeguaiziliao/live.html", UriKind.Relative));
                     ContentWebBrowser.LoadCompleted += (s, ee) =>
                     {
                         ContentWebBrowser.Visibility = Visibility.Visible;

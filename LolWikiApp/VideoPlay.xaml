@@ -29,7 +29,7 @@
         <mmppf:MediaPlayer x:Name="VideoMediaPlayer" Foreground="White" 
                            MediaOpened="VideoMediaPlayer_OnMediaOpened"
                            MediaLoading="VideoMediaPlayer_OnMediaLoading" IsFullScreen="True">
-                <mmppf:MediaPlayer.Plugins>
+            <mmppf:MediaPlayer.Plugins>
                 <smmedia:StreamingMediaPlugin />
             </mmppf:MediaPlayer.Plugins>
         </mmppf:MediaPlayer>

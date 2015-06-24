@@ -211,11 +211,12 @@ namespace LolWikiApp.Repository
 
         #region letv style
         //LeTV:
-        private const string LetvTypedVieoRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p={0}&OSType=iOS7.1.1&src=letv&tag={1}";//{0}:page;{1}:tag
-
+        private const string LetvTypedVieoRequestUrl = "http://box.dwstatic.com/apiVideoesNormalDuowan.php?v=98&action=l&p={0}&OSType=iOS8.1.2&src=letv&tag={1}";//{0}:page;{1}:tag
         private const string LetvVideoRequestUrl = "http://api.letvcloud.com/gpc.php?cf=html5&sign=signxxxxx&ver=2.0&vu={0}&uu=20c3de8a2e&format=jsonp&callback="; //{0}:vu:videoid        
         private const string LetvLatestVideoListRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p={0}&OSType=iOS7.1.1&src=letv&tag=newest";///{0}p:pagenumber
-        private const string LetvVideoTypeRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?sn=%E7%BD%91%E9%80%9A%E5%9B%9B&action=c&pn=%E6%B5%AA%E6%BD%AE%E4%B9%8B%E5%B7%85&OSType=iOS7.1.1&v=25";
+       
+        private const string LetvVideoTypeRequestUrl =
+            "http://box.dwstatic.com/apiVideoesNormalDuowan.php?sn=%E7%BD%91%E9%80%9A%E5%9B%9B&action=c&pn=%E6%B5%AA%E6%BD%AE%E4%B9%8B%E5%B7%85&OSType=iOS8.1.2&v=98";
 
 
         public async Task<List<LetvVideoTypeListInfo>> GetLetvVideoTypeList()
