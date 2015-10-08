@@ -472,6 +472,7 @@
     <Content Include="Data\html\reset.css" />
     <Content Include="Data\images\Azir\Azir.png" />
     <Content Include="Data\images\Bard\Bard.png" />
+    <Content Include="Data\images\Ekko\Ekko.png" />
     <Content Include="Data\images\Gnar\Gnar.png" />
     <Content Include="Data\images\Kalista\Kalista.png" />
     <Content Include="Data\images\RekSai\RekSai.png" />
@@ -1056,6 +1057,7 @@
     <Content Include="Data\items\item_json\3751.json" />
     <Content Include="Data\items\item_json\3800.json" />
     <Content Include="Data\items\item_json\3801.json" />
+    <Content Include="Data\heros\Ekko.json" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">

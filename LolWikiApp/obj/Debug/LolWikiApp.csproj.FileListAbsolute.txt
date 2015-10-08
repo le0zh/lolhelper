@@ -157,7 +157,6 @@ D:\Repos\lolhelper\LolWikiApp\Bin\Debug\ko\System.Windows.Interactivity.resource
 D:\Repos\lolhelper\LolWikiApp\Bin\Debug\ru\System.Windows.Interactivity.resources.dll
 D:\Repos\lolhelper\LolWikiApp\Bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
 D:\Repos\lolhelper\LolWikiApp\Bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
-D:\Repos\lolhelper\LolWikiApp\obj\Debug\LolWikiApp.csprojResolveAssemblyReference.cache
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\App.g.cs
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\AboutPage.g.cs
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\AllHeroPage.g.cs
@@ -188,3 +187,4 @@ D:\Repos\lolhelper\LolWikiApp\obj\Debug\XapCacheFile.xml
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\ItemCategoryPage.g.cs
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\ItemDetailPage.g.cs
 D:\Repos\lolhelper\LolWikiApp\obj\Debug\ItemListPage.g.cs
+D:\Repos\lolhelper\LolWikiApp\obj\Debug\LolWikiApp.csprojResolveAssemblyReference.cache

@@ -427,6 +427,11 @@ namespace LolWikiApp
             {
                  //((FlipView)sender).SelectedIndex
                  //((FlipView)sender).Items.Count
+                
+                if (item.Id == "15764") //针对隐藏分查询的特殊处理
+                {
+                    NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?fullUrl=http://test.lolhelper.cn", UriKind.Relative)); 
+                }
                 NavigationService.Navigate(new Uri("/NewsDetailPage.xaml?newsId=" + item.Id, UriKind.Relative));
             }
         }

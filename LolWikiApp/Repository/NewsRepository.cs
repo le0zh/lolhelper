@@ -484,6 +484,8 @@ namespace LolWikiApp.Repository
             var url = getNewsListRequestUrl(type, page);
             var json = await GetJsonStringViaHttpAsync(url);
 
+            Debug.WriteLine(json);
+
             var newsList = JsonConvert.DeserializeObject<List<NewsListInfo>>(json);
 
             var selectedNewsList = from n in newsList

@@ -212,8 +212,8 @@ namespace LolWikiApp.Repository
         #region letv style
         //LeTV:
         private const string LetvTypedVieoRequestUrl = "http://box.dwstatic.com/apiVideoesNormalDuowan.php?v=98&action=l&p={0}&OSType=iOS8.1.2&src=letv&tag={1}";//{0}:page;{1}:tag
-        private const string LetvVideoRequestUrl = "http://api.letvcloud.com/gpc.php?cf=html5&sign=signxxxxx&ver=2.0&vu={0}&uu=20c3de8a2e&format=jsonp&callback="; //{0}:vu:videoid        
-        private const string LetvLatestVideoListRequestUrl = "http://box.dwstatic.com/apiVideoesNormal.php?v=25&action=l&p={0}&OSType=iOS7.1.1&src=letv&tag=newest";///{0}p:pagenumber
+        private const string LetvVideoRequestUrl = "http://box.dwstatic.com/apiVideoesNormalDuowan.php?action=f&vid={0}"; //{0}:vu:videoid        
+        private const string LetvLatestVideoListRequestUrl = "http://box.dwstatic.com/apiVideoesNormalDuowan.php?v=98&action=l&p={0}&OSType=iOS8.1.2&src=letv&tag=newest ";///{0}p:pagenumber
        
         private const string LetvVideoTypeRequestUrl =
             "http://box.dwstatic.com/apiVideoesNormalDuowan.php?sn=%E7%BD%91%E9%80%9A%E5%9B%9B&action=c&pn=%E6%B5%AA%E6%BD%AE%E4%B9%8B%E5%B7%85&OSType=iOS8.1.2&v=98";
@@ -269,11 +269,6 @@ namespace LolWikiApp.Repository
             var url = string.Format(LetvVideoRequestUrl, vu);
             var json = await GetJsonStringViaHttpAsync(url);
 
-            if (json.StartsWith("(") && json.EndsWith(")"))
-            {
-                json = json.Substring(1, json.Length - 2);
-            }
-
             var jObject = JObject.Parse(json);
 
             if (jObject == null)
@@ -286,7 +281,7 @@ namespace LolWikiApp.Repository
             var standardVideo = string.Empty;
             try
             {
-                standardVideo = jObject["data"]["video_list"]["video_1"]["main_url"].ToString();
+                standardVideo = jObject["result"]["items"]["350"]["transcode"]["urls"][0].ToString();
             }
             catch (Exception ex)
             {
@@ -296,7 +291,7 @@ namespace LolWikiApp.Repository
             var hdVideo = string.Empty;
             try
             {
-                hdVideo = jObject["data"]["video_list"]["video_2"]["main_url"].ToString();
+                hdVideo = jObject["result"]["items"]["1000"]["transcode"]["urls"][0].ToString();
             }
             catch (Exception ex)
             {
@@ -306,7 +301,7 @@ namespace LolWikiApp.Repository
             var superHdVideo = string.Empty;
             try
             {
-                superHdVideo = jObject["data"]["video_list"]["video_3"]["main_url"].ToString();
+                superHdVideo = jObject["result"]["items"]["1300"]["transcode"]["urls"][0].ToString();
             }
             catch (Exception ex)
             {
@@ -314,19 +309,25 @@ namespace LolWikiApp.Repository
             }
 
             var originalHdVideo = string.Empty;
-            try
-            {
-                originalHdVideo = jObject["data"]["video_list"]["video_4"]["main_url"].ToString();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
+            //try
+            //{
+            //    originalHdVideo = jObject["data"]["video_list"]["video_4"]["main_url"].ToString();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex.Message);
+            //}
 
-            videoList.Add(myLetvSourceConverter.Decode(standardVideo));
-            videoList.Add(myLetvSourceConverter.Decode(hdVideo));
-            videoList.Add(myLetvSourceConverter.Decode(superHdVideo));
-            videoList.Add(myLetvSourceConverter.Decode(originalHdVideo));
+            //videoList.Add(myLetvSourceConverter.Decode(standardVideo));
+            //videoList.Add(myLetvSourceConverter.Decode(hdVideo));
+            //videoList.Add(myLetvSourceConverter.Decode(superHdVideo));
+            //videoList.Add(myLetvSourceConverter.Decode(originalHdVideo));
+
+            videoList.Add(standardVideo);
+            videoList.Add(hdVideo);
+            videoList.Add(superHdVideo);
+            videoList.Add(originalHdVideo);
+
             return videoList;
         }
 
@@ -416,7 +417,7 @@ namespace LolWikiApp.Repository
 
             try
             {
-                videoList = await GetNewsVideoUrlAsync(videoListInfo.Letv_Video_Unique);
+                videoList = await GetNewsVideoUrlAsync(videoListInfo.Video_Id);
             }
             catch (Exception ex)
             {

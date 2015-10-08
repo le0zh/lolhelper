@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Windows.Interop;
 using Microsoft.Phone.Tasks;
+using Newtonsoft.Json;
 
 namespace LolWikiApp
 {
@@ -18,12 +19,16 @@ namespace LolWikiApp
 
     public class NewsListInfo : NewsListBaseInfo
     {
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
+        [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
 
+        [JsonProperty(PropertyName = "img")]
         public string Img { get; set; }
 
+        [JsonProperty("thumb_img")]
         public string Thumb_img { get; set; }
 
         public string DescDisplay
@@ -42,14 +47,19 @@ namespace LolWikiApp
             }
         }
 
+        [JsonProperty("desc")]
         public string Desc { get; set; }
 
+        [JsonProperty("posttime")]
         public string PostTime { get; set; }
 
+        [JsonProperty("site")]
         public string Site { get; set; }
 
+        [JsonProperty("topic_id")]
         public string Topic_id { get; set; }
 
+        [JsonProperty("thumb_ok")]
         public string Thumb_ok { get; set; }
 
         public bool IsCached { get; set; }

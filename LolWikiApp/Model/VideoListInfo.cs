@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Phone.Tasks;
+using Newtonsoft.Json;
 
 namespace LolWikiApp
 {
@@ -44,26 +45,31 @@ namespace LolWikiApp
     #region letv style
     public class LetvVideoListInfo
     {
-        // "video_id": "141143769255511006",
-        //"title": "Miss排位日记：教你做一个会飞的翔人！",
-        //"cover_url": "http://s1.dwstatic.com/video/201409/23/7635630/4-120_90.jpg",
-        //"introduction": "",
-        //"notes": "",
-        //"video_length": "2572",
-        //"upload_time": "2014-09-23 10:01:32",
+        //"vid": "118308",
+        //"udb": "18604093877yy",
+        //"letv_video_id": "12092776",
+        //"cover_url": "http:\/\/vimg.dwstatic.com\/1520\/118281\/4-220x124.jpg",
+        //"title": "\u6bcf\u65e5\u7cbe\u5f69\u96c6\u9526\uff1a\u8f6e\u5b50\u5988\u5854\u4e0b\u667a\u6597\u75af\u72d7\u5200\u59b9",
         //"channelId": "lolboxvideo",
-        //"udb": "miss_game",
-        //"editorId": "",
-        //"amount_play": null,
-        //"letv_video_id": "7635630",
-        //"letv_video_unique": "413cf3d444",
-        //"totalPage": 10
+        //"video_length": 337,
+        //"letv_video_unique": "c3c82bfd45",
+        //"upload_time": "2015-05-13 11:49:38",
+        //"totalPage": 56
 
+        [JsonProperty("vid")]
         public string Video_Id { get; set; }
+
+        [JsonProperty("title")]
         public string Title { get; set; }
+
+        [JsonProperty("cover_url")]
         public string Cover_Url { get; set; }
+
         public string Introduction { get; set; }
+
         public string Notes { get; set; }
+
+        [JsonProperty("video_length")]
         public string Video_Length { get; set; }
 
         public string VideoLengthDisplay
@@ -81,13 +87,25 @@ namespace LolWikiApp
             }
         }
 
+        [JsonProperty("upload_time")]
         public string Upload_Time { get; set; }
+
+
         public string ChannelId { get; set; }
+
+        [JsonProperty("udb")]
         public string Udp { get; set; }
+
         public string EditorId { get; set; }
+
         public string Amount_Play { get; set; }
+
         public string Letv_Video_Id { get; set; }
+
+        [JsonProperty("letv_video_unique")]
         public string Letv_Video_Unique { get; set; }
+
+        [JsonProperty("totalPage")]
         public int TotalPage { get; set; }
     }
     #endregion

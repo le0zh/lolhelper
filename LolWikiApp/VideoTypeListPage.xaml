@@ -16,7 +16,7 @@
     shell:SystemTray.ForegroundColor="White"
     toolkit:TiltEffect.IsTiltEnabled="True"
     mc:Ignorable="d"
-    BackKeyPress="VideoTypeListPage_OnBackKeyPress">
+    BackKeyPress="VideoTypeListPage_OnBackKeyPress" Orientation="Landscape">
 
 
     <!--<phone:Pivot x:Name="LayoutPivot" Foreground="White"

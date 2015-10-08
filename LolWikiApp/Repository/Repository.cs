@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,8 +17,14 @@ namespace LolWikiApp.Repository
     {
         protected async Task<String> GetJsonStringViaHttpAsync(string url)
         {
-            var client = new HttpClient {Timeout = TimeSpan.FromMinutes(3)};
-            var json = await client.GetStringAsync(new Uri(url));
+            var handler = new HttpClientHandler();
+            if (handler.SupportsAutomaticDecompression)
+            {
+                handler.AutomaticDecompression = DecompressionMethods.GZip |
+                                                 DecompressionMethods.Deflate;
+            }
+            var httpClient = new HttpClient(handler);
+            var json = await httpClient.GetStringAsync(new Uri(url));
             return json;
         }
 
